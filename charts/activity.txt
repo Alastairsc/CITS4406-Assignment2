@@ -1,6 +1,24 @@
-@startuml
+' python -m plantuml charts\activity.txt
 
-(*) --> "First Activity"
-"First Activity" --> (*)
+@startuml
+title CSV Cleaner & Stats
+
+start
+:Load CSV;
+repeat
+  :read data;
+  :generate diagrams;
+repeat while (more data?)
+
+stop
+
+/'
+if (Graphviz installed?) then (yes)
+  :process all\ndiagrams;
+else (no)
+  :process only
+  __sequence__ and __activity__ diagrams;
+endif
+'/
 
 @enduml
