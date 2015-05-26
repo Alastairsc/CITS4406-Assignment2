@@ -25,4 +25,13 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
     * Mean
     * Third Quartile
     * Maximum
+    * Mode?
 * Top 5 occurring results
+
+Todo:
+* How does Python handle commas in a CSV value, e.g., 'Las Vegas, Nevada'
+Commas out of place will result in garbled results.
+
+* Str identification/sorting of enumerated vs str
+* Int's with leading 0's
+* Implement testing
