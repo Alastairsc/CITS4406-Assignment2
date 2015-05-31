@@ -3,43 +3,32 @@ __author__ = 'Liam'
 Module implements all evaluation methods
 """
 
-import ast
-from collections import Counter
-
 #  pattern = re.compile("d")
 #  pattern.search("dog")
+#  config['DEFAULT']['Compression']
 
 
-def return_type(i, data):
-    """
-    Iterates over the data in the column provided as i to return the most
-    common type in that column.
+class Evaluator(object):
+    def __init__(self, header, clean_data):
+        self.types = ['String', 'Number', 'Enumerated']
+        self.identified_data = self.identify_type(header, clean_data)
 
-    :param i: The position of the header iterable.
-    :param data: The data to iterate over to find the column values.
-    :return:
-    """
-    cnt = Counter()
-    values = []
-    for j in range(len(data)):
-        values.append(data[j][i])
-    for data_type in [evaluate_type(value) for value in values]:
-        cnt[data_type] += 1
-    return str(cnt.most_common()[0][0])
+        #  self.common_types = Counter(clean_data).most_common(5)
+        #  self.type_identifier(clean_data)
 
+    @staticmethod
+    def identify_type(header, clean_data):
+        data = []
+        """
+        for i in range(len(header)):
+            for j in range(len(clean_data)):
+                print(clean_data[j][i])
+        """
 
-def evaluate_type(val):
-    """
-    Interprets strings passed and attempts to return their correct type. E.g.,
-    val = '1' should return as "<class 'int'>".
-    :param val:
-    :return:
-    """
-    try:
-        val = ast.literal_eval(val)
-    except ValueError:
-        pass
-    except SyntaxError:
-        #  Without this, will fail on values with mixed type, e.g., '793B'
-        pass
-    return type(val)
+        for i in range(len(header)):
+            column = []
+            for j in range(len(clean_data)):
+                column.append(clean_data[j][i])
+            print(column)
+
+        return column

@@ -2,8 +2,12 @@ __author__ = 'Liam'
 
 from statistics import mean, mode, median_low, median, median_high
 
+
 class Analyser(object):
-    pass
+    def __init__(self):
+        pass
+
+
 
 
 class StringAnalyser(Analyser):
