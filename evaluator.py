@@ -1,34 +1,1 @@
-__author__ = 'Liam'
-"""
-Module implements all evaluation methods
-"""
-
-#  pattern = re.compile("d")
-#  pattern.search("dog")
-#  config['DEFAULT']['Compression']
-
-
-class Evaluator(object):
-    def __init__(self, header, clean_data):
-        self.types = ['String', 'Number', 'Enumerated']
-        self.identified_data = self.identify_type(header, clean_data)
-
-        #  self.common_types = Counter(clean_data).most_common(5)
-        #  self.type_identifier(clean_data)
-
-    @staticmethod
-    def identify_type(header, clean_data):
-        data = []
-        """
-        for i in range(len(header)):
-            for j in range(len(clean_data)):
-                print(clean_data[j][i])
-        """
-
-        for i in range(len(header)):
-            column = []
-            for j in range(len(clean_data)):
-                column.append(clean_data[j][i])
-            print(column)
-
-        return column
+__author__ = 'Liam'"""Module implements all evaluation methods"""# Threshhold = 0.9# if float matches/rows > TH, then# if int matches = float matches# INT# else# FLOAT# else# if count types <10# ENUM# else if average repetitions > 2# ENUM# else# STRING# float: ^\d+\.?\d*$# integer: ^[1-9]\d*$import configparserimport reconfig = configparser.ConfigParser()config.read('config.ini')class Evaluator(object):    def __init__(self, clean_data):        self.identify_type(clean_data)    @staticmethod    def identify_type(clean_data):        integer = re.compile(config['REGEX']['Integer'])        float = re.compile(config['REGEX']['Float'])        string = re.compile(config['REGEX']['String'])        for column in clean_data:            for row in column[1]:                if re.search(string, row) is None:                    column.append('Numeric')
