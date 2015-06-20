@@ -1,0 +1,11 @@
+body {
+    background-color: snow;
+    padding-top: 50px;
+}
+
+.anchor {
+    display: none;
+    height: 50px;
+    margin-top: 50px;
+    visibility: hidden;
+}

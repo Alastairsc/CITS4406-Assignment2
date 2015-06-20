@@ -19,13 +19,19 @@ class Analyser(object):
         try:
             self.mode = mode(values)
         except StatisticsError:
-            self.mode = 'No unique mode found.'
+            self.mode = 'N/A'
 
 
 class StringAnalyser(Analyser):
     def __init__(self, values):
         super().__init__(values)
         #  TODO Implement some string exclusive statistics.
+
+
+class EnumAnalyser(Analyser):
+    def __init__(self, values):
+        super().__init__(values)
+        #  TODO Implement some enum exclusive statistics.
 
 
 class NumericalAnalyser(Analyser):
@@ -60,6 +66,9 @@ class Column(object):
         for index, value in enumerate(self.values):
             if value in invalid_values:
                 self.values[index] = ''
+                
+    def drop_greater_than(self):
+        pass
 
     def define_most_common(self):
         self.most_common = Counter(self.values).most_common(15)
@@ -132,10 +141,11 @@ class Data(object):
     def clean(self):
         for column in self.columns:
             column.change_misc_values()
+            column.drop_greater_than()
 
     def analyse(self):
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
-                     'Float': NumericalAnalyser}
+                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser}
         for column in self.columns:
             column.define_most_common()
             if not column.empty:
