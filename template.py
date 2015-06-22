@@ -1,5 +1,7 @@
 __author__ = 'Liam' 
-
+"""Provide a base HTML template variable for population with appropriate 
+statistics in the report.py module.
+"""
 
 base_template = \
 """
@@ -63,7 +65,7 @@ base_template = \
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>Column Analysis</h2>
+            <h2>Column Analysis (Based on {len_columns} rows)</h2>
             <hr id="numerical"/>
             <h2>Numerical</h2>
             <table class="table table-bordered table-hover">
@@ -76,6 +78,7 @@ base_template = \
                     <th>Median Low</th>
                     <th>Median</th>
                     <th>Median High</th>
+                    <th>Most Common (Top 5)</th>
                 </tr>
                 {numerical_analysis}
             </table>

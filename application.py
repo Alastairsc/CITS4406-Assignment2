@@ -1,19 +1,16 @@
 __author__ = 'Liam'
+"""Main execution body for Assignment2 project.
+"""
 
 import sys
-
 from data import *
 from report import *
-#  from reader import Reader
-#  from cleaner import Cleaner
-#  from reporter import HTMLReport
 
 
 def main():
-    """
-    Main execution body for the cleaning and sorting tool, it calls the
-    required cleaning and analysis modules in their correct order.
-    :return:
+    """Create Data and Report objects, providing necessary information for them 
+    to run analysis and create desired outputs (i.e. HTML report).
+
     """
     file = sys.argv[1]
     data = Data(file)
@@ -21,16 +18,6 @@ def main():
     data.analyse()
     report = Report(data, file)
     report.html_report()
-
-    #  csv_file = sys.argv[1]
-    #  reader = Reader(csv_file)
-    #  cleaner = Cleaner(reader.csv_data)
-
-    #  analysers = [IntegerAnalyser(),NumericAnalyser(),StringAnalyser()]
-    #  evaluator = Evaluator(cleaner.clean_data)
-    #  analyser = Analyser(cleaner.clean_data)
-
-    #  HTMLReport(csv_file, reader, cleaner)
 
 
 if __name__ == '__main__':
