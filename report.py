@@ -57,8 +57,9 @@ class Report(object):
         html_file = open("{}_report.html".format(self.file_name), "w")
         html_file.write(html)
         html_file.close()
-        
-    def list_creator(self, list_items):
+
+    @staticmethod
+    def list_creator(list_items):
         """Return provided list as an unordered HTML list.
         
         Arguments:
@@ -72,8 +73,9 @@ class Report(object):
             html_list += '<li>' + 'Empty' + '</li>'
         html_list += '</ul>'
         return html_list
-        
-    def row_creator(self, row_items):
+
+    @staticmethod
+    def row_creator(row_items):
         """Return provided list as HTML rows.
         
         Arguments:
@@ -92,16 +94,15 @@ class Report(object):
         rows = ''
         for column in self.data.columns:
             if column.type == 'Float' or column.type == 'Integer':
-                row = []
-                row.append(column.header)
-                row.append(column.analysis.min)
-                row.append(column.analysis.max)
-                row.append(column.analysis.mode)
-                row.append(column.analysis.mean)
-                row.append(column.analysis.median_low)
-                row.append(column.analysis.median)
-                row.append(column.analysis.median_high)
-                row.append(column.most_common[:5])
+                row = [column.header,
+                       column.analysis.min,
+                       column.analysis.max,
+                       column.analysis.mode,
+                       column.analysis.mean,
+                       column.analysis.median_low,
+                       column.analysis.median,
+                       column.analysis.median_high,
+                       column.most_common[:5]]
                 rows += self.row_creator(row)
         return rows
         
@@ -112,10 +113,9 @@ class Report(object):
         rows = ''
         for column in self.data.columns:
             if column.type == 'String':
-                row = []
-                row.append(column.header)
-                row.append(column.analysis.mode)
-                row.append(column.most_common[:5])
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5]]
                 rows += self.row_creator(row)
         return rows
         
@@ -126,10 +126,9 @@ class Report(object):
         rows = ''
         for column in self.data.columns:
             if column.type == 'Enum':
-                row = []
-                row.append(column.header)
-                row.append(column.analysis.mode)
-                row.append(column.most_common[:5])
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5]]
                 rows += self.row_creator(row)
         return rows
         

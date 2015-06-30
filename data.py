@@ -76,19 +76,20 @@ class Column(object):
     change_misc_values -- Removes misc/unclear values from column 
         values.
     drop_greater_than -- Removes '<', '>' from column values.
-    define_most_common -- Sets object variable to hold 15 most common values for 
-        that column.
-    define_type -- Sets object variable to type (e.g., String) according to 
-        column values.
+    define_most_common -- Sets object variable to hold 15 most common values
+        for that column.
+    define_type -- Sets object variable to type (e.g., String) according
+        to column values.
     
     Variables:
     most_common -- <= 15 most common results within the column values.
     empty -- Boolean value of whether the column holds values or not.
     header -- Column header/title.
-    type -- The type of data in column, e.g., String, Float, Integer, Enumerated.
+    type -- The type of data in column, e.g., String, Float, Integer,
+        Enumerated.
     values -- List of CSV values for the column.
     analysis -- Analysis object associated with this column.
-    
+
     """
     def __init__(self, header=''):
         self.most_common = []
@@ -164,8 +165,8 @@ class Data(object):
     Variables:
     columns -- List of column objects.
     headers -- List of column headers.
-    invalid_rows -- List of invalid rows (i.e., more or less columns than number 
-        of headers).
+    invalid_rows -- List of invalid rows (i.e., more or less columns than
+        number of headers).
     raw_data -- List of raw CSV data as rows.
     valid_rows -- List of valid rows (i.e., same number of columns as headers).
     """
