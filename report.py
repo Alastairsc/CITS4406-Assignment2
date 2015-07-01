@@ -1,4 +1,3 @@
-__author__ = 'Liam'
 """Generate reports based on data provided via a Data object.
 
 Classes:

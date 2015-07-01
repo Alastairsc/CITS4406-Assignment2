@@ -1,5 +1,4 @@
-__author__ = 'Liam' 
-"""Provide a base HTML template variable for population with appropriate 
+"""Provide a base HTML template variable for population with appropriate
 statistics in the report.py module.
 """
 

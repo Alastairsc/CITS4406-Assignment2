@@ -1,5 +1,4 @@
-__author__ = 'Liam'
-"""Reads CSV file for information, provides basic cleaning of data and then 
+"""Reads CSV file for information, provides basic cleaning of data and then
 runs analysis on said data."""
 
 import csv
@@ -89,6 +88,7 @@ class Column(object):
         Enumerated.
     values -- List of CSV values for the column.
     analysis -- Analysis object associated with this column.
+    outliers -- List of values in column but outside threshold of column type.
 
     """
     def __init__(self, header=''):
@@ -98,6 +98,7 @@ class Column(object):
         self.type = ''
         self.values = []
         self.analysis = None
+        self.outliers = []
         #  Todo: Does initialising as None even make sense?
 
     def change_misc_values(self):
@@ -148,6 +149,16 @@ class Column(object):
         else:
             self.type = 'String'
 
+    def define_outliers(self):
+        if self.type == 'Float':
+            for value in self.values:
+                if not re_float.match(value):
+                    self.outliers.append(value)
+        elif self.type == 'Integer':
+            for value in self.values:
+                if not re_int.match(value):
+                    self.outliers.append(value)
+
 
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
@@ -191,9 +202,9 @@ class Data(object):
         valid_rows variable if same length as headers, else appends to 
         invalid_rows variable.
         """
-        for row in self.raw_data:
+        for index, row in enumerate(self.raw_data):
             if len(row) != len(self.raw_data[0]):
-                self.invalid_rows.append(row)
+                self.invalid_rows.append([index + 1, row])
             else:
                 self.valid_rows.append(row)
 
@@ -229,5 +240,6 @@ class Data(object):
             column.define_most_common()
             if not column.empty:
                 column.define_type()
+                column.define_outliers()
                 if column.type in analysers:
                     column.analysis = analysers[column.type](column.values)

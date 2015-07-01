@@ -1,8 +1,8 @@
-__author__ = 'Liam'
 """Main execution body for Assignment2 project.
 """
 
 import sys
+
 from data import *
 from report import *
 
