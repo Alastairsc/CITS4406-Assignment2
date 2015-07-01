@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<h1 class="page-header">Dashboard</h1>
+<ul>
+  {% for log in files %}
+  <li><a href="/logs/{{ log }}">{{ log }}</a></li>
+  {% endfor %}
+</ul>
+<div class="row placeholders">
+  <div class="col-xs-6 col-sm-3 placeholder">
+    <h4>Label</h4>
+    <span class="text-muted">Something else</span>
+  </div>
+  <div class="col-xs-6 col-sm-3 placeholder">
+    <h4>Label</h4>
+    <span class="text-muted">Something else</span>
+  </div>
+  <div class="col-xs-6 col-sm-3 placeholder">
+    <h4>Label</h4>
+    <span class="text-muted">Something else</span>
+  </div>
+  <div class="col-xs-6 col-sm-3 placeholder">
+    <h4>Label</h4>
+    <span class="text-muted">Something else</span>
+  </div>
+</div>
+{% endblock %}
