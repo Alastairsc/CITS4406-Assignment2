@@ -12,7 +12,8 @@ class Report(object):
     """The main report object.
     
     Methods:
-    __init__ -- Initialise the object and create required local variables.
+    __init__ -- Initialise the object 
+and create required local variables.
     empty_columns -- Return empty columns in the data object.
     html_report -- Create HTML report and output to file.
     list_creator -- Helper method to generate a HTML list from provided input.
@@ -21,6 +22,7 @@ class Report(object):
     string_analysis -- Return string based statistics on input.
     enum_analysis -- Return enumeration based statistics on input.
     bool_analysis -- Return boolean based statistics on input.
+    email_analysis -- Return email based statistics on input.
     
     Variables:
     data -- Reference to Data object.
@@ -51,7 +53,8 @@ class Report(object):
             len_columns=len(self.data.valid_rows),
             numerical_analysis=self.numerical_analysis(),
             string_analysis=self.string_analysis(),
-            enum_analysis=self.enum_analysis()
+            enum_analysis=self.enum_analysis(),
+            email_analysis=self.email_analysis()
             )
         html_file = open("{}_report.html".format(self.file_name), "w")
         html_file.write(html)
@@ -93,6 +96,7 @@ class Report(object):
         rows = ''
         for column in self.data.columns:
             if column.type == 'Float' or column.type == 'Integer':
+                print(column.header)
                 row = [column.header,
                        column.analysis.min,
                        column.analysis.max,
@@ -111,7 +115,7 @@ class Report(object):
         """
         rows = ''
         for column in self.data.columns:
-            if column.type == 'String':
+            if column.type == 'String':           
                 row = [column.header,
                        column.analysis.mode,
                        column.most_common[:5]]
@@ -134,3 +138,20 @@ class Report(object):
     def bool_analysis(self):
         pass
         # Todo: Implement boolean analysis.
+        
+    def email_analysis(self):
+        """Return HTML string of email analysis on columns of type email
+        in the data object.
+        """      
+        rows = ''
+        for column in self.data.columns:
+            if column.type == 'Email':
+                print("columns")
+                print("header " + column.header)
+                print("mode " + column.analysis.mode)
+                print(column.most_common[:5])
+                row = [column.header,
+                        column.analysis.mode,
+                        column.most_common[:5]]
+                row += self.row_creator(row)
+        return rows

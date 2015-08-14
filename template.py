@@ -35,6 +35,7 @@ base_template = \
             <li><a href="#numerical">Numerical</a></li>
             <li><a href="#string">String</a></li>
             <li><a href="#enum">Enum</a></li>
+            <li><a href="#email">Email</a></li>
           </ul>
         </div>
       </div>
@@ -102,6 +103,19 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                 </tr>
                 {enum_analysis}
+            </table>
+            
+            <hr id="email"/>
+            <h2>Email</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                </tr>
+                {email_analysis}
+            </table>
+            
         </div>
     </div>
 </div>
