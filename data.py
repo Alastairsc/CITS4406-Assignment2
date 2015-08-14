@@ -13,6 +13,7 @@ threshold = 0.9
 invalid_values = ['-', '*', '_']
 re_float = re.compile('^\d*?\.\d+$')
 re_int = re.compile('^[1-9]\d*$')
+re_email = re.compile("@")
 
 
 class Analyser(object):
@@ -24,6 +25,7 @@ class Analyser(object):
     
     Child Classes and associated variables:
     StringAnalyser -- String column analysis.
+    EmailAnalyser -- Email column analysis.
     EnumAnalyser -- Enumerated column analysis.
     NumericalAnalyser - String/Float column analysis.
         min -- Minimum value in column values.
@@ -38,8 +40,16 @@ class Analyser(object):
         try:
             self.mode = mode(values)
         except StatisticsError:
+            print("Statistics error")
             self.mode = 'N/A'
 
+class EmailAnalyser(Analyser):
+    "Run email analysis"
+    def __init__(self, values):
+        super().__init__(values)
+        print(self.mode)
+        # TODO Something actually useful for emails.
+        
 
 class StringAnalyser(Analyser):
     """Run string analysis."""
@@ -129,6 +139,7 @@ class Column(object):
         """
         float_count = 0
         int_count = 0
+        email_count = 0
         boolean = ['true', 'false']
         #  Todo: Define date type.
 
@@ -137,10 +148,16 @@ class Column(object):
                 float_count += 1
             elif re_int.match(value):
                 int_count += 1
+            elif re_email.search(value):
+                print("Email match")
+                email_count += 1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
             self.type = 'Integer'
+        elif email_count / len(self.values) >= threshold:
+            print("Email type")
+            self.type = 'Email'
         elif len(self.most_common) <= 2:
             if self.most_common[0][0].lower() in boolean:
                 self.type = 'Bool'
@@ -235,7 +252,7 @@ class Data(object):
         first.
         """
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
-                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser}
+                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 'Email': EmailAnalyser}
         for column in self.columns:
             column.define_most_common()
             if not column.empty:
