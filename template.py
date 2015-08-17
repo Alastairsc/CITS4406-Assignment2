@@ -36,6 +36,7 @@ base_template = \
             <li><a href="#string">String</a></li>
             <li><a href="#enum">Enum</a></li>
             <li><a href="#email">Email</a></li>
+            <li><a href="#currency">Currency</a></li>
           </ul>
         </div>
       </div>
@@ -114,6 +115,24 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                 </tr>
                 {email_analysis}
+            </table>
+            
+            <hr id="currency"/>
+            <h2>Currency</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Mode</th>
+                    <th>Mean</th>
+                    <th>Median Low</th>
+                    <th>Median</th>
+                    <th>Median High</th>
+                    <th>Standard Deviation</th>
+                    <th>Most Common (Top 5)</th>
+                </tr>
+                {currency_analysis}
             </table>
             
         </div>

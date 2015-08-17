@@ -10,10 +10,12 @@ from statistics import mean, mode, median_low, median, median_high, \
 
 #  Config
 threshold = 0.9
-invalid_values = ['-', '*', '_']
+invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^\d*?\.\d+$')
 re_int = re.compile('^[1-9]\d*$')
-re_email = re.compile("@")
+re_email = re.compile('@')
+re_currency = re.compile('\$') 
+"""\$?d+\.dd"""
 
 
 class Analyser(object):
@@ -50,6 +52,18 @@ class EmailAnalyser(Analyser):
         print(self.mode)
         # TODO Something actually useful for emails.
         
+class CurrencyAnalyser(Analyser):
+    "Run currency analysis"
+    def __init__(self, values):
+        values = [eval(i) for i in values]
+        super().__init__(values)
+        self.min = min(values)
+        self.max = max(values)
+        self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
+        self.median_low = median_low(values)
+        self.median = median(values)
+        self.median_high = median_high(values)
+        self.stdev = stdev(values)
 
 class StringAnalyser(Analyser):
     """Run string analysis."""
@@ -117,7 +131,10 @@ class Column(object):
         '-', with an agreed value.
         """
         for index, value in enumerate(self.values):
-            if value in invalid_values:
+            print(index)
+            print(value)
+            if value in invalid_values:               
+                print("invalid_values")
                 self.values[index] = ''
                 
     def drop_greater_than(self):
@@ -140,6 +157,7 @@ class Column(object):
         float_count = 0
         int_count = 0
         email_count = 0
+        currency_count = 0
         boolean = ['true', 'false']
         #  Todo: Define date type.
 
@@ -151,6 +169,9 @@ class Column(object):
             elif re_email.search(value):
                 print("Email match")
                 email_count += 1
+            elif re_currency.search(value):
+                print("Currency match")
+                currency_count += 1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
@@ -158,6 +179,9 @@ class Column(object):
         elif email_count / len(self.values) >= threshold:
             print("Email type")
             self.type = 'Email'
+        elif currency_count / len(self.values) >= threshold:
+            print("Currency type")
+            self.type = 'Currency'
         elif len(self.most_common) <= 2:
             if self.most_common[0][0].lower() in boolean:
                 self.type = 'Bool'
@@ -252,7 +276,7 @@ class Data(object):
         first.
         """
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
-                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 'Email': EmailAnalyser}
+                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 'Email': EmailAnalyser, 'Currency': CurrencyAnalyser}
         for column in self.columns:
             column.define_most_common()
             if not column.empty:

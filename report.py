@@ -54,7 +54,8 @@ and create required local variables.
             numerical_analysis=self.numerical_analysis(),
             string_analysis=self.string_analysis(),
             enum_analysis=self.enum_analysis(),
-            email_analysis=self.email_analysis()
+            email_analysis=self.email_analysis(),
+            currency_analysis =self.currency_analysis()
             )
         html_file = open("{}_report.html".format(self.file_name), "w")
         html_file.write(html)
@@ -146,12 +147,29 @@ and create required local variables.
         rows = ''
         for column in self.data.columns:
             if column.type == 'Email':
-                print("columns")
-                print("header " + column.header)
-                print("mode " + column.analysis.mode)
-                print(column.most_common[:5])
                 row = [column.header,
                         column.analysis.mode,
                         column.most_common[:5]]
-                row += self.row_creator(row)
+                rows += self.row_creator(row)
+        return rows
+        
+    def currency_analysis(self):
+        """Return HTML string of numerical analysis on columns of type Float or 
+        Integer in the data object.
+        """
+        rows = ''
+        for column in self.data.columns:
+            if column.type == 'Currency':
+                print(column.header)
+                row = [column.header,
+                       column.analysis.min,
+                       column.analysis.max,
+                       column.analysis.mode,
+                       column.analysis.mean,
+                       column.analysis.median_low,
+                       column.analysis.median,
+                       column.analysis.median_high,
+                       column.analysis.stdev,
+                       column.most_common[:5]]
+                rows += self.row_creator(row)
         return rows
