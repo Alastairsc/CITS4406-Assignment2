@@ -4,7 +4,7 @@ runs analysis on said data."""
 import csv
 import re
 from collections import Counter
-from statistics import mean, mode, median_low, median, median_high, \
+from statistics import mean, mode, median_low, median, median_high, stdev, \
     StatisticsError, Decimal
 
 
@@ -59,11 +59,11 @@ class CurrencyAnalyser(Analyser):
         super().__init__(values)
         self.min = min(values)
         self.max = max(values)
-        self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
+        self.mean = Decimal(mean(values)).quantize(Decimal('.00'))
         self.median_low = median_low(values)
         self.median = median(values)
         self.median_high = median_high(values)
-        self.stdev = stdev(values)
+        self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
 
 class StringAnalyser(Analyser):
     """Run string analysis."""
@@ -131,15 +131,15 @@ class Column(object):
         '-', with an agreed value.
         """
         for index, value in enumerate(self.values):
-            print(index)
-            print(value)
-            if value in invalid_values:               
-                print("invalid_values")
+            if value in invalid_values:
                 self.values[index] = ''
                 
     def drop_greater_than(self):
         pass
         #  Todo: Implement method to handle (strip?) '<', '>'.
+        
+    #def drop_dollar_sign(self):
+        
 
     def define_most_common(self):
         """Set 15 most common results to class variable, and set object variable 
@@ -161,7 +161,7 @@ class Column(object):
         boolean = ['true', 'false']
         #  Todo: Define date type.
 
-        for value in self.values:
+        for x, value in enumerate(self.values):
             if re_float.match(value):
                 float_count += 1
             elif re_int.match(value):
@@ -171,6 +171,9 @@ class Column(object):
                 email_count += 1
             elif re_currency.search(value):
                 print("Currency match")
+                print (value)
+                self.values[x] = re.sub(re_currency, '', value)
+                print (self.values[x])
                 currency_count += 1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
@@ -268,6 +271,7 @@ class Data(object):
     def clean(self):
         """Calls cleaning methods on all columns."""
         for column in self.columns:
+            #column.drop_dollar_sign()
             column.change_misc_values()
             column.drop_greater_than()
 
