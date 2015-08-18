@@ -15,6 +15,7 @@ re_float = re.compile('^\d*?\.\d+$')
 re_int = re.compile('^[1-9]\d*$')
 re_email = re.compile('@')
 re_currency = re.compile('\$') 
+re_boolean = re.compile('(T|F|[True]|[False])')
 """\$?d+\.dd"""
 
 
@@ -158,7 +159,7 @@ class Column(object):
         int_count = 0
         email_count = 0
         currency_count = 0
-        boolean = ['true', 'false']
+        boolean_count = 0
         #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
@@ -171,20 +172,26 @@ class Column(object):
                 email_count += 1
             elif re_currency.search(value):
                 print("Currency match")
-                print (value)
+                #print (value)
                 self.values[x] = re.sub(re_currency, '', value)
-                print (self.values[x])
+                #print (self.values[x])
                 currency_count += 1
+            elif re_boolean.match(value):
+                boolean_count += 1
+                print('Boolean match')
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
             self.type = 'Integer'
         elif email_count / len(self.values) >= threshold:
-            print("Email type")
+            print('Email type')
             self.type = 'Email'
         elif currency_count / len(self.values) >= threshold:
-            print("Currency type")
+            print('Currency type')
             self.type = 'Currency'
+        elif boolean_count / len(self.values) >= threshold:
+            print('Boolean type')
+            self.type = 'Boolean'
         elif len(self.most_common) <= 2:
             if self.most_common[0][0].lower() in boolean:
                 self.type = 'Bool'
