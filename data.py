@@ -10,12 +10,12 @@ from statistics import mean, mode, median_low, median, median_high, stdev, \
 
 #  Config
 threshold = 0.9
-#invalid_values = ['-', '*', '_', '$']
+invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^\d*?\.\d+$')
 re_int = re.compile('^[1-9]\d*$')
-re_email = re.compile('@') #\w+@\w+\.\w+ slightly stricter but may allow incorrect emails
-re_currency = re.compile('[\$£€]\d*(\.\d\d)?') 
-re_boolean = re.compile('(\bT\b|\bF\b|\bTrue\b|\bFalse\b|\bYes\b|\bNo\b|\bY\b|\bN\b)')
+re_email = re.compile('@')
+re_currency = re.compile('\$') 
+re_boolean = re.compile('(T|F|[True]|[False])')
 """\$?d+\.dd"""
 
 
@@ -126,14 +126,14 @@ class Column(object):
         self.outliers = []
         #  Todo: Does initialising as None even make sense?
 
-    """def change_misc_values(self):
+    def change_misc_values(self):
         """
         Replaces identified values of unclear meaning or inexact value, i.e., 
         '-', with an agreed value.
         """
         for index, value in enumerate(self.values):
             if value in invalid_values:
-                self.values[index] = ''"""
+                self.values[index] = ''
                 
     def drop_greater_than(self):
         pass
@@ -170,7 +170,7 @@ class Column(object):
             elif re_email.search(value):
                 print("Email match")
                 email_count += 1
-            elif re_currency.match(value):
+            elif re_currency.search(value):
                 print("Currency match")
                 #print (value)
                 self.values[x] = re.sub(re_currency, '', value)
@@ -279,7 +279,7 @@ class Data(object):
         """Calls cleaning methods on all columns."""
         for column in self.columns:
             #column.drop_dollar_sign()
-            #column.change_misc_values()
+            column.change_misc_values()
             column.drop_greater_than()
 
     def analyse(self):
