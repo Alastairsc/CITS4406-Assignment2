@@ -37,6 +37,7 @@ base_template = \
             <li><a href="#enum">Enum</a></li>
             <li><a href="#email">Email</a></li>
             <li><a href="#currency">Currency</a></li>
+            <li><a href="#boolean">Boolean</a></li>
           </ul>
         </div>
       </div>
@@ -133,6 +134,17 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                 </tr>
                 {currency_analysis}
+            </table>
+            
+            <hr id="boolean"/>
+            <h2>Boolean</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                </tr>
+                {boolean_analysis}
             </table>
             
         </div>

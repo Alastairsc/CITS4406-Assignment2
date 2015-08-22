@@ -55,7 +55,8 @@ and create required local variables.
             string_analysis=self.string_analysis(),
             enum_analysis=self.enum_analysis(),
             email_analysis=self.email_analysis(),
-            currency_analysis =self.currency_analysis()
+            currency_analysis =self.currency_analysis(),
+            boolean_analysis = self.boolean_analysis()
             )
         html_file = open("{}_report.html".format(self.file_name), "w")
         html_file.write(html)
@@ -136,9 +137,6 @@ and create required local variables.
                 rows += self.row_creator(row)
         return rows
         
-    def bool_analysis(self):
-        pass
-        # Todo: Implement boolean analysis.
         
     def email_analysis(self):
         """Return HTML string of email analysis on columns of type email
@@ -147,6 +145,19 @@ and create required local variables.
         rows = ''
         for column in self.data.columns:
             if column.type == 'Email':
+                row = [column.header,
+                        column.analysis.mode,
+                        column.most_common[:5]]
+                rows += self.row_creator(row)
+        return rows
+        
+    def boolean_analysis(self):
+        """Return HTML string of boolean analysis on columns of type boolean
+        in the data object.
+        """      
+        rows = ''
+        for column in self.data.columns:
+            if column.type == 'Boolean':
                 row = [column.header,
                         column.analysis.mode,
                         column.most_common[:5]]

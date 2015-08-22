@@ -14,9 +14,9 @@ invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^\d*?\.\d+$')
 re_int = re.compile('^[1-9]\d*$')
 re_email = re.compile('@')
-re_currency = re.compile('\$') 
-re_boolean = re.compile('(T|F|[True]|[False])')
-"""\$?d+\.dd"""
+re_currency = re.compile('^\s*(\$)|(€)|(£)(\d*\.\d*|\.\d*|\d*)')
+re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
+"""^\s*\$d*\."""
 
 
 class Analyser(object):
@@ -52,6 +52,7 @@ class EmailAnalyser(Analyser):
         super().__init__(values)
         print(self.mode)
         # TODO Something actually useful for emails.
+        
         
 class CurrencyAnalyser(Analyser):
     "Run currency analysis"
@@ -91,6 +92,11 @@ class NumericalAnalyser(Analyser):
         self.median_low = median_low(values)
         self.median = median(values)
         self.median_high = median_high(values)
+
+class BooleanAnalyser(Analyser):
+    "Run email analysis"
+    def __init__(self, values):
+        super().__init__(values)
 
 
 class Column(object):
@@ -163,6 +169,7 @@ class Column(object):
         #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
+            print(value)
             if re_float.match(value):
                 float_count += 1
             elif re_int.match(value):
@@ -173,10 +180,10 @@ class Column(object):
             elif re_currency.search(value):
                 print("Currency match")
                 #print (value)
-                self.values[x] = re.sub(re_currency, '', value)
+                self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
                 #print (self.values[x])
                 currency_count += 1
-            elif re_boolean.match(value):
+            elif re_boolean.search(value):
                 boolean_count += 1
                 print('Boolean match')
         if float_count / len(self.values) >= threshold:
@@ -287,7 +294,9 @@ class Data(object):
         first.
         """
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
-                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 'Email': EmailAnalyser, 'Currency': CurrencyAnalyser}
+                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
+                     'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
+                     'Boolean': BooleanAnalyser}
         for column in self.columns:
             column.define_most_common()
             if not column.empty:
