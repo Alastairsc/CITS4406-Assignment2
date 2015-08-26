@@ -199,9 +199,9 @@ class Column(object):
         elif boolean_count / len(self.values) >= threshold:
             print('Boolean type')
             self.type = 'Boolean'
-        elif len(self.most_common) <= 2:
+       """ elif len(self.most_common) <= 2:
             if self.most_common[0][0].lower() in boolean:
-                self.type = 'Bool'
+                self.type = 'Bool' """
         elif len(self.most_common) < 10:
             self.type = 'Enum'
         else:
