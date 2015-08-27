@@ -107,7 +107,9 @@ and create required local variables.
                        column.analysis.median_low,
                        column.analysis.median,
                        column.analysis.median_high,
-                       column.most_common[:5]]
+                       column.analysis.stdev,
+                       column.most_common[:5],
+                       column.least_common[:5]]
                 rows += self.row_creator(row)
         return rows
         
@@ -120,7 +122,8 @@ and create required local variables.
             if column.type == 'String':           
                 row = [column.header,
                        column.analysis.mode,
-                       column.most_common[:5]]
+                       column.most_common[:5],
+                       column.least_common[:5]]
                 rows += self.row_creator(row)
         return rows
         
@@ -133,7 +136,8 @@ and create required local variables.
             if column.type == 'Enum':
                 row = [column.header,
                        column.analysis.mode,
-                       column.most_common[:5]]
+                       column.most_common[:5],
+                       column.least_common[:5]]
                 rows += self.row_creator(row)
         return rows
         
@@ -147,7 +151,8 @@ and create required local variables.
             if column.type == 'Email':
                 row = [column.header,
                         column.analysis.mode,
-                        column.most_common[:5]]
+                        column.most_common[:5],
+                        column.least_common[:5]]
                 rows += self.row_creator(row)
         return rows
         
@@ -160,7 +165,8 @@ and create required local variables.
             if column.type == 'Boolean':
                 row = [column.header,
                         column.analysis.mode,
-                        column.most_common[:5]]
+                        column.most_common[:5],
+                        column.least_common[:5]]
                 rows += self.row_creator(row)
         return rows
         
@@ -181,6 +187,7 @@ and create required local variables.
                        column.analysis.median,
                        column.analysis.median_high,
                        column.analysis.stdev,
-                       column.most_common[:5]]
+                       column.most_common[:5],
+                       column.least_common[:5]]
                 rows += self.row_creator(row)
         return rows

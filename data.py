@@ -12,7 +12,7 @@ from statistics import mean, mode, median_low, median, median_high, stdev, \
 threshold = 0.9
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^\d*?\.\d+$')
-re_int = re.compile('^[1-9]\d*$')
+re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
 re_currency = re.compile('^\s*(\$)|(€)|(£)(\d*\.\d*|\.\d*|\d*)')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
@@ -43,6 +43,7 @@ class Analyser(object):
         try:
             self.mode = mode(values)
         except StatisticsError:
+            print(values)
             print("Statistics error")
             self.mode = 'N/A'
 
@@ -92,6 +93,7 @@ class NumericalAnalyser(Analyser):
         self.median_low = median_low(values)
         self.median = median(values)
         self.median_high = median_high(values)
+        self.stdev = Decimal(stdev(values)).quantize(Decimal('.00000'))
 
 class BooleanAnalyser(Analyser):
     "Run email analysis"
@@ -110,9 +112,12 @@ class Column(object):
         for that column.
     define_type -- Sets object variable to type (e.g., String) according
         to column values.
+    define_least_common -- Sets object variable to hold 15 least common values 
+        for that column.
     
     Variables:
     most_common -- <= 15 most common results within the column values.
+    least_common -- <= 15 least common results within the column values.
     empty -- Boolean value of whether the column holds values or not.
     header -- Column header/title.
     type -- The type of data in column, e.g., String, Float, Integer,
@@ -124,6 +129,7 @@ class Column(object):
     """
     def __init__(self, header=''):
         self.most_common = []
+        self.least_common = []
         self.empty = False
         self.header = header
         self.type = ''
@@ -156,6 +162,20 @@ class Column(object):
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
+            
+    def define_least_common(self):
+        """Set 15 least common results to class variable, and set object variable
+        empty if appropriate.
+        """
+        commonList = Counter(self.values).most_common()
+        for i, e in reversed(list(enumerate(commonList))):
+            if i < 15:
+                self.least_common.append(e)
+        if self.least_common[0][0] == '' \
+                and self.least_common[0][1] / len(self.values) >= threshold:
+            self.empty = True
+          
+        
 
     def define_type(self):
         """Run column data against regex filters and assign object variable type
@@ -174,6 +194,7 @@ class Column(object):
                 float_count += 1
             elif re_int.match(value):
                 int_count += 1
+                value = value.strip()
             elif re_email.search(value):
                 print("Email match")
                 email_count += 1
@@ -259,7 +280,8 @@ class Data(object):
         """
         for index, row in enumerate(self.raw_data):
             if len(row) != len(self.raw_data[0]):
-                self.invalid_rows.append([index + 1, row])
+                self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
+                print(self.invalid_rows)
             else:
                 self.valid_rows.append(row)
 
@@ -296,6 +318,7 @@ class Data(object):
                      'Boolean': BooleanAnalyser}
         for column in self.columns:
             column.define_most_common()
+            column.define_least_common()
             if not column.empty:
                 column.define_type()
                 column.define_outliers()

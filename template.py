@@ -80,7 +80,9 @@ base_template = \
                     <th>Median Low</th>
                     <th>Median</th>
                     <th>Median High</th>
+                    <th>Standard Deviation</th>
                     <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
                 </tr>
                 {numerical_analysis}
             </table>
@@ -92,6 +94,7 @@ base_template = \
                     <th>Column</th>
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
                 </tr>
                 {string_analysis}
             </table>
@@ -103,6 +106,7 @@ base_template = \
                     <th>Column</th>
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
                 </tr>
                 {enum_analysis}
             </table>
@@ -114,6 +118,7 @@ base_template = \
                     <th>Column</th>
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
                 </tr>
                 {email_analysis}
             </table>
@@ -132,6 +137,7 @@ base_template = \
                     <th>Median High</th>
                     <th>Standard Deviation</th>
                     <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
                 </tr>
                 {currency_analysis}
             </table>
@@ -143,6 +149,7 @@ base_template = \
                     <th>Column</th>
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
                 </tr>
                 {boolean_analysis}
             </table>
