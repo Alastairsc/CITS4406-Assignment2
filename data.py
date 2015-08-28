@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """Reads CSV file for information, provides basic cleaning of data and then
 runs analysis on said data."""
 
