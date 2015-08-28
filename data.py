@@ -6,17 +6,19 @@ runs analysis on said data."""
 import sys
 import os
 
-sysPathStr = "%s%s" % (os.path.dirname(os.path.realpath(__file__)), "/lib/python3.4/site-packages")
-print (sysPathStr)
+"""sysPathStr = "%s%s" % (os.path.dirname(os.path.realpath(__file__)), "/lib/python3.4/site-packages")
+#print (sysPathStr)
 sys.path.append(sysPathStr)
+for pth in sys.path:
+    print (pth)"""
 
 import csv
 import re
 from collections import Counter
 from statistics import mean, mode, median_low, median, median_high, stdev, \
     StatisticsError, Decimal
-from scipy.stats import mstats
-import numpy as np
+#from scipy.stats import mstats
+#import numpy as np
 
 
 
@@ -72,7 +74,7 @@ class CurrencyAnalyser(Analyser):
     def __init__(self, values):
         values = [eval(i) for i in values]
         super().__init__(values)
-        self.pval = mstats.normaltest(np.array(values))[1]
+        #self.pval = mstats.normaltest(np.array(values))[1]
         #print(self.pval)
         self.min = min(values)
         self.max = max(values)
@@ -80,10 +82,11 @@ class CurrencyAnalyser(Analyser):
         self.median_low = median_low(values)
         self.median = median(values)
         self.median_high = median_high(values)
-        if(self.pval < 0.055):
+        self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
+        """if(self.pval < 0.055):
             self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
         else:
-            self.stdev = 'N/A'
+            self.stdev = 'N/A'"""
 
 class StringAnalyser(Analyser):
     """Run string analysis."""
@@ -104,17 +107,18 @@ class NumericalAnalyser(Analyser):
     def __init__(self, values):
         values = [eval(i) for i in values]
         super().__init__(values)
-        self.pval = mstats.normaltest(np.array(values))[1]
+        #self.pval = mstats.normaltest(np.array(values))[1]
         self.min = min(values)
         self.max = max(values)
         self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
         self.median_low = median_low(values)
         self.median = median(values)
         self.median_high = median_high(values)
-        if(self.pval < 0.055):
+        self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
+        """if(self.pval < 0.055):
             self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
         else:
-            self.stdev = 'N/A'
+            self.stdev = 'N/A'"""
 
 class BooleanAnalyser(Analyser):
     "Run email analysis"
