@@ -3,6 +3,13 @@
 """Reads CSV file for information, provides basic cleaning of data and then
 runs analysis on said data."""
 
+import sys
+import os
+
+sysPathStr = "%s%s" % (os.path.dirname(os.path.realpath(__file__)), "/lib/python3.4/site-packages")
+print (sysPathStr)
+sys.path.append(sysPathStr)
+
 import csv
 import re
 from collections import Counter
@@ -10,11 +17,7 @@ from statistics import mean, mode, median_low, median, median_high, stdev, \
     StatisticsError, Decimal
 from scipy.stats import mstats
 import numpy as np
-import sys
-import os
 
-sysPathStr = "%s%s" % (os.path.dirname(os.path.realpath(__file__)), "/lib/python3.4/site-packages")
-print (sysPathStr)
 
 
 #  Config
