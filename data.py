@@ -18,7 +18,7 @@ from collections import Counter
 from statistics import mean, mode, median_low, median, median_high, stdev, \
     StatisticsError, Decimal
 from scipy.stats import mstats
-import numpy as np
+from numpy import array
 
 
 
@@ -74,7 +74,7 @@ class CurrencyAnalyser(Analyser):
     def __init__(self, values):
         values = [eval(i) for i in values]
         super().__init__(values)
-        self.pval = mstats.normaltest(np.array(values))[1]
+        self.pval = mstats.normaltest(array(values))[1]
         #print(self.pval)
         self.min = min(values)
         self.max = max(values)
@@ -107,7 +107,7 @@ class NumericalAnalyser(Analyser):
     def __init__(self, values):
         values = [eval(i) for i in values]
         super().__init__(values)
-        self.pval = mstats.normaltest(np.array(values))[1]
+        self.pval = mstats.normaltest(array(values))[1]
         self.min = min(values)
         self.max = max(values)
         self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
