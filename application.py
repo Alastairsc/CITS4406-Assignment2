@@ -7,12 +7,12 @@ from data import *
 from report import *
 
 
-def main():
+def main(filePath):
     """Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
 
     """
-    file = sys.argv[1]
+    file = filePath
     data = Data(file)
     data.clean()
     data.analyse()
