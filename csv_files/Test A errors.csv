@@ -8,8 +8,8 @@ Item,Mass,Colour,Direction,Brittle,Height,Address,Cost,Description,Test time,Tes
 7,3,Pink,Right,Men,0.6,Hello@gmail.com,$20.00 ,hello,6:30,03-Aug,Monday,-31.6981,115.3233
 8,9,White,Dwon,FALSE,0.35,People@gmail.com,$50.00 ,words,6:40,12-Aug,Wednesday,-31.0001,115.4642
 9,5,Purple,Right,TRUE,1.1,Left@hotmail.com,$-9.33,people,8:20,09-Oct,Friday,-31.3223,114.9982
-10,4,Red,Left,FALSE,1.52,Good@apple.com,$95.63 ,places,6:50,32-3-2015,Friday,-31.6253,114.8522
-11,1,Green,Up,T,0.98,Horrific@apple.com,$58.20 ,things,11:15,21-Aug,Friday,-31.2566,115.6235
+10,4,Red,Left,FALSE,1.52,Good@apple.com,$-95.63 ,places,6:50,32-3-2015,Friday,-31.6253,114.8522
+11,1,Green,Up,T,0.98,Horrific@apple.com,-$58.20 ,things,11:15,21-Aug,Friday,-31.2566,115.6235
 12,26,Blue,Down,F,0.78,yesterday@hotmail.com,$44.00 ,italy,19:45,06-Sep,Sunday,-30.9442,115.8985
 13,5.002,Red,Left,TRUE,0.6,walking@gmail.com,$6.00 ,Poland,25:65,02-Sep,Wednesday,-30.8651,115.6332
 12,20,White,Right,FALSE,4,newlogo@gmail.com,$32.89 ,Greece,12:04,30-Jul,Thursday,-30.7541,115.6465

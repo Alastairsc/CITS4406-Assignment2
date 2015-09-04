@@ -72,7 +72,11 @@ class EmailAnalyser(Analyser):
 class CurrencyAnalyser(Analyser):
     "Run currency analysis"
     def __init__(self, values):
-        values = [eval(i) for i in values]
+        """for x, value in enumerate(self.values):
+            try:
+                value[x] = eval(self.values[x])
+            except SyntaxError:"""
+        values = [eval(i) for i in values] 
         super().__init__(values)
         self.pval = mstats.normaltest(array(values))[1]
         #print(self.pval)
@@ -80,7 +84,7 @@ class CurrencyAnalyser(Analyser):
         self.max = max(values)
         self.mean = Decimal(mean(values)).quantize(Decimal('.00'))
         self.median_low = median_low(values)
-        self.median = median(values)
+        self.median = Decimal(median(values)).quantize(Decimal('.00'))
         self.median_high = median_high(values)
         #self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
         if(self.pval < 0.055):
@@ -224,9 +228,10 @@ class Column(object):
                 print("Email match")
                 email_count += 1
             elif re_currency.search(value):
-                print("Currency match")
+                print ("Group")
+                print (re_currency.search(value).group())
+                #print("Currency match")
                 #print (value)
-                self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
                 #print (self.values[x])
                 currency_count += 1
             elif re_boolean.search(value):
@@ -259,6 +264,15 @@ class Column(object):
             for value in self.values:
                 if not re_int.match(value):
                     self.outliers.append(value)
+        elif self.type == 'Currency':
+            print('Currency outliers')
+            for x, value in enumerate(self.values):
+                if not re_currency.match(value):
+                    self.outliers.append(value)
+                else:
+                    print(value)
+                    self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
+                    print(value)
 
 
 class Data(object):
