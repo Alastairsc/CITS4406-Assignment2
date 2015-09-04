@@ -315,7 +315,7 @@ class Data(object):
         #SEPARATION
         """When data in csv files are in one column separated by comma, semicolon, or space, they are
         separated accordingly"""
-        new_csv = open(csv_file)
+        #new_csv = open(csv_file)
         f = csv.reader(open(csv_file))
         #for row in f:
         for line in f:
