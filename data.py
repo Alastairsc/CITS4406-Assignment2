@@ -25,10 +25,10 @@ from numpy import array
 #  Config
 threshold = 0.9
 invalid_values = ['-', '*', '_', '$']
-re_float = re.compile('^\d*?\.\d+$')
+re_float = re.compile('^-?\d*?\.\d+$')
 re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
-re_currency = re.compile('^\s*(\$)|(€)|(£)(\d*\.\d*|\.\d*|\d*)')
+re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
 """^\s*\$d*\."""
 
