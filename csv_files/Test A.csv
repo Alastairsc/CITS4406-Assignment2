@@ -1,5 +1,5 @@
 Item,Mass,Colour,Direction,Brittle,Height,Address,Cost,Description,Test time,Test Date,Day,Latitude,Longitude
-1,2,Blue,Right,TRUE,0.2,Hello@gmail.com,$54.96 ,Works well,13:45,03-09-15,Thursday,-31.9522,115.8589
+1,2,Blue,Right,TRUE,0.2,Hello@gmail.com,$54.96 ,Works well,13:45,03/09/2015,Thursday,-31.9522,115.8589
 2,5,Red,Left,FALSE,1,World@gmail.com,$95.60 ,Too red,15:45,04-Sep,Friday,-31.9465,115.6231
 3,6,Yellow,Up,TRUE,0.7,Pony@hotmail.com,$65.32 ,white car,13:00,03-Sep,Wednesday,-30.9666,115.3026
 4,8,Purple,Down,FALSE,1.5,Exodus@apple.com,$85.20 ,forgot where,15:45,02-Aug,Sunday,-30.8822,115.3012
