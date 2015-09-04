@@ -21,4 +21,4 @@ def main(filePath):
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1])
