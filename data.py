@@ -31,7 +31,7 @@ re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
 """^\s*\$d*\."""
-
+re_separation = re.compile('[\s,;]+')
 
 class Analyser(object):
     """Base analysis class object. Initiate the object, and assigns the 
@@ -308,19 +308,26 @@ class Data(object):
 
     def read(self, csv_file):
         """Opens and reads the CSV file, line by line, to raw_data variable."""
-        f = csv.reader(open(csv_file))
-        for row in f:
-            self.raw_data.append(row)
+        #f = csv.reader(open(csv_file))
+        #for row in f:
+        #    self.raw_data.append(row)
 
-        """# Separation //not working
+        #SEPARATION
+        """When data in csv files are in one column separated by comma, semicolon, or space, they are
+        separated accordingly"""
         new_csv = open(csv_file)
-        dialect = csv.Sniffer().sniff(new_csv.read(), delimeters=';,')
-        new_csv.seek(0)
-        reader = csv.reader(new_csv, dialect)
-        for line in reader:
-            print(line)
-            self.raw_data.append(line)
-        """
+        f = csv.reader(open(csv_file))
+        #for row in f:
+        for line in f:
+            n_col = len(line)
+            #print(n_col)
+            if n_col == 1:
+                result = re.split(re_separation, line[0])
+                self.raw_data.append(result)
+                #print(self.raw_data)
+            else:
+                self.raw_data.append(line)
+                #print(self.raw_data)
 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
