@@ -298,6 +298,16 @@ class Data(object):
         for row in f:
             self.raw_data.append(row)
 
+        """# Separation //not working
+        new_csv = open(csv_file)
+        dialect = csv.Sniffer().sniff(new_csv.read(), delimeters=';,')
+        new_csv.seek(0)
+        reader = csv.reader(new_csv, dialect)
+        for line in reader:
+            print(line)
+            self.raw_data.append(line)
+        """
+
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
         valid_rows variable if same length as headers, else appends to 
