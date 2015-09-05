@@ -81,6 +81,7 @@ base_template = \
                     <th>Median</th>
                     <th>Median High</th>
                     <th>Standard Deviation</th>
+                    <th>Outliers</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                 </tr>
@@ -136,6 +137,7 @@ base_template = \
                     <th>Median</th>
                     <th>Median High</th>
                     <th>Standard Deviation</th>
+                    <th>Outliers</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                 </tr>

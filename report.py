@@ -108,6 +108,7 @@ and create required local variables.
                        column.analysis.median,
                        column.analysis.median_high,
                        column.analysis.stdev,
+                       column.analysis.stDevOutliers,
                        column.most_common[:5],
                        column.least_common[:5]]
                 rows += self.row_creator(row)
@@ -187,6 +188,7 @@ and create required local variables.
                        column.analysis.median,
                        column.analysis.median_high,
                        column.analysis.stdev,
+                       column.analysis.stDevOutliers,
                        column.most_common[:5],
                        column.least_common[:5]]
                 rows += self.row_creator(row)

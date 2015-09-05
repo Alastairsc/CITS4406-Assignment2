@@ -24,6 +24,7 @@ from numpy import array
 
 #  Config
 threshold = 0.9
+standardDeviations = 3
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
 re_int = re.compile('^\s*[1-9]\d*$')
@@ -44,14 +45,19 @@ class Analyser(object):
     StringAnalyser -- String column analysis.
     EmailAnalyser -- Email column analysis.
     EnumAnalyser -- Enumerated column analysis.
-    NumericalAnalyser - String/Float column analysis.
+    NumericalAnalyser -- String/Float column analysis.
         min -- Minimum value in column values.
         max -- Maximum value in column values.
         mean -- Mean value in column values.
         median_low -- Low median for column values.
         median -- Median value for column values.
         median_high -- High median for column values.
-                    
+        stdev -- Standard deviation for column values, N/A if not normally distributed to
+                    to within 95.5% confidence.
+        stDevOutliers -- List of values outside a certain number of standard deviations
+                        from the mean.
+    CurrencyAnalyser -- Child class of NumericalAnalyser
+    BooleanAnalyser -- Boolean column analysis
     """
     def __init__(self, values):
         try:
@@ -68,29 +74,38 @@ class EmailAnalyser(Analyser):
         print(self.mode)
         # TODO Something actually useful for emails.
         
-        
-class CurrencyAnalyser(Analyser):
-    "Run currency analysis"
+class NumericalAnalyser(Analyser):
+    """Runs numeric analysis."""
     def __init__(self, values):
-        """for x, value in enumerate(self.values):
-            try:
-                value[x] = eval(self.values[x])
-            except SyntaxError:"""
-        values = [eval(i) for i in values] 
+        values = [eval(i) for i in values]
         super().__init__(values)
+        self.stDevOutliers = []
         self.pval = mstats.normaltest(array(values))[1]
-        #print(self.pval)
         self.min = min(values)
         self.max = max(values)
-        self.mean = Decimal(mean(values)).quantize(Decimal('.00'))
+        self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
         self.median_low = median_low(values)
-        self.median = Decimal(median(values)).quantize(Decimal('.00'))
+        self.median = median(values)
         self.median_high = median_high(values)
         #self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
         if(self.pval < 0.055):
             self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
         else:
             self.stdev = 'N/A'
+        if self.stdev != 'N/A':
+            for value in values:
+                if value < (self.mean - standardDeviations * self.stdev) or \
+                value > (self.mean + standardDeviations * self.stdev):                
+                    self.stDevOutliers.append(value)
+        
+class CurrencyAnalyser(NumericalAnalyser):
+    "Run currency analysis, calls NumericalAnalyser as a superclass"
+    def __init__(self, values):
+        """for x, value in enumerate(self.values):
+            try:
+                value[x] = eval(self.values[x])
+            except SyntaxError:"""
+        super().__init__(values)
 
 class StringAnalyser(Analyser):
     """Run string analysis."""
@@ -104,26 +119,7 @@ class EnumAnalyser(Analyser):
     def __init__(self, values):
         super().__init__(values)
         #  TODO Implement some enum exclusive statistics.
-
-
-class NumericalAnalyser(Analyser):
-    """Runs numeric analysis."""
-    def __init__(self, values):
-        values = [eval(i) for i in values]
-        super().__init__(values)
-        self.pval = mstats.normaltest(array(values))[1]
-        self.min = min(values)
-        self.max = max(values)
-        self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
-        self.median_low = median_low(values)
-        self.median = median(values)
-        self.median_high = median_high(values)
-        #self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
-        if(self.pval < 0.055):
-            self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
-        else:
-            self.stdev = 'N/A'
-
+                             
 class BooleanAnalyser(Analyser):
     "Run email analysis"
     def __init__(self, values):
@@ -230,9 +226,6 @@ class Column(object):
             elif re_currency.search(value):
                 print ("Group")
                 print (re_currency.search(value).group())
-                #print("Currency match")
-                #print (value)
-                #print (self.values[x])
                 currency_count += 1
             elif re_boolean.search(value):
                 boolean_count += 1
