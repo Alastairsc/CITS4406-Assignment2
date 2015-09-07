@@ -50,6 +50,8 @@ and create required local variables.
             invalid_rows=self.list_creator(self.data.invalid_rows), 
             empty_columns=self.list_creator(self.empty_columns()),
             len_empty_columns=len(self.empty_columns()),
+            error_columns=self.list_creator(self.data.errors),
+            len_error_columns=len(self.data.errors),
             len_columns=len(self.data.valid_rows),
             numerical_analysis=self.numerical_analysis(),
             string_analysis=self.string_analysis(),
