@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2. Data &mdash; Online Data Analysis 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Online Data Analysis 1.0.0 documentation" href="../index.html" />
+    <link rel="next" title="3. Report" href="rep.html" />
+    <link rel="prev" title="1. Application" href="app.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data">
+<h1>2. Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h1>
+<p>Reads CSV file for information, provides basic cleaning of data and then
+runs analysis on said data.</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Analyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
+<dd><blockquote>
+<div>Base analysis class object. Initiate the object, and assigns the</div></blockquote>
+<p>statistical mode, if any.</p>
+<p>Class variables:
+mode &#8211; Returns the mode of the column analysed.</p>
+<p>Child Classes and associated variables:
+StringAnalyser &#8211; String column analysis.
+EmailAnalyser &#8211; Email column analysis.
+EnumAnalyser &#8211; Enumerated column analysis.
+NumericalAnalyser &#8211; String/Float column analysis.</p>
+<blockquote>
+<div><p>min &#8211; Minimum value in column values.
+max &#8211; Maximum value in column values.
+mean &#8211; Mean value in column values.
+median_low &#8211; Low median for column values.
+median &#8211; Median value for column values.
+median_high &#8211; High median for column values.
+stdev &#8211; Standard deviation for column values, N/A if not normally distributed to</p>
+<blockquote>
+<div>to within 95.5% confidence.</div></blockquote>
+<dl class="docutils">
+<dt>stDevOutliers &#8211; List of values outside a certain number of standard deviations</dt>
+<dd>from the mean.</dd>
+</dl>
+</div></blockquote>
+<p>CurrencyAnalyser &#8211; Child class of NumericalAnalyser
+BooleanAnalyser &#8211; Boolean column analysis</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">BooleanAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
+<dd><p>Run Boolean analysis.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>header=''</em><span class="sig-paren">)</span></dt>
+<dd><blockquote>
+<div>Object to hold data from each column within the provided CSV file.</div></blockquote>
+<p>Methods:
+change_misc_values &#8211; Removes misc/unclear values from column</p>
+<blockquote>
+<div>values.</div></blockquote>
+<p>drop_greater_than &#8211; Removes &#8216;&lt;&#8217;, &#8216;&gt;&#8217; from column values.
+define_most_common &#8211; Sets object variable to hold 15 most common values</p>
+<blockquote>
+<div>for that column.</div></blockquote>
+<dl class="docutils">
+<dt>define_type &#8211; Sets object variable to type (e.g., String) according</dt>
+<dd>to column values.</dd>
+<dt>define_least_common &#8211; Sets object variable to hold 15 least common values </dt>
+<dd>for that column.</dd>
+</dl>
+<p>Variables:
+most_common &#8211; &lt;= 15 most common results within the column values.
+least_common &#8211; &lt;= 15 least common results within the column values.
+empty &#8211; Boolean value of whether the column holds values or not.
+header &#8211; Column header/title.
+type &#8211; The type of data in column, e.g., String, Float, Integer,</p>
+<blockquote>
+<div>Enumerated.</div></blockquote>
+<p>values &#8211; List of CSV values for the column.
+analysis &#8211; Analysis object associated with this column.
+outliers &#8211; List of values in column but outside threshold of column type.</p>
+<dl class="method">
+<dt>
+<code class="descname">change_misc_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Replaces identified values of unclear meaning or inexact value, i.e., 
+&#8216;-&#8216;, with an agreed value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">define_least_common</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Set 15 least common results to class variable, and set object variable
+empty if appropriate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">define_most_common</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Set 15 most common results to class variable, and set object variable 
+empty if appropriate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">define_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Run column data against regex filters and assign object variable type
+as appropriate.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">CurrencyAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
+<dd><p>Run currency analysis, calls NumericalAnalyser as a superclass</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Data</code><span class="sig-paren">(</span><em>csv_file</em><span class="sig-paren">)</span></dt>
+<dd><p>Main store for CSV data, reading the data from the CSV file and then 
+assigning out to relevant variables.</p>
+<p>Methods:
+read &#8211; Reads the CSV file and outputs to raw_data variable.
+remove_invalid &#8211; Reads from raw_data variable and assigns rows to</p>
+<blockquote>
+<div>valid_rows or invalid_rows according to their length.</div></blockquote>
+<dl class="docutils">
+<dt>create_columns &#8211; Creates column object according to valid_rows, assigning</dt>
+<dd>column header and column values.</dd>
+</dl>
+<p>clean &#8211; Calls column cleaning methods to run &#8216;cleaning&#8217; on all columns.
+analyse &#8211; Calls column analysis methods to run &#8216;analysis&#8217; on all columns.</p>
+<p>Variables:
+columns &#8211; List of column objects.
+headers &#8211; List of column headers.
+invalid_rows &#8211; List of invalid rows (i.e., more or less columns than</p>
+<blockquote>
+<div>number of headers).</div></blockquote>
+<p>raw_data &#8211; List of raw CSV data as rows.
+valid_rows &#8211; List of valid rows (i.e., same number of columns as headers).</p>
+<dl class="method">
+<dt>
+<code class="descname">analyse</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Calls analysis methods on all columns, checking if they are empty
+first.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Calls cleaning methods on all columns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">create_columns</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>For each row in raw_data variable, assigns the first value to the 
+headers variable and creates a Column object with that header provided.
+Then removes header row from valid_rows. (Todo: Maybe can read straight 
+from valid rows? Why/Why not?). Then for each row in valid_rows,
+populates relevant column object with row data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">read</code><span class="sig-paren">(</span><em>csv_file</em><span class="sig-paren">)</span></dt>
+<dd><p>Opens and reads the CSV file, line by line, to raw_data variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">remove_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>For each row in raw_data variable, checks row length and appends to 
+valid_rows variable if same length as headers, else appends to 
+invalid_rows variable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">EmailAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
+<dd><p>Run email analysis</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">EnumAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
+<dd><p>Run enumeration analysis.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">NumericalAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
+<dd><p>Runs numeric analysis.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">StringAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
+<dd><p>Run string analysis.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="app.html" title="previous chapter">1. Application</a></li>
+      <li>Next: <a href="rep.html" title="next chapter">3. Report</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Code_rst/dat.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Alastair Chin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../_sources/Code_rst/dat.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
