@@ -139,6 +139,8 @@ class Column(object):
         to column values.
     define_least_common -- Sets object variable to hold 15 least common values 
         for that column.
+    define_errors -- Defines a list that contains the row and column of possibly
+        incorrect values.
     
     Variables:
     most_common -- <= 15 most common results within the column values.
@@ -149,7 +151,8 @@ class Column(object):
         Enumerated.
     values -- List of CSV values for the column.
     analysis -- Analysis object associated with this column.
-    outliers -- List of values in column but outside threshold of column type.
+    errors -- List of values in column but outside threshold of column type
+            or wrong in some other way.
 
     """
     def __init__(self, header=''):
@@ -160,7 +163,7 @@ class Column(object):
         self.type = ''
         self.values = []
         self.analysis = None
-        self.outliers = []
+        self.errors = []
         #  Todo: Does initialising as None even make sense?
 
     def change_misc_values(self):
@@ -176,7 +179,6 @@ class Column(object):
         pass
         #  Todo: Implement method to handle (strip?) '<', '>'.
         
-    #def drop_dollar_sign(self):
         
 
     def define_most_common(self):
@@ -248,24 +250,27 @@ class Column(object):
         else:
             self.type = 'String'
 
-    def define_outliers(self):
+    def define_errors(self, columnNumber, errors):
         if self.type == 'Float':
-            for value in self.values:
+            for x, value in enumerate(self.values):
                 if not re_float.match(value):
-                    self.outliers.append(value)
+                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
         elif self.type == 'Integer':
-            for value in self.values:
+            for x, value in enumerate(self.values):
                 if not re_int.match(value):
-                    self.outliers.append(value)
+                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
         elif self.type == 'Currency':
-            print('Currency outliers')
+            print('Currency errors')
             for x, value in enumerate(self.values):
                 if not re_currency.match(value):
-                    self.outliers.append(value)
+                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
                 else:
-                    print(value)
                     self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
-                    print(value)
+        elif self.type == 'String':
+            for x, value in enumerate(self.values):
+                if value == '' or value == ' ':
+                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
+        print("Errors: ", errors)
 
 
 class Data(object):
@@ -288,11 +293,13 @@ class Data(object):
         number of headers).
     raw_data -- List of raw CSV data as rows.
     valid_rows -- List of valid rows (i.e., same number of columns as headers).
+    errors -- List of rows and columns of possibly incorrect values.
     """
     def __init__(self, csv_file):
         self.columns = []
         self.headers = []
         self.invalid_rows = []
+        self.errors = []
         self.raw_data = []
         self.valid_rows = []
         self.read(csv_file)
@@ -359,17 +366,19 @@ class Data(object):
 
     def analyse(self):
         """Calls analysis methods on all columns, checking if they are empty
-        first.
+        first. First defines their least and most common elements, then if 
+        column is not empty defines its type, any outliers and finally checks
+        for any errors.
         """
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
                      'Boolean': BooleanAnalyser}
-        for column in self.columns:
+        for colNo, column in enumerate(self.columns):
             column.define_most_common()
             column.define_least_common()
             if not column.empty:
                 column.define_type()
-                column.define_outliers()
+                column.define_errors(colNo, self.errors)
                 if column.type in analysers:
                     column.analysis = analysers[column.type](column.values)

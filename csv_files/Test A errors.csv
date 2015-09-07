@@ -18,4 +18,4 @@ Item,Mass,Colour,Direction,Brittle,Height,Address,Cost,Description,Test time,Tes
 17,8,Violet,Uptown,TRUE,1.01,,$42.42 ,Direction,22:05,06-Sep,Sunday,-31.6051,115.3266
 18,5,Silver,Up,True,1.2,George.Cluney@gmail.com,$66.66 ,Decryption,22:45,15-Aug,Saturday,-31.6052,115.8985
 19,2,Gold,Down,TRUE,1.35,Hello@gmail.com,$33.15 ,Poland,4:14,23-Aug,Sunday,-31.0331,115.6445
-20,6,Red,Down,FALSE,1.44,World@gmail.com,$1112312312.20 ,Iceland,1:00,16-Sep,Sunday,-31.655,115.8756
+20,6,Red,Down,FALSE,1.44,World@gmail.com,$1112312312.20 , ,1:00,16-Sep,Sunday,-31.655,115.8756
