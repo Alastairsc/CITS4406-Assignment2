@@ -247,14 +247,18 @@ class Column(object):
         else:
             self.type = 'String'
 
-    def define_errors(self, columnNumber, errors, formatted_errors):
-        tup = ()
+    def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos):
+        """Define all the rows/columns with invalid values and append to errors, and
+        formatted_errors once formatted properly. prev holds the row index of the most
+        recently skipped invalid row (too many or too little values) and skipped holds
+        the amount of skipped rows required to keep errors/formatted_errors acurate"""
+        tup = ()        
         if self.type == 'Float':
             for x, value in enumerate(self.values):
                 print("Row is: ", x)
+                
                 if not re_float.match(value):
-                    
-                    tup = (x + 2, columnNumber + 1, value)
+                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         elif self.type == 'Integer':
@@ -325,6 +329,7 @@ class Data(object):
         self.columns = []
         self.headers = []
         self.invalid_rows = []
+        self.invalid_rows_pos = []
         self.errors = []
         self.formatted_errors = []
         self.raw_data = []
@@ -361,12 +366,15 @@ class Data(object):
         valid_rows variable if same length as headers, else appends to 
         invalid_rows variable.
         """
+        count = 0
         for index, row in enumerate(self.raw_data):
             if len(row) != len(self.raw_data[0]):
                 self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
                 print(self.invalid_rows)
+                count = count + 1
             else:
                 self.valid_rows.append(row)
+                self.invalid_rows_pos.append(count)
 
     def create_columns(self):
         """For each row in raw_data variable, assigns the first value to the 
@@ -387,7 +395,6 @@ class Data(object):
     def clean(self):
         """Calls cleaning methods on all columns."""
         for column in self.columns:
-            #column.drop_dollar_sign()
             column.change_misc_values()
             column.drop_greater_than()
 
@@ -406,6 +413,6 @@ class Data(object):
             column.define_least_common()
             if not column.empty:
                 column.define_type()
-                column.define_errors(colNo, self.errors, self.formatted_errors)
+                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos)
                 if column.type in analysers:
                     column.analysis = analysers[column.type](column.values)       
