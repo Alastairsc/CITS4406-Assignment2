@@ -249,9 +249,8 @@ class Column(object):
 
     def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos):
         """Define all the rows/columns with invalid values and append to errors, and
-        formatted_errors once formatted properly. prev holds the row index of the most
-        recently skipped invalid row (too many or too little values) and skipped holds
-        the amount of skipped rows required to keep errors/formatted_errors acurate"""
+        formatted_errors once formatted properly. invalid_rows_pos holds the amount of
+        rows that have been skipped by the time the current row x is being considered."""
         tup = ()        
         if self.type == 'Float':
             for x, value in enumerate(self.values):           
@@ -362,7 +361,8 @@ class Data(object):
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
         valid_rows variable if same length as headers, else appends to 
-        invalid_rows variable.
+        invalid_rows variable. invalid_rows_pos holds the amount of rows that have been
+        skipped by the point the xth row has been accessed from valid_rows.
         """
         count = 0
         for index, row in enumerate(self.raw_data):
