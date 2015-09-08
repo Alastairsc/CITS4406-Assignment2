@@ -151,8 +151,6 @@ class Column(object):
         Enumerated.
     values -- List of CSV values for the column.
     analysis -- Analysis object associated with this column.
-    errors -- List of values in column but outside threshold of column type
-            or wrong in some other way.
 
     """
     def __init__(self, header=''):
@@ -163,7 +161,6 @@ class Column(object):
         self.type = ''
         self.values = []
         self.analysis = None
-        self.errors = []
         #  Todo: Does initialising as None even make sense?
 
     def change_misc_values(self):
@@ -250,26 +247,55 @@ class Column(object):
         else:
             self.type = 'String'
 
-    def define_errors(self, columnNumber, errors):
+    def define_errors(self, columnNumber, errors, formatted_errors):
+        tup = ()
         if self.type == 'Float':
             for x, value in enumerate(self.values):
+                print("Row is: ", x)
                 if not re_float.match(value):
-                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
+                    
+                    tup = (x + 2, columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
                 if not re_int.match(value):
-                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
+                    tup = (x + 2, columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+        elif self.type == 'Email':
+            for x, value in enumerate(self.values):
+                if not re_email.search(value):
+                    tup = (x + 2, columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+        elif self.type == 'Boolean':
+            for x, value in enumerate(self.values):
+                if not re_boolean.match(value):
+                    tup = (x + 2, columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+        elif self.type == 'Email':
+            for x, value in enumerate(self.values):
+                if not re_email.search(value):
+                    tup = (x + 2, columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         elif self.type == 'Currency':
             print('Currency errors')
             for x, value in enumerate(self.values):
                 if not re_currency.match(value):
-                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
+                    tup = (x + 2, columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
                 else:
                     self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
         elif self.type == 'String':
             for x, value in enumerate(self.values):
                 if value == '' or value == ' ':
-                    errors.append('Row: %d Column: %d' % (x + 2, columnNumber + 1))
+                    tup = (x + 2, columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         print("Errors: ", errors)
 
 
@@ -300,6 +326,7 @@ class Data(object):
         self.headers = []
         self.invalid_rows = []
         self.errors = []
+        self.formatted_errors = []
         self.raw_data = []
         self.valid_rows = []
         self.read(csv_file)
@@ -379,6 +406,6 @@ class Data(object):
             column.define_least_common()
             if not column.empty:
                 column.define_type()
-                column.define_errors(colNo, self.errors)
+                column.define_errors(colNo, self.errors, self.formatted_errors)
                 if column.type in analysers:
-                    column.analysis = analysers[column.type](column.values)
+                    column.analysis = analysers[column.type](column.values)       

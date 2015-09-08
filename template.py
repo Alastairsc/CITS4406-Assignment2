@@ -64,7 +64,7 @@ base_template = \
         
         <div class="col-md-6">
             <h2>Error Columns ({len_error_columns})</h2>
-            <p>These columns incorrect values.</p>
+            <p>These column/row combinations contain invalid values.</p>
             {error_columns}
         </div>
     </div>
