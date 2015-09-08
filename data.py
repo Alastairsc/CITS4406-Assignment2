@@ -254,9 +254,7 @@ class Column(object):
         the amount of skipped rows required to keep errors/formatted_errors acurate"""
         tup = ()        
         if self.type == 'Float':
-            for x, value in enumerate(self.values):
-                print("Row is: ", x)
-                
+            for x, value in enumerate(self.values):           
                 if not re_float.match(value):
                     tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
@@ -264,32 +262,32 @@ class Column(object):
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
                 if not re_int.match(value):
-                    tup = (x + 2, columnNumber + 1, value)
+                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
                 if not re_email.search(value):
-                    tup = (x + 2, columnNumber + 1, value)
+                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         elif self.type == 'Boolean':
             for x, value in enumerate(self.values):
                 if not re_boolean.match(value):
-                    tup = (x + 2, columnNumber + 1, value)
+                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
                 if not re_email.search(value):
-                    tup = (x + 2, columnNumber + 1, value)
+                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         elif self.type == 'Currency':
             print('Currency errors')
             for x, value in enumerate(self.values):
                 if not re_currency.match(value):
-                    tup = (x + 2, columnNumber + 1, value)
+                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
                 else:
@@ -297,7 +295,7 @@ class Column(object):
         elif self.type == 'String':
             for x, value in enumerate(self.values):
                 if value == '' or value == ' ':
-                    tup = (x + 2, columnNumber + 1, value)
+                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         print("Errors: ", errors)
@@ -375,6 +373,7 @@ class Data(object):
             else:
                 self.valid_rows.append(row)
                 self.invalid_rows_pos.append(count)
+        print("Invalid row pos: ", self.invalid_rows_pos)
 
     def create_columns(self):
         """For each row in raw_data variable, assigns the first value to the 
