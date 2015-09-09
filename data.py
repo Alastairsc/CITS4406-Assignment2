@@ -19,6 +19,7 @@ from statistics import mean, mode, median_low, median, median_high, stdev, \
     StatisticsError, Decimal
 from scipy.stats import mstats
 from numpy import array
+from email.utils import parseaddr
 
 
 
@@ -28,7 +29,7 @@ standardDeviations = 3
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
 re_int = re.compile('^\s*[1-9]\d*$')
-re_email = re.compile('@')
+#re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
 """^\s*\$d*\."""
@@ -52,6 +53,7 @@ class Analyser(object):
         median_low -- Low median for column values.
         median -- Median value for column values.
         median_high -- High median for column values.
+        normDist -- String Yes/No if columns value is normally distributed.
         stdev -- Standard deviation for column values, N/A if not normally distributed to
                     to within 95.5% confidence.
         stDevOutliers -- List of values outside a certain number of standard deviations
@@ -218,7 +220,7 @@ class Column(object):
             elif re_int.match(value):
                 int_count += 1
                 value = value.strip()
-            elif re_email.search(value):
+            elif parseaddr(value)[1] != '':
                 print("Email match")
                 email_count += 1
             elif re_currency.search(value):
@@ -254,48 +256,42 @@ class Column(object):
         if self.type == 'Float':
             for x, value in enumerate(self.values):           
                 if not re_float.match(value):
-                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
                 if not re_int.match(value):
-                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
-                if not re_email.search(value):
-                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
+                if parseaddr(value)[1] == '':
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Boolean':
             for x, value in enumerate(self.values):
                 if not re_boolean.match(value):
-                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
-        elif self.type == 'Email':
-            for x, value in enumerate(self.values):
-                if not re_email.search(value):
-                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
-                    errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Currency':
             print('Currency errors')
             for x, value in enumerate(self.values):
                 if not re_currency.match(value):
-                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
                 else:
                     self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
         elif self.type == 'String':
             for x, value in enumerate(self.values):
                 if value == '' or value == ' ':
-                    tup = (x + 2 + invalid_rows_pos[x], columnNumber + 1, value)
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         print("Errors: ", errors)
 
 
