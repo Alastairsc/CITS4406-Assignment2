@@ -301,7 +301,7 @@ class Column(object):
                 if self.least_common[x][1] <= enum_threshold:
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         print("Errors: ", errors)
 
 
