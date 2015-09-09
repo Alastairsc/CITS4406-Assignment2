@@ -109,6 +109,7 @@ and create required local variables.
                        column.analysis.median_low,
                        column.analysis.median,
                        column.analysis.median_high,
+                       column.analysis.normDist,
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],
@@ -174,8 +175,8 @@ and create required local variables.
         return rows
         
     def currency_analysis(self):
-        """Return HTML string of numerical analysis on columns of type Float or 
-        Integer in the data object.
+        """Return HTML string of numerical analysis on columns of type Currency
+         in the data object.
         """
         rows = ''
         for column in self.data.columns:
@@ -189,6 +190,7 @@ and create required local variables.
                        column.analysis.median_low,
                        column.analysis.median,
                        column.analysis.median_high,
+                       column.analysis.normDist,
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],

@@ -88,12 +88,11 @@ class NumericalAnalyser(Analyser):
         self.median_low = median_low(values)
         self.median = median(values)
         self.median_high = median_high(values)
-        #self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
+        self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
+        self.normDist = 'No'
         if(self.pval < 0.055):
-            self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
-        else:
-            self.stdev = 'N/A'
-        if self.stdev != 'N/A':
+            self.normDist = 'Yes'
+        if self.normDist != 'No':
             for value in values:
                 if value < (self.mean - standardDeviations * self.stdev) or \
                 value > (self.mean + standardDeviations * self.stdev):                
