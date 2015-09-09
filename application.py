@@ -5,6 +5,7 @@ import sys
 
 from data import *
 from report import *
+from editor import *
 
 
 def main(filePath):
@@ -15,6 +16,8 @@ def main(filePath):
     file = filePath
     data = Data(file)
     data.clean()
+    #editor = Editor(data)
+    #editor.make_corrected(file)
     data.analyse()
     report = Report(data, file)
     report.html_report()

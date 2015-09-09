@@ -324,6 +324,8 @@ class Data(object):
     headers -- List of column headers.
     invalid_rows -- List of invalid rows (i.e., more or less columns than
         number of headers).
+    formatted_errors -- List of errors in file, each error contains: row, column 
+        and value of the error
     raw_data -- List of raw CSV data as rows.
     valid_rows -- List of valid rows (i.e., same number of columns as headers).
     errors -- List of rows and columns of possibly incorrect values.
@@ -333,7 +335,7 @@ class Data(object):
         self.headers = []
         self.invalid_rows = []
         self.invalid_rows_pos = []
-        self.errors = []
+        self.errors = []     
         self.formatted_errors = []
         self.raw_data = []
         self.valid_rows = []
