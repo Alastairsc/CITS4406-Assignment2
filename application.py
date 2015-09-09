@@ -21,4 +21,6 @@ def main(filePath):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+	numFiles = len(sys.argv)
+	for i in range(1,numFiles):
+		main(sys.argv[i])
