@@ -30,7 +30,7 @@ standardDeviations = 3
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
 re_int = re.compile('^\s*[1-9]\d*$')
-#re_email = re.compile('@')
+re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
 """^\s*\$d*\."""
@@ -221,9 +221,11 @@ class Column(object):
             elif re_int.match(value):
                 int_count += 1
                 value = value.strip()
-            elif parseaddr(value)[1] != '':
-                print("Email match")
-                email_count += 1
+            elif re_email.search(value):
+                if parseaddr(value)[1] != '':
+                    print(parseaddr(value)[1])
+                    print("Email match")
+                    email_count += 1
             elif re_currency.search(value):
                 print ("Group")
                 print (re_currency.search(value).group())
@@ -268,10 +270,11 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
-                if parseaddr(value)[1] == '':
-                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
-                    errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                if re_email.search(value):
+                    if parseaddr(value)[1] == '':
+                        tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Boolean':
             for x, value in enumerate(self.values):
                 if not re_boolean.match(value):
