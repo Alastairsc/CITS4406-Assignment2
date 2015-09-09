@@ -25,6 +25,7 @@ from email.utils import parseaddr
 
 #  Config
 threshold = 0.9
+enum_threshold = 1
 standardDeviations = 3
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
@@ -197,7 +198,7 @@ class Column(object):
             if i < 15:
                 self.least_common.append(e)
         if self.least_common[0][0] == '' \
-                and self.least_common[0][1] / len(self.values) >= threshold:
+            and self.least_common[0][1] / len(self.values) >= threshold:
             self.empty = True
           
         
@@ -292,6 +293,12 @@ class Column(object):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+        elif self.type == 'Enum':
+            for x, value in enumerate(self.least_common):  
+                if self.least_common[x][1] <= enum_threshold:
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0], tup[1], tup[2]))
         print("Errors: ", errors)
 
 
