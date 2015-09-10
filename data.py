@@ -33,6 +33,7 @@ re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
+re_sci_notation= re.compile('-?(\d+(\.\d*)?|\d*\.\d+)([eE][+\-]?\d+)?')
 """^\s*\$d*\."""
 re_separation = re.compile('[\s,;]+')
 
@@ -66,7 +67,7 @@ class Analyser(object):
         try:
             self.mode = mode(values)
         except StatisticsError:
-            print(values)
+         #   print(values)
             print("Statistics error")
             self.mode = 'N/A'
 
@@ -132,6 +133,10 @@ class BooleanAnalyser(Analyser):
     def __init__(self, values):
         super().__init__(values)
 
+class Sci_NotationAnalyser(NumericalAnalyser):
+    """Run Scientific notation analysis."""
+    def __init__(self, values):
+        super().__init__(values)
 
 class Column(object):
     """Object to hold data from each column within the provided CSV file.
@@ -217,10 +222,11 @@ class Column(object):
         email_count = 0
         currency_count = 0
         boolean_count = 0
+        sci_not_count = 0
         #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
-            print(value)
+        #    print(value)
             if re_float.match(value):
                 float_count += 1
             elif re_int.match(value):
@@ -229,7 +235,7 @@ class Column(object):
             elif re_email.search(value):
                 if parseaddr(value)[1] != '':
                     print(parseaddr(value)[1])
-                    print("Email match")
+          #          print("Email match")
                     email_count += 1
             elif re_currency.search(value):
                 print ("Group")
@@ -237,20 +243,24 @@ class Column(object):
                 currency_count += 1
             elif re_boolean.search(value):
                 boolean_count += 1
-                print('Boolean match')
+             #   print('Boolean match')
+            elif re_sci_notation.fullmatch(value):
+                sci_not_count += 1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
             self.type = 'Integer'
         elif email_count / len(self.values) >= threshold:
-            print('Email type')
+        #    print('Email type')
             self.type = 'Email'
         elif currency_count / len(self.values) >= threshold:
-            print('Currency type')
+      #     print('Currency type')
             self.type = 'Currency'
         elif boolean_count / len(self.values) >= threshold:
-            print('Boolean type')
+       #     print('Boolean type')
             self.type = 'Boolean'
+        elif sci_not_count / len(self.values) >= threshold:
+            self.type = 'Sci_Notation'
         elif len(self.most_common) < 10:
             self.type = 'Enum'
         else:
@@ -315,7 +325,7 @@ class Column(object):
                         i+=1
                     if freq == 0:
                          raise Exception('Least common value not found')
-        print("Errors: ", errors)
+       # print("Errors: ", errors)
 
 
         
@@ -389,12 +399,12 @@ class Data(object):
         for index, row in enumerate(self.raw_data):
             if len(row) != len(self.raw_data[0]):
                 self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
-                print(self.invalid_rows)
+           #     print(self.invalid_rows)
                 count = count + 1
             else:
                 self.valid_rows.append(row)
                 self.invalid_rows_pos.append(count)
-        print("Invalid row pos: ", self.invalid_rows_pos)
+    #    print("Invalid row pos: ", self.invalid_rows_pos)
 
     def create_columns(self):
         """For each row in raw_data variable, assigns the first value to the 
@@ -427,7 +437,7 @@ class Data(object):
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
-                     'Boolean': BooleanAnalyser}
+                     'Boolean': BooleanAnalyser, 'Sci_Notation': Sci_NotationAnalyser}
         for colNo, column in enumerate(self.columns):
             column.define_most_common()
             column.define_least_common()

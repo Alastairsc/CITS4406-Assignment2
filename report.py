@@ -99,7 +99,8 @@ and create required local variables.
         """
         rows = ''
         for column in self.data.columns:
-            if column.type == 'Float' or column.type == 'Integer':
+            if column.type == 'Float' or column.type == 'Integer'\
+            or column.type == 'Sci_Notation':
                 print(column.header)
                 row = [column.header,
                        column.analysis.min,
