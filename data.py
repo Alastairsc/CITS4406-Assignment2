@@ -20,6 +20,7 @@ from statistics import mean, mode, median_low, median, median_high, stdev, \
 from scipy.stats import mstats
 from numpy import array
 from email.utils import parseaddr
+from math import floor, log10, pow
 
 
 
@@ -33,7 +34,7 @@ re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
-re_sci_notation= re.compile('-?(\d+(\.\d*)?|\d*\.\d+)([eE][+\-]?\d+)?')
+re_sci_notation= re.compile('[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 """^\s*\$d*\."""
 re_separation = re.compile('[\s,;]+')
 
@@ -92,6 +93,7 @@ class NumericalAnalyser(Analyser):
     def __init__(self, values): 
         new_values = []
         for i in values:
+            print("Value: ",i)
             if i != '':
                 new_values.append(eval(i))
         values = new_values
@@ -142,11 +144,46 @@ class BooleanAnalyser(Analyser):
     def __init__(self, values):
         super().__init__(values)
 
-class Sci_NotationAnalyser(NumericalAnalyser):
+class SciNotationAnalyser(Analyser):
     """Run Scientific notation analysis."""
-    def __init__(self, values):
+    def __init__(self, values): 
+        new_values = []
+        for i in values:
+            if i != '':
+                new_values.append(eval(i))
+        values = new_values
+       # values = [eval(i) for i in values]
         super().__init__(values)
+        self.stDevOutliers = []
+        self.pval = mstats.normaltest(array(values))[1]
+        self.min = self.int_to_sci(min(values))
+        self.max = self.int_to_sci(max(values))
+        self.mean = self.int_to_sci(mean(values))
+   
+        self.median_low = self.int_to_sci(median_low(values))
+        self.median = self.int_to_sci(median(values))
+        self.median_high =  self.int_to_sci(median_high(values))
+        self.stdev = self.int_to_sci(stdev(values))
+        self.normDist = 'No'
+        if(self.pval < 0.055):
+            self.normDist = 'Yes'
+        if self.normDist != 'No':
+            for value in values:
+                if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
+                value > (float(self.mean) + standardDeviations * float(self.stdev)):               
+                    self.stDevOutliers.append(self.int_to_sci(value))
 
+    def int_to_sci(self, value):
+        """Converts numbers into a string in scientific notation form"""
+        power = floor(log10(abs(value)))
+        base = round(value / pow(10, power), 2)
+        if power > 0:
+            return str(base) + "E+" + str(power)
+        else:
+            return str(base) + "E" + str(power)
+        
+
+        
 class Column(object):
     """Object to hold data from each column within the provided CSV file.
     
@@ -253,7 +290,7 @@ class Column(object):
             elif re_boolean.search(value):
                 boolean_count += 1
              #   print('Boolean match')
-            elif re_sci_notation.fullmatch(value):
+            elif re_sci_notation.match(value):
                 sci_not_count += 1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
@@ -334,6 +371,12 @@ class Column(object):
                         i+=1
                     if freq == 0:
                          raise Exception('Least common value not found')
+        elif self.type == 'Sci_Notation':
+            for x, value in enumerate(self.values):
+                if not re_sci_notation.match(value):
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
        # print("Errors: ", errors)
 
 
@@ -446,7 +489,7 @@ class Data(object):
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
-                     'Boolean': BooleanAnalyser, 'Sci_Notation': Sci_NotationAnalyser}
+                     'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser}
         for colNo, column in enumerate(self.columns):
             column.define_most_common()
             column.define_least_common()
