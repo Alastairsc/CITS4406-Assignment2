@@ -6,7 +6,7 @@ report.
 """
 
 from template import *
-
+from os import path
 
 class Report(object):
     """The main report object.
@@ -45,7 +45,7 @@ and create required local variables.
     def html_report(self):
         """Write a HTML file based on analysis of CSV file."""
         html = base_template.format(
-            header=self.file_name, 
+            header= path.basename(self.file_name), 
             len_invalid_rows=len(self.data.invalid_rows),
             invalid_rows=self.list_creator(self.data.invalid_rows), 
             empty_columns=self.list_creator(self.empty_columns()),
