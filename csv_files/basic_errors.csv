@@ -1,25 +1,25 @@
-Interger,Float,Day
-1,1,Monday
-2,6.5,Tuesday
-3,3.3,Wednesday
-2,5.2,Thursday
-5,4.3,Friday
-5,6.5,Saturday
-2,7.3,Sunday
-5,5.2,Monday
-6,5.2,Tuesday
-5,4.1,Wednesday
-2,1.5,Thursday
-2,6.4,Friday
-5,5.5,Saturday
-5,19.2,Sunday
-9,16.5,Friiday
-8,13.3,Tuesday
-5,,Wednesday
-5,433.3,Thursday
-2,1.1,Friday
-0.3,1.1,Saturday
-6,2.7,Sunday
-5,3.3,Monday
-2,4.5,Tuesday
-1.4,5.6,Wednesday
+Interger,Float,Day,Description
+1,1,Monday,Works well
+2,6.5,Tuesday,Too red
+3,3.3,Wednesday,white car
+2,5.2,Thursday,forgot where
+5,4.3,Friday,nuwar
+5,6.5,Saturday,robot
+2,7.3,Sunday,hello
+5,5.2,Monday,words
+6,5.2,Tuesday,people
+5,4.1,Wednesday,places
+2,1.5,Thursday,things
+2,6.4,Friday,italy
+5,5.5,Saturday,Poland
+5,19.2,Sunday,Greece
+9,16.5,Friiday,
+8,13.3,Tuesday,West
+5,,Wednesday,Direction
+5,433.3,Thursday,Decryption
+2,1.1,Friday,Poland
+0.3,1.1,Saturday,Iceland
+6,2.7,Sunday,Hello
+5,3.3,Monday,But why
+2,4.5,Tuesday,Hey
+1.4,5.6,Wednesday,Seriosuly?
