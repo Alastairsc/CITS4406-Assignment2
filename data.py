@@ -63,13 +63,22 @@ class Analyser(object):
     CurrencyAnalyser -- Child class of NumericalAnalyser
     BooleanAnalyser -- Boolean column analysis
     """
+    def uniqueCount(self, values):
+        valSet = set()
+        for vals in values:
+            valSet.add(vals)
+        print("Set stuff")
+        print(valSet)
+        print(len(valSet))
+        return len(valSet)
+
     def __init__(self, values):
         try:
             self.mode = mode(values)
         except StatisticsError:
-         #   print(values)
             print("Statistics error")
             self.mode = 'N/A'
+        self.unique = self.uniqueCount(values)
 
 class EmailAnalyser(Analyser):
     "Run email analysis"

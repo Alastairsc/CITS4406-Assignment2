@@ -114,7 +114,8 @@ and create required local variables.
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],
-                       column.least_common[:5]]
+                       column.least_common[:5],
+                       column.analysis.unique]
                 rows += self.row_creator(row)
         return rows
         
@@ -128,7 +129,8 @@ and create required local variables.
                 row = [column.header,
                        column.analysis.mode,
                        column.most_common[:5],
-                       column.least_common[:5]]
+                       column.least_common[:5],
+                       column.analysis.unique]
                 rows += self.row_creator(row)
         return rows
         
@@ -142,7 +144,8 @@ and create required local variables.
                 row = [column.header,
                        column.analysis.mode,
                        column.most_common[:5],
-                       column.least_common[:5]]
+                       column.least_common[:5],
+                       column.analysis.unique]
                 rows += self.row_creator(row)
         return rows
         
@@ -157,7 +160,8 @@ and create required local variables.
                 row = [column.header,
                         column.analysis.mode,
                         column.most_common[:5],
-                        column.least_common[:5]]
+                        column.least_common[:5],
+                       column.analysis.unique]
                 rows += self.row_creator(row)
         return rows
         
@@ -171,7 +175,8 @@ and create required local variables.
                 row = [column.header,
                         column.analysis.mode,
                         column.most_common[:5],
-                        column.least_common[:5]]
+                        column.least_common[:5],
+                       column.analysis.unique]
                 rows += self.row_creator(row)
         return rows
         
@@ -195,6 +200,7 @@ and create required local variables.
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],
-                       column.least_common[:5]]
+                       column.least_common[:5],
+                       column.analysis.unique]
                 rows += self.row_creator(row)
         return rows

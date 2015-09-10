@@ -83,7 +83,7 @@ base_template = \
                     <th>Min</th>
                     <th>Max</th>
                     <th>Mode</th>
-                    <th>Mean</th>
+                    <th>Mean</th>                   
                     <th>Median Low</th>
                     <th>Median</th>
                     <th>Median High</th>
@@ -92,6 +92,7 @@ base_template = \
                     <th>Outliers</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
                 </tr>
                 {numerical_analysis}
             </table>
@@ -104,6 +105,7 @@ base_template = \
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
                 </tr>
                 {string_analysis}
             </table>
@@ -116,6 +118,7 @@ base_template = \
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
                 </tr>
                 {enum_analysis}
             </table>
@@ -128,6 +131,7 @@ base_template = \
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
                 </tr>
                 {email_analysis}
             </table>
@@ -149,6 +153,7 @@ base_template = \
                     <th>Outliers</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
                 </tr>
                 {currency_analysis}
             </table>
@@ -161,6 +166,7 @@ base_template = \
                     <th>Mode</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
                 </tr>
                 {boolean_analysis}
             </table>
