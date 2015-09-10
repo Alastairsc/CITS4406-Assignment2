@@ -318,7 +318,7 @@ class Column(object):
                     freq = 0
                     for cell in self.values:
                         if cell == value[0]:
-                            tup = (i + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                            tup = (i + 1 + invalid_rows_pos[x], columnNumber + 1, value[0])
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
                             freq += 1
