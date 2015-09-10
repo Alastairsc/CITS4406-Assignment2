@@ -3,6 +3,8 @@
 import sys
 import os
 
+from difflib import get_close_matches
+
 #Config for default values of data types
 def_int = 0
 def_float = 0.0
@@ -69,4 +71,8 @@ class Editor(object):
         
     def enum_fix(self, col, row, value):
         """Function for fixing Enumerated values"""
-        
+        most_common = self.columns[col].most_common
+        items = []
+        for i in most_common:
+            items.append(i[0])
+        self.columns[col].values[row] = get_close_matches(value[0], items, 2)[1]
