@@ -43,6 +43,7 @@ base_template = \
       </div>
     </nav>
 
+<br>&nbsp<br>
 <div class="container">
     <h1>Analysis Report on {header}</h1>
 </div>
