@@ -81,6 +81,8 @@ class Editor(object):
             items.append(i[0])
         self.columns[col].values[row] = get_close_matches(value[0], items, 2)[1]
        
-    #def string_fix(self, col, row, value):
-    
-        #TODO add fix
+    def bool_fix(self, col, row, value):
+        """Function for fixing Boolean Values"""
+        possible = {"true", "false"}
+        self.comlumns[col].values[row] = get_close_matches(value[0], possible, 1)[1]
+        
