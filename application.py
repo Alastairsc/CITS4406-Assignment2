@@ -16,14 +16,14 @@ def main(filePath):
     file = filePath
     data = Data(file)
     data.clean()
-    #editor = Editor(data)
-    #editor.make_corrected(file)
+    editor = Editor(data)
     data.analyse()
+    editor.make_corrected(file)
     report = Report(data, file)
     report.html_report()
 
 
 if __name__ == '__main__':
-	numFiles = len(sys.argv)
-	for i in range(1,numFiles):
-		main(sys.argv[i])
+    numFiles = len(sys.argv)
+    for i in range(1,numFiles):
+        main(sys.argv[i])

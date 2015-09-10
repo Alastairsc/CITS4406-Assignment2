@@ -79,8 +79,13 @@ class EmailAnalyser(Analyser):
         
 class NumericalAnalyser(Analyser):
     """Runs numeric analysis."""
-    def __init__(self, values):
-        values = [eval(i) for i in values]
+    def __init__(self, values): 
+        new_values = []
+        for i in values:
+            if i != '':
+                new_values.append(eval(i))
+        values = new_values
+       # values = [eval(i) for i in values]
         super().__init__(values)
         self.stDevOutliers = []
         self.pval = mstats.normaltest(array(values))[1]
