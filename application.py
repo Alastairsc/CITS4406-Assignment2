@@ -16,9 +16,9 @@ def main(filePath):
     file = filePath
     data = Data(file)
     data.clean()
-    editor = Editor(data)
+  #  editor = Editor(data)
     data.analyse()
-    editor.make_corrected(file)
+  #  editor.make_corrected(file)
     report = Report(data, file)
     report.html_report()
 
