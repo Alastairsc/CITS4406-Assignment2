@@ -20,7 +20,8 @@ def_dow = " "
 def_coords = 0
 
 class Editor(object):
-    """Corrects errors before writing to new file"""
+    """Corrects errors before writing to new file
+    """
     
     def __init__(self, data):
         self.columns = data.columns
@@ -32,12 +33,15 @@ class Editor(object):
             col_num = col - 1
             row_num = row - 1
             type = self.columns[col_num].type
+     
             if type == 'Integer':
                 self.int_fix(col_num, row_num, value)
             elif type == 'Float':
                 self.float_fix(col_num, row_num, value)
-            elif type == "Enum":
+            elif type == 'Enum':
                 self.enum_fix(col_num, row_num, value)
+            elif type == 'String':
+                self.string_fix(col_num, row_num, value)
             #TODO add the rest of the types
                 
     def make_corrected(self, filename):
@@ -76,3 +80,7 @@ class Editor(object):
         for i in most_common:
             items.append(i[0])
         self.columns[col].values[row] = get_close_matches(value[0], items, 2)[1]
+       
+    #def string_fix(self, col, row, value):
+    
+        #TODO add fix

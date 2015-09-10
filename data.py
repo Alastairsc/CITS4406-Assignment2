@@ -304,12 +304,21 @@ class Column(object):
         elif self.type == 'Enum':
             for x, value in enumerate(self.least_common):  
                 if self.least_common[x][1] <= enum_threshold:
-                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
-                    errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    i = 0 
+                    freq = 0
+                    for cell in self.values:
+                        if cell == value[0]:
+                            tup = (i + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                            errors.append(tup)
+                            formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                            freq += 1
+                        i+=1
+                    if freq == 0:
+                         raise Exception('Least common value not found')
         print("Errors: ", errors)
 
 
+        
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
     assigning out to relevant variables.
