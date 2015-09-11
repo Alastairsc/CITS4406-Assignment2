@@ -423,23 +423,13 @@ class Data(object):
         #f = csv.reader(open(csv_file))
         #for row in f:
         #    self.raw_data.append(row)
-
-        #SEPARATION
-        """When data in csv files are in one column separated by comma, semicolon, or space, they are
-        separated accordingly"""
-        #new_csv = open(csv_file)
-        f = csv.reader(open(csv_file))
-        #for row in f:
-        for line in f:
-            n_col = len(line)
-            #print(n_col)
-            if n_col == 1:
-                result = re.split(re_separation, line[0])
-                self.raw_data.append(result)
-                #print(self.raw_data)
-            else:
-                self.raw_data.append(line)
-                #print(self.raw_data)
+        #separation of comma, semicolon, dash, tab delimited csv files
+        with open(csv_file, newline='') as csvfile:
+                dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
+                csvfile.seek(0)
+                f = csv.reader(csvfile, dialect)
+                for row in f:
+                   self.raw_data.append(row)
 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
