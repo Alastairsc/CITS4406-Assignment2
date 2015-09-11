@@ -34,8 +34,8 @@ re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
-re_sci_notation= re.compile('[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
-"""^\s*\$d*\."""
+re_sci_notation= re.compile('[\+-]?\d+(\.\d+)?[eE]\d')
+#[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
 re_separation = re.compile('[\s,;]+')
 
 class Analyser(object):
@@ -291,6 +291,7 @@ class Column(object):
                 boolean_count += 1
              #   print('Boolean match')
             elif re_sci_notation.match(value):
+                print("Sci not match:", value)
                 sci_not_count += 1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
