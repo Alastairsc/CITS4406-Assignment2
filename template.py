@@ -167,6 +167,11 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>Total "True"</th>
+                    <th>Total "False</th>
+                    <th>Total "Yes"</th>
+                    <th>Total "No"</th>
+                    <th>Total Boolean Values</th>
                 </tr>
                 {boolean_analysis}
             </table>
