@@ -219,6 +219,10 @@ class Column(object):
         self.type = ''
         self.values = []
         self.analysis = None
+        self.total_true = 0
+        self.total_false = 0
+        self.total_yes = 0
+        self.total_no = 0
         #  Todo: Does initialising as None even make sense?
 
     def change_misc_values(self):
@@ -269,6 +273,7 @@ class Column(object):
         currency_count = 0
         boolean_count = 0
         sci_not_count = 0
+
         #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
@@ -289,7 +294,15 @@ class Column(object):
                 currency_count += 1
             elif re_boolean.search(value):
                 boolean_count += 1
-             #   print('Boolean match')
+                temp_value = str(value.upper())
+                if temp_value == ' TRUE' or temp_value == ' T' or temp_value == 'TRUE' or temp_value == 'T':
+                    self.total_true += 1
+                if temp_value == ' FALSE' or temp_value == ' F' or temp_value == 'FALSE' or temp_value == 'F':
+                    self.total_false += 1
+                if temp_value == ' YES' or temp_value == ' Y' or temp_value == 'YES' or temp_value == 'Y':
+                    self.total_yes += 1
+                if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
+                    self.total_no += 1
             elif re_sci_notation.match(value):
                 print("Sci not match:", value)
                 sci_not_count += 1
