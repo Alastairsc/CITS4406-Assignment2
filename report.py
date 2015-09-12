@@ -176,7 +176,12 @@ and create required local variables.
                         column.analysis.mode,
                         column.most_common[:5],
                         column.least_common[:5],
-                       column.analysis.unique]
+                       column.analysis.unique,
+                       column.total_true,
+                       column.total_false,
+                       column.total_yes,
+                       column.total_no,
+                       column.total_true + column.total_false + column.total_yes + column.total_no]
                 rows += self.row_creator(row)
         return rows
         
