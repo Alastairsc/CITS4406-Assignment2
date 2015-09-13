@@ -173,9 +173,9 @@ and create required local variables.
         for column in self.data.columns:
             if column.type == 'Boolean':
                 row = [column.header,
-                        column.analysis.mode,
-                        column.most_common[:5],
-                        column.least_common[:5],
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
                        column.analysis.unique,
                        column.total_true,
                        column.total_false,
