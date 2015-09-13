@@ -95,16 +95,21 @@ class Template(object):
         self.delimiter = ''
         self.header_row = 0
         self.data_start = 1
-       
+        self.data_size = {}
+        
         self.read(filename)
         
     def read(self, filename):
+        """Reads template file, assumes correct formatting, if user editing
+        is permitted will need to be improved with more checks"""
         with open(filename, newline='') as csvfile:
             f = csv.reader(csvfile, delimiter=',')
             for row in f:
                 if len(row) > 1:
                     if row[0] == 'column':
                         self.columns[int(row[1])-1] = row[2] #column numbering starts at 1 instead of 0
+                        if len(row) > 3 and row[2] == 'Identifier' and row[3] == 'size':
+                            self.data_size[int(row[1])-1] = int(row[4])
                     elif row[0] == 'delimiter':
                         if(row[1] == 'comma'):
                             self.delimiter = ','

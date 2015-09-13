@@ -69,6 +69,7 @@ class Column(object):
         self.total_false = 0
         self.total_yes = 0
         self.total_no = 0
+        self.data_size = -1
         #  Todo: Does initialising as None even make sense?
 
     def change_misc_values(self):
@@ -237,12 +238,26 @@ class Column(object):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+        elif self.type == 'Identifier':
+            if self.data_size != -1:
+                size = self.data_size
+            else:
+                size = len(self.values[0])
+            for x, value in enumerate(self.values):
+                if len(value) != size:
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
        # print("Errors: ", errors)
 
     def set_type(self, type):
         """Sets type of column for use with tempaltes"""
         self.type = type
 
+    def set_size(self, size):
+        """Sets the size of the data for use when checking for errors.
+            For use with the 'Identifier' data type"""
+        self.data_size = size
         
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
@@ -287,13 +302,13 @@ class Data(object):
         self.delimiter = ''
         self.header_row = 0
         self.data_start = 1
-        if len(args) > 1:
-            print("template: ",args[1])
-            print("header: ",args[1].header_row)        
+        self.data_size = {}
+        if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
             self.header_row = self.template.header_row
             self.data_start = self.template.data_start
+            self.data_size = self.template.data_size
         #Process data
         self.read(args[0])
         self.remove_invalid()
@@ -355,7 +370,6 @@ class Data(object):
         from valid rows? Why/Why not?). Then for each row in valid_rows,
         populates relevant column object with row data.
         """
-        print("Header: ",self.header_row)
         if self.header_row >=0:
             for value in self.raw_data[self.header_row]:
                 self.columns.append(Column(header=value))
@@ -363,7 +377,6 @@ class Data(object):
             self.valid_rows.pop(self.header_row)            
 
         length = len(self.valid_rows)
-        print("Data_start: ",self.data_start)
         for row_num in range(self.data_start, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
@@ -383,7 +396,8 @@ class Data(object):
         analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
-                     'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser}
+                     'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser,
+                     'Identifier': IdentifierAnalyser}
         for colNo, column in enumerate(self.columns):
             column.define_most_common()
             column.define_least_common()
@@ -392,6 +406,9 @@ class Data(object):
                     column.set_type(self.template.columns[colNo])
                 else:
                     column.define_type()
+                if column.type == 'Identifier' and self.data_size != None and \
+                    colNo in self.data_size:
+                    column.set_size(self.data_size[colNo])
                 column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos)
                 if column.type in analysers:
                     column.analysis = analysers[column.type](column.values)       

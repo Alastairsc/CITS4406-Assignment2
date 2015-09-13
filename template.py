@@ -34,6 +34,7 @@ base_template = \
             <li><a href="#invalid">Invalid/Empty</a></li>
             <li><a href="#numerical">Numerical</a></li>
             <li><a href="#string">String</a></li>
+            <li><a href="#identifier">String</a></li>
             <li><a href="#enum">Enum</a></li>
             <li><a href="#email">Email</a></li>
             <li><a href="#currency">Currency</a></li>
@@ -108,6 +109,19 @@ base_template = \
                     <th>Unique Items</th>
                 </tr>
                 {string_analysis}
+            </table>
+            
+            <hr id="identifier"/>
+            <h2>Identifier</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                </tr>
+                {identifier_analysis}
             </table>
             
             <hr id="enum"/>

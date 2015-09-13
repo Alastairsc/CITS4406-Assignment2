@@ -119,7 +119,12 @@ class StringAnalyser(Analyser):
         super().__init__(values)
         #  TODO Implement some string exclusive statistics.
 
-
+class IdentifierAnalyser(Analyser):
+    """Run Identifier analysis"""
+    def __init__(self, values):
+        super().__init__(values)
+        # TODO Implement some identifier exclusive statistics.
+        
 class EnumAnalyser(Analyser):
     """Run enumeration analysis."""
     def __init__(self, values):

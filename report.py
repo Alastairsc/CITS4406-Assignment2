@@ -55,6 +55,7 @@ and create required local variables.
             len_columns=len(self.data.valid_rows),
             numerical_analysis=self.numerical_analysis(),
             string_analysis=self.string_analysis(),
+            identifier_analysis=self.identifier_analysis(),
             enum_analysis=self.enum_analysis(),
             email_analysis=self.email_analysis(),
             currency_analysis =self.currency_analysis(),
@@ -209,3 +210,19 @@ and create required local variables.
                        column.analysis.unique]
                 rows += self.row_creator(row)
         return rows
+
+    def identifier_analysis(self):
+        """Return HTML string of identifier analysis on columns of type identifier
+        in the data object.
+        """
+        rows = ''
+        for column in self.data.columns:
+            if column.type == 'Identifier':           
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rows += self.row_creator(row)
+        return rows
+        
