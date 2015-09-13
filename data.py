@@ -165,7 +165,10 @@ class SciNotationAnalyser(Analyser):
        # values = [eval(i) for i in values]
         super().__init__(values)
         self.stDevOutliers = []
-        self.pval = mstats.normaltest(array(values))[1]
+             if len(values) >= 8:
+            self.pval = mstats.normaltest(array(values))[1]
+        else:
+            self.pval = 100
         self.min = self.int_to_sci(min(values))
         self.max = self.int_to_sci(max(values))
         self.mean = self.int_to_sci(mean(values))
@@ -177,6 +180,8 @@ class SciNotationAnalyser(Analyser):
         self.normDist = 'No'
         if(self.pval < 0.055):
             self.normDist = 'Yes'
+        elif(self.pval == 100):
+            self.normDist = 'N/A'
         if self.normDist != 'No':
             for value in values:
                 if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
