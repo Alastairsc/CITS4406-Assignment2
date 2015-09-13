@@ -303,7 +303,12 @@ class Data(object):
         #separation of comma, semicolon, dash, tab delimited csv files
         if self.delimiter == '':
             with open(csv_file, newline='') as csvfile:
-                    dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
+                    try:
+                        dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
+                    except:
+                        print("Delimiter Error: could not determine delimiter, consider",\
+                        "specifying using template")
+                        exit(0)
                     csvfile.seek(0)
                     f = csv.reader(csvfile, dialect)
                     for row in f:

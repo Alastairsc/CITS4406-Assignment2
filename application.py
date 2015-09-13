@@ -3,6 +3,7 @@
 
 import sys
 import argparse
+import textwrap
 
 from data import *
 from report import *
@@ -27,15 +28,27 @@ def main(*args):
     report.html_report()
             
 if __name__ == '__main__': 
-    parser = argparse.ArgumentParser(description='Processes Csv files.')
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,\
+        description=textwrap.dedent('''\
+                Processes Csv files.
+        ----------------------------------
+        Can process one or more csv files. Can specify template to describe
+        data further. Templates can be used to describe one or more csv files.
+        If using multiple templates for multiple files list templates in the 
+        same order as the files they correspond to.
+    '''))
     parser.add_argument('filenames', nargs='+',\
         help='one or more filenames for the processor to analyse')
-    parser.add_argument('-t', metavar='template', default='',help='a template for the given files')
+    parser.add_argument('-t', nargs='+', metavar='template', help='a template for the given files')
     args = parser.parse_args()
     print (args)
-    if args.t != '':
-        for name in args.filenames:
-            main(name, args.t)
+    if args.t != None:
+        if len(args.t) == 1:
+            for name in args.filenames:
+                main(name, args.t[0])
+        else:
+            for i in range(0, len(args.filenames)):
+                main(args.filenames[i], args.t[i])
     else:
         for name in args.filenames:
             main(name)
