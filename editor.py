@@ -83,12 +83,18 @@ class Editor(object):
         
         
 class Template(object):
-    """Object storing user input that describes data given"""
+    """Object storing user input that describes data given. Able to specify:
+        Columns - state column number and data type
+        Delimiter - state delimiter character (for comma use the word not ',')
+        Start row - row of header (0 for no header)
+        
+        Columns and rows start at 1 not 0"""
         
     def __init__(self, filename):
         self.columns = {}
         self.delimiter = ''
         self.read(filename)
+        self.start_row = 0
         
     def read(self, filename):
         with open(filename, newline='') as csvfile:
@@ -98,5 +104,9 @@ class Template(object):
                     if row[0] == 'Column':
                         self.columns[int(row[1])-1] = row[2] #column numbering starts at 1 instead of 0
                     elif row[0] == 'Delimiter':
-                        self.delimiter = row[1]
-                    
+                        if(row[1] == 'comma'):
+                            self.delimiter = ','
+                        else:
+                            self.delimiter = row[1]
+                    elif row[0] == 'Start':
+                        self.start_row = int(row[1]) - 1

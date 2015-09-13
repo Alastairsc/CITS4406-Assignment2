@@ -285,10 +285,11 @@ class Data(object):
         #Template settings
         self.template = None
         self.delimiter = ''
+        self.start_row = 0
         if len(args) > 1:
             self.template = args[1]
             self.delimiter = self.template.delimiter
-        
+            self.start_row = self.template.start_row
         #Process data
         self.read(args[0])
         self.remove_invalid()
@@ -316,7 +317,11 @@ class Data(object):
         else:
             #template specified delimiter
             with open(csv_file, newline='') as csvfile:
-                dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=self.delimiter)
+                try:
+                    dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=self.delimiter)
+                except:
+                    print("Delimiter Error: could not read file using specified delimiter")
+                    exit(0)
                 csvfile.seek(0)
                 f = csv.reader(csvfile, dialect)
                 for row in f:
@@ -346,13 +351,16 @@ class Data(object):
         from valid rows? Why/Why not?). Then for each row in valid_rows,
         populates relevant column object with row data.
         """
-        for value in self.raw_data[0]:
-            self.columns.append(Column(header=value))
-            self.headers.append(value)
-        self.valid_rows.pop(0)
+        start = self.start_row
+        if start >=0:
+            for value in self.raw_data[start]:
+                self.columns.append(Column(header=value))
+                self.headers.append(value)
+            self.valid_rows.pop(start)            
 
-        for row in self.valid_rows:
-            for index, value in enumerate(row):
+        length = len(self.valid_rows)
+        for row_num in range(start + 1, length):
+            for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
 
     def clean(self):

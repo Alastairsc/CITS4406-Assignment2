@@ -4,4 +4,4 @@ Column,1,Float
 Column,2,Integer
 Column,3,String
 Column,5,Sci_Notation
-
+Delimiter,comma
