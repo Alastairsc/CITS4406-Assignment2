@@ -1,0 +1,7 @@
+Template works with basic_errors.csv
+
+Column,1,Integer
+Column,2,Float
+Column,3,String
+Column,5,Sci_Notation
+

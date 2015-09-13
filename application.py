@@ -7,7 +7,6 @@ from data import *
 from report import *
 from editor import *
 
-
 def main(filePath):
     """Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
@@ -22,8 +21,23 @@ def main(filePath):
     report = Report(data, file)
     report.html_report()
 
-
+def mainT(filePath, template):
+    """"Creates Data and Report objects using the template as a guideline"""
+    
+    temp = Template(template)
+    file = filePath
+    data = Data(file, temp)
+    data.clean()
+    data.analyse()
+    report = Report(data, file)
+    report.html_report()
+    
 if __name__ == '__main__':
     numFiles = len(sys.argv)
-    for i in range(1,numFiles):
-        main(sys.argv[i])
+    #for i in range(1,numFiles):
+    #    main(sys.argv[i])
+    if numFiles > 2:
+        mainT(sys.argv[1], sys.argv[2])
+    else:
+        for i in range(1,numFiles):
+            main(sys.argv[i])

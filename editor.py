@@ -2,6 +2,7 @@
 
 import sys
 import os
+import csv
 
 from difflib import get_close_matches
 
@@ -80,3 +81,22 @@ class Editor(object):
         possible = {"true", "false"}
         self.columns[col].values[row] = get_close_matches(value, possible, 1)[0]
         
+        
+class Template(object):
+    """Object storing user input that describes data given"""
+        
+    def __init__(self, filename):
+        self.columns = {}
+        self.delimiter = ''
+        self.read(filename)
+        
+    def read(self, filename):
+        with open(filename, newline='') as csvfile:
+            f = csv.reader(csvfile, delimiter=',')
+            for row in f:
+                if len(row) > 1:
+                    if row[0] == 'Column':
+                        self.columns[int(row[1])-1] = row[2] #column numbering starts at 1 instead of 0
+                    elif row[0] == 'Delimiter':
+                        self.delimiter = row[1]
+                    

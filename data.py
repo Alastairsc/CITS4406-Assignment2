@@ -34,8 +34,9 @@ re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
-re_sci_notation= re.compile('[\+-]?\d+(\.\d+)?[eE]\d')
+re_sci_notation= re.compile('[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
+#[\+-]?\d+(\.\d+)?[eE]\d
 re_separation = re.compile('[\s,;]+')
 
 class Analyser(object):
@@ -95,12 +96,19 @@ class NumericalAnalyser(Analyser):
         for i in values:
             print("Value: ",i)
             if i != '':
-                new_values.append(eval(i))
+                try:
+                    new_values.append(eval(i))
+                except NameError:
+                    print ("NameError:", i, " is not a numeric type")
+                    sys.exit(0)
         values = new_values
        # values = [eval(i) for i in values]
         super().__init__(values)
         self.stDevOutliers = []
-        self.pval = mstats.normaltest(array(values))[1]
+        if len(values) >= 8:
+            self.pval = mstats.normaltest(array(values))[1]
+        else:
+            self.pval = 100
         self.min = min(values)
         self.max = max(values)
         self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
@@ -111,6 +119,8 @@ class NumericalAnalyser(Analyser):
         self.normDist = 'No'
         if(self.pval < 0.055):
             self.normDist = 'Yes'
+        elif self.pval == 100:
+            self.normDist = 'N/A'
         if self.normDist != 'No':
             for value in values:
                 if value < (self.mean - standardDeviations * self.stdev) or \
@@ -393,6 +403,9 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
        # print("Errors: ", errors)
 
+    def set_type(self, type):
+        """Sets type of column for use with tempaltes"""
+        self.type = type
 
         
 class Data(object):
@@ -419,7 +432,11 @@ class Data(object):
     valid_rows -- List of valid rows (i.e., same number of columns as headers).
     errors -- List of rows and columns of possibly incorrect values.
     """
-    def __init__(self, csv_file):
+    def __init__(self, *args):
+        """Can take up to two arguments, 
+            first argument -- filename
+            second argument -- template"""
+
         self.columns = []
         self.headers = []
         self.invalid_rows = []
@@ -428,9 +445,19 @@ class Data(object):
         self.formatted_errors = []
         self.raw_data = []
         self.valid_rows = []
-        self.read(csv_file)
+        
+        #Template settings
+        self.template = None
+        self.delimiter = ''
+        if len(args) > 1:
+            self.template = args[1]
+            self.delimiter = self.template.delimiter
+        
+        #Process data
+        self.read(args[0])
         self.remove_invalid()
         self.create_columns()
+        
 
     def read(self, csv_file):
         """Opens and reads the CSV file, line by line, to raw_data variable."""
@@ -438,8 +465,17 @@ class Data(object):
         #for row in f:
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
-        with open(csv_file, newline='') as csvfile:
-                dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
+        if self.delimiter == '':
+            with open(csv_file, newline='') as csvfile:
+                    dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
+                    csvfile.seek(0)
+                    f = csv.reader(csvfile, dialect)
+                    for row in f:
+                       self.raw_data.append(row)
+        else:
+            #template specified delimiter
+            with open(csv_file, newline='') as csvfile:
+                dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=self.delimiter)
                 csvfile.seek(0)
                 f = csv.reader(csvfile, dialect)
                 for row in f:
@@ -498,7 +534,10 @@ class Data(object):
             column.define_most_common()
             column.define_least_common()
             if not column.empty:
-                column.define_type()
+                if self.template != None and colNo in self.template.columns:
+                    column.set_type(self.template.columns[colNo])
+                else:
+                    column.define_type()
                 column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos)
                 if column.type in analysers:
                     column.analysis = analysers[column.type](column.values)       
