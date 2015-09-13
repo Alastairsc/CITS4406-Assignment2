@@ -93,20 +93,26 @@ class Template(object):
     def __init__(self, filename):
         self.columns = {}
         self.delimiter = ''
+        self.header_row = 0
+        self.data_start = 1
+       
         self.read(filename)
-        self.start_row = 0
         
     def read(self, filename):
         with open(filename, newline='') as csvfile:
             f = csv.reader(csvfile, delimiter=',')
             for row in f:
                 if len(row) > 1:
-                    if row[0] == 'Column':
+                    if row[0] == 'column':
                         self.columns[int(row[1])-1] = row[2] #column numbering starts at 1 instead of 0
-                    elif row[0] == 'Delimiter':
+                    elif row[0] == 'delimiter':
                         if(row[1] == 'comma'):
                             self.delimiter = ','
                         else:
                             self.delimiter = row[1]
-                    elif row[0] == 'Start':
-                        self.start_row = int(row[1]) - 1
+                    elif row[0] == 'header':
+                        self.header_row = int(row[1]) - 1
+                        print("Set header: ", self.header_row)
+                    elif row[0] == 'data_start':
+                        self.data_start = int(row[1]) - 1
+                        

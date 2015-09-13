@@ -41,7 +41,6 @@ if __name__ == '__main__':
         help='one or more filenames for the processor to analyse')
     parser.add_argument('-t', nargs='+', metavar='template', help='a template for the given files')
     args = parser.parse_args()
-    print (args)
     if args.t != None:
         if len(args.t) == 1:
             for name in args.filenames:

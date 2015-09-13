@@ -150,7 +150,7 @@ class Column(object):
                 if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
                     self.total_no += 1
             elif re_sci_notation.match(value):
-                print("Sci not match:", value)
+                #print("Sci not match:", value)
                 sci_not_count += 1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
@@ -285,11 +285,15 @@ class Data(object):
         #Template settings
         self.template = None
         self.delimiter = ''
-        self.start_row = 0
+        self.header_row = 0
+        self.data_start = 1
         if len(args) > 1:
+            print("template: ",args[1])
+            print("header: ",args[1].header_row)        
             self.template = args[1]
             self.delimiter = self.template.delimiter
-            self.start_row = self.template.start_row
+            self.header_row = self.template.header_row
+            self.data_start = self.template.data_start
         #Process data
         self.read(args[0])
         self.remove_invalid()
@@ -351,15 +355,16 @@ class Data(object):
         from valid rows? Why/Why not?). Then for each row in valid_rows,
         populates relevant column object with row data.
         """
-        start = self.start_row
-        if start >=0:
-            for value in self.raw_data[start]:
+        print("Header: ",self.header_row)
+        if self.header_row >=0:
+            for value in self.raw_data[self.header_row]:
                 self.columns.append(Column(header=value))
                 self.headers.append(value)
-            self.valid_rows.pop(start)            
+            self.valid_rows.pop(self.header_row)            
 
         length = len(self.valid_rows)
-        for row_num in range(start + 1, length):
+        print("Data_start: ",self.data_start)
+        for row_num in range(self.data_start, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
 

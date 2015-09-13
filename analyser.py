@@ -46,9 +46,9 @@ class Analyser(object):
         valSet = set()
         for vals in values:
             valSet.add(vals)
-        print("Set stuff")
-        print(valSet)
-        print(len(valSet))
+   #     print("Set stuff")
+     #   print(valSet)
+     #   print(len(valSet))
         return len(valSet)
 
     def __init__(self, values):
@@ -167,7 +167,6 @@ class SciNotationAnalyser(Analyser):
 
     def int_to_sci(self, value):
         """Converts numbers into a string in scientific notation form"""
-        print ("Value: ", value)
         power = floor(log10(abs(value)))
         base = round(value / pow(10, power), 2)
         if power > 0:
