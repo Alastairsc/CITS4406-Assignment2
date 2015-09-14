@@ -336,13 +336,7 @@ class Data(object):
         else:
             #template specified delimiter
             with open(csv_file, newline='') as csvfile:
-                try:
-                    dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=self.delimiter)
-                except:
-                    print("Delimiter Error: could not read file using specified delimiter")
-                    exit(0)
-                csvfile.seek(0)
-                f = csv.reader(csvfile, dialect)
+                f = csv.reader(csvfile, delimiter=self.delimiter)
                 for row in f:
                    self.raw_data.append(row)
 

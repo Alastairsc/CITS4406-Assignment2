@@ -4,29 +4,37 @@
 import sys
 import argparse
 import textwrap
+import pandas as pd
+import os
 
 from data import *
 from report import *
 from editor import *
+
 
 def main(*args):
     """Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
 
     """
-    file = args[0]
+
+    filename = args[0]
     if len(args) > 1:
         temp = Template(args[1])
-        data = Data(file, temp)
+        data = Data(filename, temp)
     else:
-        data = Data(file)
+        data = Data(filename)
     data.clean()
   #  editor = Editor(data)
     data.analyse()
   #  editor.make_corrected(file)
-    report = Report(data, file)
+    report = Report(data, filename)
     report.html_report()
             
+def get_file_dir(location):
+    """Returns the directory of the file with the file name"""
+    return location.rpartition('\\')
+    
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,\
         description=textwrap.dedent('''\
@@ -41,13 +49,37 @@ if __name__ == '__main__':
         help='one or more filenames for the processor to analyse')
     parser.add_argument('-t', nargs='+', metavar='template', help='a template for the given files')
     args = parser.parse_args()
+    filenames = []
+    for file in args.filenames:
+        name_ext = os.path.splitext(file)
+        if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
+            xls=pd.ExcelFile(file)
+            sheet_names = xls.sheet_names
+            if len(sheet_names) == 1:
+                    df = xls.parse(sheet_names[0], index_col=None, na_values=['NA'])
+                    new_name = os.path.splitext(file)[0] + ".csv"
+                    df.to_csv(new_name, index=False) 
+                    filenames.append(new_name)
+            else:
+                file_dir = get_file_dir(file)
+                if not os.path.exists(file_dir[0] + "\csv_copies"):
+                    os.makedirs(file_dir[0] + "\csv_copies")
+                    #makes new directory to store new csv files
+                for sheet in sheet_names:
+                    df = xls.parse(sheet, index_col=None, na_values=['NA'])
+                    new_name = file_dir[0] + "\csv_copies\\" + os.path.splitext(file_dir[2])[0] \
+                    + "_" + sheet + ".csv"
+                    df.to_csv(new_name, index=False)
+                    filenames.append(new_name)
+                    
     if args.t != None:
         if len(args.t) == 1:
-            for name in args.filenames:
+            for name in filenames:
                 main(name, args.t[0])
         else:
-            for i in range(0, len(args.filenames)):
-                main(args.filenames[i], args.t[i])
+            for i in range(0, len(filenames)):
+                main(filenames[i], args.t[i])
+                #TODO keep functionality when files have multiple sheets
     else:
-        for name in args.filenames:
+        for name in filenames:
             main(name)

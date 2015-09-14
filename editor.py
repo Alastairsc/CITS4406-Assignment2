@@ -106,18 +106,18 @@ class Template(object):
             f = csv.reader(csvfile, delimiter=',')
             for row in f:
                 if len(row) > 1:
-                    if row[0] == 'column':
+                    if row[0].lower() == 'column':
                         self.columns[int(row[1])-1] = row[2] #column numbering starts at 1 instead of 0
                         if len(row) > 3 and row[2] == 'Identifier' and row[3] == 'size':
                             self.data_size[int(row[1])-1] = int(row[4])
-                    elif row[0] == 'delimiter':
+                    elif row[0].lower() == 'delimiter':
                         if(row[1] == 'comma'):
                             self.delimiter = ','
                         else:
                             self.delimiter = row[1]
-                    elif row[0] == 'header':
+                    elif row[0].lower() == 'header':
                         self.header_row = int(row[1]) - 1
                         print("Set header: ", self.header_row)
-                    elif row[0] == 'data_start':
+                    elif row[0].lower() == 'data_start':
                         self.data_start = int(row[1]) - 1
                         
