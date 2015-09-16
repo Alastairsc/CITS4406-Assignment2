@@ -296,6 +296,11 @@ class Data(object):
         self.formatted_errors = []
         self.raw_data = []
         self.valid_rows = []
+        self.analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
+                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
+                     'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
+                     'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser,
+                     'Identifier': IdentifierAnalyser}
         
         #Template settings
         self.template = None
@@ -381,17 +386,24 @@ class Data(object):
             column.change_misc_values()
             column.drop_greater_than()
 
-    def analyse(self):
+    def analysis(self):
+        for colNo, column in enumerate(self.columns):
+             if not column.empty:
+                if column.type in self.analysers:
+                    column.analysis = self.analysers[column.type](column.values)  
+            
+    def find_errors(self):
+        for colNo, column in enumerate(self.columns):
+             if not column.empty:
+                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos)
+
+    def pre_analysis(self):
         """Calls analysis methods on all columns, checking if they are empty
         first. First defines their least and most common elements, then if 
         column is not empty defines its type, any outliers and finally checks
         for any errors.
         """
-        analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
-                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
-                     'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
-                     'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser,
-                     'Identifier': IdentifierAnalyser}
+        
         for colNo, column in enumerate(self.columns):
             column.define_most_common()
             column.define_least_common()
@@ -402,7 +414,4 @@ class Data(object):
                     column.define_type()
                 if column.type == 'Identifier' and self.data_size != None and \
                     colNo in self.data_size:
-                    column.set_size(self.data_size[colNo])
-                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos)
-                if column.type in analysers:
-                    column.analysis = analysers[column.type](column.values)       
+                    column.set_size(self.data_size[colNo])                     
