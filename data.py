@@ -303,7 +303,9 @@ class Data(object):
         self.header_row = 0
         self.data_start = 1
         self.data_size = {}
+        self.has_template = False
         if len(args) > 1:  
+            self.has_template = True
             self.template = args[1]
             self.delimiter = self.template.delimiter
             self.header_row = self.template.header_row
@@ -321,7 +323,7 @@ class Data(object):
         #for row in f:
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
-        if self.delimiter == '':
+        if not self.has_template:
             with open(csv_file, newline='') as csvfile:
                     try:
                         dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
