@@ -19,6 +19,7 @@ def main(*args):
     """
 
     filename = args[0]
+    print (filename)
     if len(args) > 1:
         temp = Template(args[1])
         data = Data(filename, temp)
@@ -71,6 +72,8 @@ if __name__ == '__main__':
                     + "_" + sheet + ".csv"
                     df.to_csv(new_name, index=False)
                     filenames.append(new_name)
+        else:
+            filenames.append(file)
                     
     if args.t != None:
         if len(args.t) == 1:

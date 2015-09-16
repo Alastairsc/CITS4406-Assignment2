@@ -150,7 +150,7 @@ class Column(object):
                     self.total_yes += 1
                 if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
                     self.total_no += 1
-            elif re_sci_notation.match(value):
+            elif re_sci_notation.fullmatch(value):
                 #print("Sci not match:", value)
                 sci_not_count += 1
         if float_count / len(self.values) >= threshold:
@@ -289,7 +289,7 @@ class Data(object):
             second argument -- template"""
 
         self.columns = []
-        self.headers = []
+     #   self.headers = []
         self.invalid_rows = []
         self.invalid_rows_pos = []
         self.errors = []     
@@ -303,9 +303,7 @@ class Data(object):
         self.header_row = 0
         self.data_start = 1
         self.data_size = {}
-        self.has_template = False
         if len(args) > 1:  
-            self.has_template = True
             self.template = args[1]
             self.delimiter = self.template.delimiter
             self.header_row = self.template.header_row
@@ -323,7 +321,8 @@ class Data(object):
         #for row in f:
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
-        if not self.has_template:
+        if self.template == None:
+            print("Here")
             with open(csv_file, newline='') as csvfile:
                     try:
                         dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
@@ -369,7 +368,7 @@ class Data(object):
         if self.header_row >=0:
             for value in self.raw_data[self.header_row]:
                 self.columns.append(Column(header=value))
-                self.headers.append(value)
+              #  self.headers.append(value)
             self.valid_rows.pop(self.header_row)            
 
         length = len(self.valid_rows)
