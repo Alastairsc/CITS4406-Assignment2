@@ -15,7 +15,6 @@ from editor import *
 def main(*args):
     """Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
-
     """
 
     filename = args[0]
@@ -27,7 +26,9 @@ def main(*args):
         data = Data(filename)
     data.clean()
   #  editor = Editor(data)
-    data.analyse()
+    data.pre_analysis()
+    data.find_errors()
+    data.analysis()
   #  editor.make_corrected(file)
     report = Report(data, filename)
     report.html_report()
@@ -50,9 +51,11 @@ if __name__ == '__main__':
         help='one or more filenames for the processor to analyse')
     parser.add_argument('-t', nargs='+', metavar='template', help='a template for the given files')
     args = parser.parse_args()
+    print(args)
     filenames = []
     for file in args.filenames:
         name_ext = os.path.splitext(file)
+        print(name_ext)
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
             xls=pd.ExcelFile(file)
             sheet_names = xls.sheet_names
@@ -74,7 +77,8 @@ if __name__ == '__main__':
                     filenames.append(new_name)
         else:
             filenames.append(file)
-                    
+                          
+    print(args.t)     
     if args.t != None:
         if len(args.t) == 1:
             for name in filenames:
