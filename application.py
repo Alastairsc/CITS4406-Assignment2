@@ -1,4 +1,4 @@
-"""Main execution body for Assignment2 project.
+"""Main execution body for program.
 """
 
 import sys

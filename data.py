@@ -175,7 +175,23 @@ class Column(object):
     def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos):
         """Define all the rows/columns with invalid values and append to errors, and
         formatted_errors once formatted properly. invalid_rows_pos holds the amount of
-        rows that have been skipped by the time the current row x is being considered."""
+        rows that have been skipped by the time the current row x is being considered.
+        
+        Keyword arguments:
+            columnNumber -- The number of the current column being iterated over, numbered
+            from 0.
+            
+            errors -- A list of errors to be edited of the form (row number, column number,
+            error value) which is numbered from 0.
+            
+            formatted_errors -- A list of errors to be edited of the form (row number, column
+            number, error value) which is numbered from 1.
+            
+            invalid_rows_pos -- An array containing a number matching the amount of invalid
+            rows that have been removed from analysis by the time that row is accessed. i.e.
+            invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
+            been removed from analysis.
+        """
         tup = ()        
         if self.type == 'Float':
             for x, value in enumerate(self.values):           
@@ -298,7 +314,6 @@ class Data(object):
             second argument -- template"""
 
         self.columns = []
-     #   self.headers = []
         self.invalid_rows = []
         self.invalid_rows_pos = []
         self.errors = []     
@@ -330,7 +345,11 @@ class Data(object):
         
 
     def read(self, csv_file):
-        """Opens and reads the CSV file, line by line, to raw_data variable."""
+        """Opens and reads the CSV file, line by line, to raw_data variable.
+        
+        Keyword arguments:
+            csv_file -- The filename of the file to be opened.
+        """
         #f = csv.reader(open(csv_file))
         #for row in f:
         #    self.raw_data.append(row)
@@ -391,27 +410,34 @@ class Data(object):
                 self.columns[index].values.append(value)
 
     def clean(self):
-        """Calls cleaning methods on all columns."""
+        """Calls cleaning methods on all columns.
+        """
         for column in self.columns:
             column.change_misc_values()
             column.drop_greater_than()
 
     def analysis(self):
+        """Iterates through each column and analyses the columns values using the
+        columns type analyser.
+        """
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
                     column.analysis = self.analysers[column.type](column.values)  
             
     def find_errors(self):
+        """Iterates through each column and finds any errors according to pre-determined
+        conditions.
+        """
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos)
 
     def pre_analysis(self):
-        """Calls analysis methods on all columns, checking if they are empty
-        first. First defines their least and most common elements, then if 
-        column is not empty defines its type, any outliers and finally checks
-        for any errors.
+        """First defines their least and most common elements, then if 
+        template is supplied, sets the type of the column to match the template, if not if 
+        column is not empty defines its type, and if it's a special data type sets the columns
+        size to me no more than data_size.
         """
         
         for colNo, column in enumerate(self.columns):

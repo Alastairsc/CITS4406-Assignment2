@@ -38,13 +38,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="data">
-<h1>2. Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-data">
+<span id="data"></span><h1>2. Data<a class="headerlink" href="#module-data" title="Permalink to this headline">¶</a></h1>
 <p>Reads CSV file for information, provides basic cleaning of data and then
 runs analysis on said data.</p>
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>header=''</em><span class="sig-paren">)</span></dt>
+<dt id="data.Column">
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>header=''</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object to hold data from each column within the provided CSV file.</p>
 <dl class="docutils">
 <dt>Methods:</dt>
@@ -69,52 +69,66 @@ Enumerated.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt>
-<code class="descname">change_misc_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dt id="data.Column.change_misc_values">
+<code class="descname">change_misc_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.change_misc_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replaces identified values of unclear meaning or inexact value, i.e., 
 &#8216;-&#8216;, with an agreed value.</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">define_errors</code><span class="sig-paren">(</span><em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em><span class="sig-paren">)</span></dt>
+<dt id="data.Column.define_errors">
+<code class="descname">define_errors</code><span class="sig-paren">(</span><em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.define_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define all the rows/columns with invalid values and append to errors, and
 formatted_errors once formatted properly. invalid_rows_pos holds the amount of
 rows that have been skipped by the time the current row x is being considered.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd><p class="first">columnNumber &#8211; The number of the current column being iterated over, numbered
+from 0.</p>
+<p>errors &#8211; A list of errors to be edited of the form (row number, column number,
+error value) which is numbered from 0.</p>
+<p>formatted_errors &#8211; A list of errors to be edited of the form (row number, column
+number, error value) which is numbered from 1.</p>
+<p class="last">invalid_rows_pos &#8211; An array containing a number matching the amount of invalid
+rows that have been removed from analysis by the time that row is accessed. i.e.
+invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
+been removed from analysis.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">define_most_least_common</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dt id="data.Column.define_most_least_common">
+<code class="descname">define_most_least_common</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.define_most_least_common" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set 15 most common results to class variable, and set object variable 
 empty if appropriate.</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">define_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dt id="data.Column.define_type">
+<code class="descname">define_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.define_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run column data against regex filters and assign object variable type
 as appropriate.</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">set_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span></dt>
+<dt id="data.Column.set_size">
+<code class="descname">set_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the size of the data for use when checking for errors.
 For use with the &#8216;Identifier&#8217; data type</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">set_type</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span></dt>
+<dt id="data.Column.set_type">
+<code class="descname">set_type</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets type of column for use with tempaltes</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Data</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span></dt>
+<dt id="data.Data">
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Data</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main store for CSV data, reading the data from the CSV file and then 
 assigning out to relevant variables.</p>
 <dl class="docutils">
@@ -140,14 +154,21 @@ and value of the error.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt>
-<code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dt id="data.Data.analysis">
+<code class="descname">analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates through each column and analyses the columns values using the
+columns type analyser.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.clean">
+<code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls cleaning methods on all columns.</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">create_columns</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dt id="data.Data.create_columns">
+<code class="descname">create_columns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.create_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each row in raw_data variable, assigns the first value to the 
 headers variable and creates a Column object with that header provided.
 Then removes header row from valid_rows. (Todo: Maybe can read straight 
@@ -156,23 +177,34 @@ populates relevant column object with row data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">pre_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Calls analysis methods on all columns, checking if they are empty
-first. First defines their least and most common elements, then if 
-column is not empty defines its type, any outliers and finally checks
-for any errors.</p>
+<dt id="data.Data.find_errors">
+<code class="descname">find_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.find_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates through each column and finds any errors according to pre-determined
+conditions.</p>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">read</code><span class="sig-paren">(</span><em>csv_file</em><span class="sig-paren">)</span></dt>
+<dt id="data.Data.pre_analysis">
+<code class="descname">pre_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.pre_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>First defines their least and most common elements, then if 
+template is supplied, sets the type of the column to match the template, if not if 
+column is not empty defines its type, and if it&#8217;s a special data type sets the columns
+size to me no more than data_size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.read">
+<code class="descname">read</code><span class="sig-paren">(</span><em>csv_file</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens and reads the CSV file, line by line, to raw_data variable.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>csv_file &#8211; The filename of the file to be opened.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">remove_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dt id="data.Data.remove_invalid">
+<code class="descname">remove_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.remove_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each row in raw_data variable, checks row length and appends to 
 valid_rows variable if same length as headers, else appends to 
 invalid_rows variable. invalid_rows_pos holds the amount of rows that have been
