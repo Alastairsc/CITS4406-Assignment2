@@ -34,27 +34,34 @@ class Column(object):
     """Object to hold data from each column within the provided CSV file.
     
     Methods:
-    change_misc_values -- Removes misc/unclear values from column 
-        values.
-    drop_greater_than -- Removes '<', '>' from column values.
-    define_most_common -- Sets object variable to hold 15 most common values
-        for that column.
-    define_type -- Sets object variable to type (e.g., String) according
+        change_misc_values -- Removes misc/unclear values from column values.
+        
+        drop_greater_than -- Removes '<', '>' from column values.
+        
+        define_most_least_common -- Sets object variable to hold 15 most common values
+        and least common values for that column.
+        
+        define_type -- Sets object variable to type (e.g., String) according
         to column values.
-    define_least_common -- Sets object variable to hold 15 least common values 
-        for that column.
-    define_errors -- Defines a list that contains the row and column of possibly
+        
+        define_errors -- Defines a list that contains the row and column of possibly
         incorrect values.
     
     Variables:
-    most_common -- <= 15 most common results within the column values.
-    least_common -- <= 15 least common results within the column values.
-    empty -- Boolean value of whether the column holds values or not.
-    header -- Column header/title.
-    type -- The type of data in column, e.g., String, Float, Integer,
+        most_common -- <= 15 most common results within the column values.
+        
+        least_common -- <= 15 least common results within the column values.
+        
+        empty -- Boolean value of whether the column holds values or not.
+        
+        header -- Column header/title.
+        
+        type -- The type of data in column, e.g., String, Float, Integer,
         Enumerated.
-    values -- List of CSV values for the column.
-    analysis -- Analysis object associated with this column.
+        
+        values -- List of CSV values for the column.
+        
+        analysis -- Analysis object associated with this column.
 
     """
     def __init__(self, header=''):
@@ -87,28 +94,20 @@ class Column(object):
         
         
 
-    def define_most_common(self):
+    def define_most_least_common(self):
         """Set 15 most common results to class variable, and set object variable 
         empty if appropriate.
         """
-        self.most_common = Counter(self.values).most_common(15)
+        temp_list = Counter(self.values).most_common()
+        for i, e in list(enumerate(temp_list)):
+            if i < 15:
+                self.most_common.append(e)
+        for i, e in reversed(list(enumerate(temp_list))):
+            if i < 15:
+                self.least_common.append(e)
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
-            
-    def define_least_common(self):
-        """Set 15 least common results to class variable, and set object variable
-        empty if appropriate.
-        """
-        commonList = Counter(self.values).most_common()
-        for i, e in reversed(list(enumerate(commonList))):
-            if i < 15:
-                self.least_common.append(e)
-        if self.least_common[0][0] == '' \
-            and self.least_common[0][1] / len(self.values) >= threshold:
-            self.empty = True
-          
-        
 
     def define_type(self):
         """Run column data against regex filters and assign object variable type
@@ -264,24 +263,34 @@ class Data(object):
     assigning out to relevant variables.
     
     Methods:
-    read -- Reads the CSV file and outputs to raw_data variable.
-    remove_invalid -- Reads from raw_data variable and assigns rows to 
+        read -- Reads the CSV file and outputs to raw_data variable.
+        
+        remove_invalid -- Reads from raw_data variable and assigns rows to 
         valid_rows or invalid_rows according to their length.
-    create_columns -- Creates column object according to valid_rows, assigning
+        
+        create_columns -- Creates column object according to valid_rows, assigning
         column header and column values.
-    clean -- Calls column cleaning methods to run 'cleaning' on all columns.
-    analyse -- Calls column analysis methods to run 'analysis' on all columns.
+        
+        clean -- Calls column cleaning methods to run 'cleaning' on all columns.
+        
+        analyse -- Calls column analysis methods to run 'analysis' on all columns.
     
     Variables:
-    columns -- List of column objects.
-    headers -- List of column headers.
-    invalid_rows -- List of invalid rows (i.e., more or less columns than
+        columns -- List of column objects.
+        
+        headers -- List of column headers.
+        
+        invalid_rows -- List of invalid rows (i.e., more or less columns than
         number of headers).
-    formatted_errors -- List of errors in file, each error contains: row, column 
-        and value of the error
-    raw_data -- List of raw CSV data as rows.
-    valid_rows -- List of valid rows (i.e., same number of columns as headers).
-    errors -- List of rows and columns of possibly incorrect values.
+        
+        formatted_errors -- List of errors in file, each error contains: row, column 
+        and value of the error.
+        
+        raw_data -- List of raw CSV data as rows.
+        
+        valid_rows -- List of valid rows (i.e., same number of columns as headers).
+        
+        errors -- List of rows and columns of possibly incorrect values.
     """
     def __init__(self, *args):
         """Can take up to two arguments, 
@@ -406,8 +415,7 @@ class Data(object):
         """
         
         for colNo, column in enumerate(self.columns):
-            column.define_most_common()
-            column.define_least_common()
+            column.define_most_least_common()
             if not column.empty:
                 if self.template != None and colNo in self.template.columns:
                     column.set_type(self.template.columns[colNo])

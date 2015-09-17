@@ -44,72 +44,30 @@
 runs analysis on said data.</p>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Analyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
-<dd><blockquote>
-<div>Base analysis class object. Initiate the object, and assigns the</div></blockquote>
-<p>statistical mode, if any.</p>
-<p>Class variables:
-mode &#8211; Returns the mode of the column analysed.</p>
-<p>Child Classes and associated variables:
-StringAnalyser &#8211; String column analysis.
-EmailAnalyser &#8211; Email column analysis.
-EnumAnalyser &#8211; Enumerated column analysis.
-NumericalAnalyser &#8211; String/Float column analysis.</p>
-<blockquote>
-<div><p>min &#8211; Minimum value in column values.
-max &#8211; Maximum value in column values.
-mean &#8211; Mean value in column values.
-median_low &#8211; Low median for column values.
-median &#8211; Median value for column values.
-median_high &#8211; High median for column values.
-stdev &#8211; Standard deviation for column values, N/A if not normally distributed to</p>
-<blockquote>
-<div>to within 95.5% confidence.</div></blockquote>
-<dl class="docutils">
-<dt>stDevOutliers &#8211; List of values outside a certain number of standard deviations</dt>
-<dd>from the mean.</dd>
-</dl>
-</div></blockquote>
-<p>CurrencyAnalyser &#8211; Child class of NumericalAnalyser
-BooleanAnalyser &#8211; Boolean column analysis</p>
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">BooleanAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
-<dd><p>Run Boolean analysis.</p>
-</dd></dl>
-
-<dl class="class">
-<dt>
 <em class="property">class </em><code class="descclassname">data.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>header=''</em><span class="sig-paren">)</span></dt>
-<dd><blockquote>
-<div>Object to hold data from each column within the provided CSV file.</div></blockquote>
-<p>Methods:
-change_misc_values &#8211; Removes misc/unclear values from column</p>
-<blockquote>
-<div>values.</div></blockquote>
-<p>drop_greater_than &#8211; Removes &#8216;&lt;&#8217;, &#8216;&gt;&#8217; from column values.
-define_most_common &#8211; Sets object variable to hold 15 most common values</p>
-<blockquote>
-<div>for that column.</div></blockquote>
+<dd><p>Object to hold data from each column within the provided CSV file.</p>
 <dl class="docutils">
-<dt>define_type &#8211; Sets object variable to type (e.g., String) according</dt>
-<dd>to column values.</dd>
-<dt>define_least_common &#8211; Sets object variable to hold 15 least common values </dt>
-<dd>for that column.</dd>
+<dt>Methods:</dt>
+<dd><p class="first">change_misc_values &#8211; Removes misc/unclear values from column values.</p>
+<p>drop_greater_than &#8211; Removes &#8216;&lt;&#8217;, &#8216;&gt;&#8217; from column values.</p>
+<p>define_most_least_common &#8211; Sets object variable to hold 15 most common values
+and least common values for that column.</p>
+<p>define_type &#8211; Sets object variable to type (e.g., String) according
+to column values.</p>
+<p class="last">define_errors &#8211; Defines a list that contains the row and column of possibly
+incorrect values.</p>
+</dd>
+<dt>Variables:</dt>
+<dd><p class="first">most_common &#8211; &lt;= 15 most common results within the column values.</p>
+<p>least_common &#8211; &lt;= 15 least common results within the column values.</p>
+<p>empty &#8211; Boolean value of whether the column holds values or not.</p>
+<p>header &#8211; Column header/title.</p>
+<p>type &#8211; The type of data in column, e.g., String, Float, Integer,
+Enumerated.</p>
+<p>values &#8211; List of CSV values for the column.</p>
+<p class="last">analysis &#8211; Analysis object associated with this column.</p>
+</dd>
 </dl>
-<p>Variables:
-most_common &#8211; &lt;= 15 most common results within the column values.
-least_common &#8211; &lt;= 15 least common results within the column values.
-empty &#8211; Boolean value of whether the column holds values or not.
-header &#8211; Column header/title.
-type &#8211; The type of data in column, e.g., String, Float, Integer,</p>
-<blockquote>
-<div>Enumerated.</div></blockquote>
-<p>values &#8211; List of CSV values for the column.
-analysis &#8211; Analysis object associated with this column.
-outliers &#8211; List of values in column but outside threshold of column type.</p>
 <dl class="method">
 <dt>
 <code class="descname">change_misc_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
@@ -119,14 +77,15 @@ outliers &#8211; List of values in column but outside threshold of column type.<
 
 <dl class="method">
 <dt>
-<code class="descname">define_least_common</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Set 15 least common results to class variable, and set object variable
-empty if appropriate.</p>
+<code class="descname">define_errors</code><span class="sig-paren">(</span><em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em><span class="sig-paren">)</span></dt>
+<dd><p>Define all the rows/columns with invalid values and append to errors, and
+formatted_errors once formatted properly. invalid_rows_pos holds the amount of
+rows that have been skipped by the time the current row x is being considered.</p>
 </dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">define_most_common</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<code class="descname">define_most_least_common</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
 <dd><p>Set 15 most common results to class variable, and set object variable 
 empty if appropriate.</p>
 </dd></dl>
@@ -138,45 +97,48 @@ empty if appropriate.</p>
 as appropriate.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">CurrencyAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
-<dd><p>Run currency analysis, calls NumericalAnalyser as a superclass</p>
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Data</code><span class="sig-paren">(</span><em>csv_file</em><span class="sig-paren">)</span></dt>
-<dd><p>Main store for CSV data, reading the data from the CSV file and then 
-assigning out to relevant variables.</p>
-<p>Methods:
-read &#8211; Reads the CSV file and outputs to raw_data variable.
-remove_invalid &#8211; Reads from raw_data variable and assigns rows to</p>
-<blockquote>
-<div>valid_rows or invalid_rows according to their length.</div></blockquote>
-<dl class="docutils">
-<dt>create_columns &#8211; Creates column object according to valid_rows, assigning</dt>
-<dd>column header and column values.</dd>
-</dl>
-<p>clean &#8211; Calls column cleaning methods to run &#8216;cleaning&#8217; on all columns.
-analyse &#8211; Calls column analysis methods to run &#8216;analysis&#8217; on all columns.</p>
-<p>Variables:
-columns &#8211; List of column objects.
-headers &#8211; List of column headers.
-invalid_rows &#8211; List of invalid rows (i.e., more or less columns than</p>
-<blockquote>
-<div>number of headers).</div></blockquote>
-<p>raw_data &#8211; List of raw CSV data as rows.
-valid_rows &#8211; List of valid rows (i.e., same number of columns as headers).</p>
 <dl class="method">
 <dt>
-<code class="descname">analyse</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Calls analysis methods on all columns, checking if they are empty
-first.</p>
+<code class="descname">set_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span></dt>
+<dd><p>Sets the size of the data for use when checking for errors.
+For use with the &#8216;Identifier&#8217; data type</p>
 </dd></dl>
 
+<dl class="method">
+<dt>
+<code class="descname">set_type</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span></dt>
+<dd><p>Sets type of column for use with tempaltes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">data.</code><code class="descname">Data</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span></dt>
+<dd><p>Main store for CSV data, reading the data from the CSV file and then 
+assigning out to relevant variables.</p>
+<dl class="docutils">
+<dt>Methods:</dt>
+<dd><p class="first">read &#8211; Reads the CSV file and outputs to raw_data variable.</p>
+<p>remove_invalid &#8211; Reads from raw_data variable and assigns rows to 
+valid_rows or invalid_rows according to their length.</p>
+<p>create_columns &#8211; Creates column object according to valid_rows, assigning
+column header and column values.</p>
+<p>clean &#8211; Calls column cleaning methods to run &#8216;cleaning&#8217; on all columns.</p>
+<p class="last">analyse &#8211; Calls column analysis methods to run &#8216;analysis&#8217; on all columns.</p>
+</dd>
+<dt>Variables:</dt>
+<dd><p class="first">columns &#8211; List of column objects.</p>
+<p>headers &#8211; List of column headers.</p>
+<p>invalid_rows &#8211; List of invalid rows (i.e., more or less columns than
+number of headers).</p>
+<p>formatted_errors &#8211; List of errors in file, each error contains: row, column 
+and value of the error.</p>
+<p>raw_data &#8211; List of raw CSV data as rows.</p>
+<p>valid_rows &#8211; List of valid rows (i.e., same number of columns as headers).</p>
+<p class="last">errors &#8211; List of rows and columns of possibly incorrect values.</p>
+</dd>
+</dl>
 <dl class="method">
 <dt>
 <code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
@@ -195,6 +157,15 @@ populates relevant column object with row data.</p>
 
 <dl class="method">
 <dt>
+<code class="descname">pre_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Calls analysis methods on all columns, checking if they are empty
+first. First defines their least and most common elements, then if 
+column is not empty defines its type, any outliers and finally checks
+for any errors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
 <code class="descname">read</code><span class="sig-paren">(</span><em>csv_file</em><span class="sig-paren">)</span></dt>
 <dd><p>Opens and reads the CSV file, line by line, to raw_data variable.</p>
 </dd></dl>
@@ -204,33 +175,10 @@ populates relevant column object with row data.</p>
 <code class="descname">remove_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
 <dd><p>For each row in raw_data variable, checks row length and appends to 
 valid_rows variable if same length as headers, else appends to 
-invalid_rows variable.</p>
+invalid_rows variable. invalid_rows_pos holds the amount of rows that have been
+skipped by the point the xth row has been accessed from valid_rows.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">EmailAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
-<dd><p>Run email analysis</p>
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">EnumAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
-<dd><p>Run enumeration analysis.</p>
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">NumericalAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
-<dd><p>Runs numeric analysis.</p>
-</dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">data.</code><code class="descname">StringAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span></dt>
-<dd><p>Run string analysis.</p>
 </dd></dl>
 
 </div>
@@ -240,7 +188,29 @@ invalid_rows variable.</p>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Online Data Analysis</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="app.html">1. Application</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">2. Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rep.html">3. Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="templ.html">4. Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analy.html">5. Analyser</a></li>
+</ul>
+
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
@@ -249,13 +219,6 @@ invalid_rows variable.</p>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/Code_rst/dat.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

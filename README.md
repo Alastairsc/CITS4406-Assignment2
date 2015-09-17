@@ -1,11 +1,21 @@
 # CITS4406 - Assignment 2
 Provide a Python file to perform basic cleansing and statistical analysis on data provided via a csv file. Ideally structure the project so that other students can easily pick up/extend the functionality at a later date.
 
+### Running the program
+* The program requires Python3, the scipy module, numpy module, alabaster module and pandas 
+* module to run, it is reccomended that you install these via the python distribution "Anaconda"
+* found here: http://continuum.io/downloads.
+* 
+
 ### Data types
 * Int
 * Float
 * Enumerated
-* Str
+* String
+* Email
+* Currency
+* Boolean
+* Scientific notation
 
 
 ### Cleansing
@@ -24,15 +34,5 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
     * Maximum
     * Mode
 * Top 5 occurring results
-
-Todo:
-* Boolean type?
-* Dates type
-* Geo-cords type
-* Cleansing of '<1', numeric values with characters - Currently excluded/not matched.
-* Implement testing
-* Nice to have handling of multiple input files?
-* Create makefile with venv included to allow easier use of things like jinja2?
-
 
 You can run the project by extracting the zip, and running 'python3 application.py *csv filename here*'. 

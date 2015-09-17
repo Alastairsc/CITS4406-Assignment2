@@ -1,45 +1,69 @@
-"""Analyser class for running analsis on columns"""
+"""Analyser class for running analysis on columns"""
 
+import sys
+import os
 import re
 from collections import Counter
-from statistics import mean, mode, median_low, median, median_high, stdev, \
-    StatisticsError, Decimal
+from statistics import mean, mode, median_low, median, median_high, stdev, StatisticsError, Decimal
 from scipy.stats import mstats
 from numpy import array
 from email.utils import parseaddr
 from math import floor, log10, pow
 
-
-
-#  Config
 threshold = 0.9
 enum_threshold = 1
 standardDeviations = 3
 
 class Analyser(object):
-    """Base analysis class object. Initiate the object, and assigns the 
-    statistical mode, if any.
+    """
+    Base analysis class object. Initiate the object, and assigns the statistical mode, if any.
+    
+    Global variables:
+        threshold -- The percentage threshold which the column must have of a type before
+        it is declared that type.
+        
+        enum_threshold -- The integer threshold which if the count of occurence of a value is
+        less than the value is declared an error.
+        
+        standardDeviations -- The amount of standard deviations away from the mean (mean +-
+        standardDeviations) which if the value is outside the value is declared an error.
+        
     
     Class variables:
-    mode -- Returns the mode of the column analysed.
+        mode -- Returns the mode of the column analysed.
+        
+        unique -- The count of unique values in the column.
     
-    Child Classes and associated variables:
-    StringAnalyser -- String column analysis.
-    EmailAnalyser -- Email column analysis.
-    EnumAnalyser -- Enumerated column analysis.
-    NumericalAnalyser -- String/Float column analysis.
-        min -- Minimum value in column values.
-        max -- Maximum value in column values.
-        mean -- Mean value in column values.
-        median_low -- Low median for column values.
-        median -- Median value for column values.
-        median_high -- High median for column values.
-        normDist -- String Yes/No if columns value is normally distributed.
-        stdev -- Standard deviation for column values, N/A if not normally distributed to
+    Child classes and associated variables:
+        StringAnalyser -- String column analysis.
+        
+        EmailAnalyser -- Email column analysis.
+        
+        EnumAnalyser -- Enumerated column analysis.
+        
+        NumericalAnalyser -- String/Float column analysis.
+            min -- Minimum value in column values.
+            
+            max -- Maximum value in column values.
+            
+            mean -- Mean value in column values.
+            
+            median_low -- Low median for column values.
+            
+            median -- Median value for column values.
+            
+            median_high -- High median for column values.
+            
+            normDist -- String Yes/No if columns value is normally distributed.
+            
+            stdev -- Standard deviation for column values, N/A if not normally distributed to
                     to within 95.5% confidence.
-        stDevOutliers -- List of values outside a certain number of standard deviations
+                    
+            stDevOutliers -- List of values outside a certain number of standard deviations
                         from the mean.
+                        
     CurrencyAnalyser -- Child class of NumericalAnalyser
+    
     BooleanAnalyser -- Boolean column analysis
     """
     def uniqueCount(self, values):

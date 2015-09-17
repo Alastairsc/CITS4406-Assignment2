@@ -13,7 +13,7 @@ This contains the documentation for the online data analysis project
 Requirements
 ------------
 
-This requires Python 3, scipy and nummpy
+This requires Python 3, scipy, numpy and pandas
 
 
 The program currently consists of 4 files
@@ -27,6 +27,7 @@ Contents:
    /Code_rst/dat
    /Code_rst/rep
    /Code_rst/templ
+   /Code_rst/analy
 
 
 Indices and tables

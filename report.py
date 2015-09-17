@@ -12,21 +12,30 @@ class Report(object):
     """The main report object.
     
     Methods:
-    __init__ -- Initialise the object 
-and create required local variables.
-    empty_columns -- Return empty columns in the data object.
-    html_report -- Create HTML report and output to file.
-    list_creator -- Helper method to generate a HTML list from provided input.
-    row_creator -- Helper method to generate HTML rows from provided input.
-    numerical_analysis -- Return numerical based statistics on input.
-    string_analysis -- Return string based statistics on input.
-    enum_analysis -- Return enumeration based statistics on input.
-    bool_analysis -- Return boolean based statistics on input.
-    email_analysis -- Return email based statistics on input.
+        __init__ -- Initialise the object and create required local variables.
+    
+        empty_columns -- Return empty columns in the data object.
+    
+        html_report -- Create HTML report and output to file.
+    
+        list_creator -- Helper method to generate a HTML list from provided input.
+    
+        row_creator -- Helper method to generate HTML rows from provided input.
+    
+        numerical_analysis -- Return numerical based statistics on input.
+    
+        string_analysis -- Return string based statistics on input.
+    
+        enum_analysis -- Return enumeration based statistics on input.
+    
+        bool_analysis -- Return boolean based statistics on input.
+    
+        email_analysis -- Return email based statistics on input.
     
     Variables:
-    data -- Reference to Data object.
-    file -- Reference to CSV file.
+        data -- Reference to Data object.
+        
+        file -- Reference to CSV file.
     """
     def __init__(self, data, file):
         """Initialise the Report object and assign local variables.
