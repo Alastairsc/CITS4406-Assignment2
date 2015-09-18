@@ -1,8 +1,7 @@
 """Generate reports based on data provided via a Data object.
 
 Classes:
-Report -- Contains methods to generate and output appropriate HTML for the 
-report.
+Report -- Contains methods to generate and output appropriate HTML for the report.
 """
 
 from template import *
@@ -40,8 +39,9 @@ class Report(object):
     def __init__(self, data, file):
         """Initialise the Report object and assign local variables.
         
-        Arguments:
+        Keyword arguments:
         data -- The processed CSV data object.
+        
         file -- The filename of the report.
         """
         self.data = data
@@ -52,7 +52,9 @@ class Report(object):
         return [column.header for column in self.data.columns if column.empty]
     
     def html_report(self):
-        """Write a HTML file based on analysis of CSV file."""
+        """Write a HTML file based on analysis of CSV file by calling the various
+        type analyses.
+        """
         html = base_template.format(
             header= path.basename(self.file_name), 
             len_invalid_rows=len(self.data.invalid_rows),
@@ -78,7 +80,7 @@ class Report(object):
     def list_creator(list_items):
         """Return provided list as an unordered HTML list.
         
-        Arguments:
+        Keyword arguments:
         list_items -- List of items to be turned into HTML.
         """
         html_list = '<ul>'
@@ -105,7 +107,8 @@ class Report(object):
         
     def numerical_analysis(self):
         """Return HTML string of numerical analysis on columns of type Float or 
-        Integer in the data object.
+        Integer in the data object by accessing the various class variables of the
+        columns.
         """
         rows = ''
         for column in self.data.columns:
@@ -131,7 +134,8 @@ class Report(object):
         
     def string_analysis(self):
         """Return HTML string of string analysis on columns of type string 
-        in the data object.
+        in the data object by accessing the various class variables of the
+        columns.
         """
         rows = ''
         for column in self.data.columns:
@@ -146,7 +150,8 @@ class Report(object):
         
     def enum_analysis(self):
         """Return HTML string of enumeration analysis on columns of type Enum 
-        in the data object.
+        in the data object by accessing the various class variables of the
+        columns.
         """
         rows = ''
         for column in self.data.columns:
@@ -162,7 +167,8 @@ class Report(object):
         
     def email_analysis(self):
         """Return HTML string of email analysis on columns of type email
-        in the data object.
+        in the data objectby accessing the various class variables of the
+        columns.
         """      
         rows = ''
         for column in self.data.columns:
@@ -177,7 +183,8 @@ class Report(object):
         
     def boolean_analysis(self):
         """Return HTML string of boolean analysis on columns of type boolean
-        in the data object.
+        in the data objectby accessing the various class variables of the
+        columns.
         """      
         rows = ''
         for column in self.data.columns:
@@ -197,7 +204,8 @@ class Report(object):
         
     def currency_analysis(self):
         """Return HTML string of numerical analysis on columns of type Currency
-         in the data object.
+         in the data object by accessing the various class variables of the
+        columns.
         """
         rows = ''
         for column in self.data.columns:
@@ -222,7 +230,9 @@ class Report(object):
 
     def identifier_analysis(self):
         """Return HTML string of identifier analysis on columns of type identifier
-        in the data object.
+        in the data objectby accessing the various class variables of the
+        columns by accessing the various class variables of the
+        columns.
         """
         rows = ''
         for column in self.data.columns:

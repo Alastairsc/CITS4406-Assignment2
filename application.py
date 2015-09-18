@@ -34,7 +34,11 @@ def main(*args):
     report.html_report()
             
 def get_file_dir(location):
-    """Returns the directory of the file with the file name"""
+    """Returns the directory of the file with the file name
+    
+    Keyword arguments:
+        location -- A file path.
+    """
     return location.rpartition('\\')
     
 if __name__ == '__main__': 

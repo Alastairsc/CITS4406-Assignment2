@@ -82,52 +82,94 @@ standardDeviations) which if the value is outside the value is declared an error
 </dl>
 <p>CurrencyAnalyser &#8211; Child class of NumericalAnalyser</p>
 <p>BooleanAnalyser &#8211; Boolean column analysis</p>
+<dl class="method">
+<dt id="analyser.Analyser.uniqueCount">
+<code class="descname">uniqueCount</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.Analyser.uniqueCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the amount of unique values in the values list.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>values &#8211; A list of values.</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="analyser.BooleanAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">BooleanAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.BooleanAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run email analysis</p>
+<dd><p>Run boolean analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="analyser.CurrencyAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">CurrencyAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.CurrencyAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run currency analysis, calls NumericalAnalyser as a superclass</p>
+<dd><p>Run currency analysis, using NumericalAnalyser as a super class</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>NumericalAnalyser &#8211; A NumericalAnalyser object.</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="analyser.EmailAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">EmailAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.EmailAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run email analysis</p>
+<dd><p>Run email analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="analyser.EnumAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">EnumAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.EnumAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run enumeration analysis.</p>
+<dd><p>Run enumerated analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="analyser.IdentifierAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">IdentifierAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.IdentifierAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run Identifier analysis</p>
+<dd><p>Run identifier analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="analyser.NumericalAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">NumericalAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.NumericalAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs numeric analysis.</p>
+<dd><p>Runs numeric analysis with unique fields</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="analyser.SciNotationAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">SciNotationAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.SciNotationAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run Scientific notation analysis.</p>
+<dd><p>Run scientific notation analysis, using unique fields.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
 <dl class="method">
 <dt id="analyser.SciNotationAnalyser.int_to_sci">
 <code class="descname">int_to_sci</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.SciNotationAnalyser.int_to_sci" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts numbers into a string in scientific notation form</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>value &#8211; The value to be converted to scientific notation.</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -135,7 +177,11 @@ standardDeviations) which if the value is outside the value is declared an error
 <dl class="class">
 <dt id="analyser.StringAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">StringAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.StringAnalyser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run string analysis.</p>
+<dd><p>Run string analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
 </dd></dl>
 
 </div>

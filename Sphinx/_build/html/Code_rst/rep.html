@@ -42,8 +42,7 @@
 <span id="report"></span><h1>3. Report<a class="headerlink" href="#module-report" title="Permalink to this headline">¶</a></h1>
 <p>Generate reports based on data provided via a Data object.</p>
 <p>Classes:
-Report &#8211; Contains methods to generate and output appropriate HTML for the 
-report.</p>
+Report &#8211; Contains methods to generate and output appropriate HTML for the report.</p>
 <dl class="class">
 <dt id="report.Report">
 <em class="property">class </em><code class="descclassname">report.</code><code class="descname">Report</code><span class="sig-paren">(</span><em>data</em>, <em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#report.Report" title="Permalink to this definition">¶</a></dt>
@@ -70,21 +69,26 @@ report.</p>
 <dt id="report.Report.boolean_analysis">
 <code class="descname">boolean_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.boolean_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of boolean analysis on columns of type boolean
-in the data object.</p>
+in the data objectby accessing the various class variables of the
+columns.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="report.Report.currency_analysis">
 <code class="descname">currency_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.currency_analysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return HTML string of numerical analysis on columns of type Currency
-in the data object.</p>
+<dd><dl class="docutils">
+<dt>Return HTML string of numerical analysis on columns of type Currency</dt>
+<dd>in the data object by accessing the various class variables of the</dd>
+</dl>
+<p>columns.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="report.Report.email_analysis">
 <code class="descname">email_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.email_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of email analysis on columns of type email
-in the data object.</p>
+in the data objectby accessing the various class variables of the
+columns.</p>
 </dd></dl>
 
 <dl class="method">
@@ -97,27 +101,31 @@ in the data object.</p>
 <dt id="report.Report.enum_analysis">
 <code class="descname">enum_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.enum_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of enumeration analysis on columns of type Enum 
-in the data object.</p>
+in the data object by accessing the various class variables of the
+columns.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="report.Report.html_report">
 <code class="descname">html_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.html_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a HTML file based on analysis of CSV file.</p>
+<dd><p>Write a HTML file based on analysis of CSV file by calling the various
+type analyses.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="report.Report.identifier_analysis">
 <code class="descname">identifier_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.identifier_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of identifier analysis on columns of type identifier
-in the data object.</p>
+in the data objectby accessing the various class variables of the
+columns by accessing the various class variables of the
+columns.</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="report.Report.list_creator">
 <em class="property">static </em><code class="descname">list_creator</code><span class="sig-paren">(</span><em>list_items</em><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.list_creator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return provided list as an unordered HTML list.</p>
-<p>Arguments:
+<p>Keyword arguments:
 list_items &#8211; List of items to be turned into HTML.</p>
 </dd></dl>
 
@@ -125,7 +133,8 @@ list_items &#8211; List of items to be turned into HTML.</p>
 <dt id="report.Report.numerical_analysis">
 <code class="descname">numerical_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.numerical_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of numerical analysis on columns of type Float or 
-Integer in the data object.</p>
+Integer in the data object by accessing the various class variables of the
+columns.</p>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -140,7 +149,8 @@ row_items &#8211; List of items to be turned into HTML.</p>
 <dt id="report.Report.string_analysis">
 <code class="descname">string_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.string_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of string analysis on columns of type string 
-in the data object.</p>
+in the data object by accessing the various class variables of the
+columns.</p>
 </dd></dl>
 
 </dd></dl>

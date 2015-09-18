@@ -67,6 +67,11 @@ class Analyser(object):
     BooleanAnalyser -- Boolean column analysis
     """
     def uniqueCount(self, values):
+        """Return the amount of unique values in the values list.
+        
+        Keyword arguments:
+            values -- A list of values.
+        """
         valSet = set()
         for vals in values:
             valSet.add(vals)
@@ -84,14 +89,22 @@ class Analyser(object):
         self.unique = self.uniqueCount(values)
 
 class EmailAnalyser(Analyser):
-    "Run email analysis"
+    """Run email analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
     def __init__(self, values):
         super().__init__(values)
         print(self.mode)
         # TODO Something actually useful for emails.
         
 class NumericalAnalyser(Analyser):
-    """Runs numeric analysis."""
+    """Runs numeric analysis with unique fields
+    
+    Keyword arguments:
+        Analyser -- An analyser object.    
+    """
     def __init__(self, values): 
         new_values = []
         for i in values:
@@ -129,7 +142,11 @@ class NumericalAnalyser(Analyser):
                     self.stDevOutliers.append(value)
         
 class CurrencyAnalyser(NumericalAnalyser):
-    "Run currency analysis, calls NumericalAnalyser as a superclass"
+    """Run currency analysis, using NumericalAnalyser as a super class
+    
+    Keyword arguments:
+        NumericalAnalyser -- A NumericalAnalyser object.
+    """
     def __init__(self, values):
         """for x, value in enumerate(self.values):
             try:
@@ -138,30 +155,50 @@ class CurrencyAnalyser(NumericalAnalyser):
         super().__init__(values)
 
 class StringAnalyser(Analyser):
-    """Run string analysis."""
+    """Run string analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
     def __init__(self, values):
         super().__init__(values)
         #  TODO Implement some string exclusive statistics.
 
 class IdentifierAnalyser(Analyser):
-    """Run Identifier analysis"""
+    """Run identifier analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
     def __init__(self, values):
         super().__init__(values)
         # TODO Implement some identifier exclusive statistics.
         
 class EnumAnalyser(Analyser):
-    """Run enumeration analysis."""
+    """Run enumerated analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
     def __init__(self, values):
         super().__init__(values)
         #  TODO Implement some enum exclusive statistics.
                              
 class BooleanAnalyser(Analyser):
-    "Run email analysis"
+    """Run boolean analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
     def __init__(self, values):
         super().__init__(values)
 
 class SciNotationAnalyser(Analyser):
-    """Run Scientific notation analysis."""
+    """Run scientific notation analysis, using unique fields.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
     def __init__(self, values): 
         new_values = []
         for i in values:
@@ -195,7 +232,11 @@ class SciNotationAnalyser(Analyser):
                     self.stDevOutliers.append(self.int_to_sci(value))
 
     def int_to_sci(self, value):
-        """Converts numbers into a string in scientific notation form"""
+        """Converts numbers into a string in scientific notation form
+        
+        Keyword arguments:
+            value -- The value to be converted to scientific notation.
+        """
         power = floor(log10(abs(value)))
         base = round(value / pow(10, power), 2)
         if power > 0:
