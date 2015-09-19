@@ -72,9 +72,11 @@ class Report(object):
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis()
             )
+        #Remove following 3 lines to stop html file generation
         html_file = open("{}_report.html".format(self.file_name), "w")
         html_file.write(html)
         html_file.close()
+        #return str(html) will return html report as a string
 
     @staticmethod
     def list_creator(list_items):
@@ -245,3 +247,6 @@ class Report(object):
                 rows += self.row_creator(row)
         return rows
         
+    def get_html_report(self):
+        """Returns the html report for the file as a string"""
+        return html_report(self)
