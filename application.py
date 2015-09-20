@@ -18,7 +18,7 @@ def main(*args):
     """
 
     filename = args[0]
-    print (filename)
+    print (len(args))
     if len(args) > 1:
         temp = Template(args[1])
         data = Data(filename, temp)
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     filenames = []
     for file in args.filenames:
         name_ext = os.path.splitext(file)
-        print(name_ext)
+        print("name_ext: ", name_ext)
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
             xls=pd.ExcelFile(file)
             sheet_names = xls.sheet_names
@@ -95,4 +95,5 @@ if __name__ == '__main__':
                 #TODO keep functionality when files have multiple sheets
     else:
         for name in filenames:
+            print("working here")
             main(name)

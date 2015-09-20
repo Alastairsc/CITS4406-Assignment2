@@ -108,7 +108,7 @@ class NumericalAnalyser(Analyser):
     def __init__(self, values): 
         new_values = []
         for i in values:
-            print("Value: ",i)
+            #print("Value: ",i)
             if i != '':
                 try:
                     new_values.append(eval(i))
@@ -136,10 +136,10 @@ class NumericalAnalyser(Analyser):
         elif self.pval == 100:
             self.normDist = 'N/A'
         if self.normDist != 'No':
-            for value in values:
+            for x, value in enumerate(values):
                 if value < (self.mean - standardDeviations * self.stdev) or \
                 value > (self.mean + standardDeviations * self.stdev):                
-                    self.stDevOutliers.append(value)
+                    self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
         
 class CurrencyAnalyser(NumericalAnalyser):
     """Run currency analysis, using NumericalAnalyser as a super class

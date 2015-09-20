@@ -24,7 +24,7 @@ re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
 re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
-re_sci_notation= re.compile('[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
+re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
 #[\+-]?\d+(\.\d+)?[eE]\d
 re_separation = re.compile('[\s,;]+')
@@ -123,24 +123,31 @@ class Column(object):
         #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
-        #    print(value)
+            print("Values: " , value)
             if re_float.match(value):
+                print(value)
                 float_count += 1
             elif re_int.match(value):
+                print(value)
                 int_count += 1
                 value = value.strip()
             elif re_email.search(value):
+                print(value)
                 if parseaddr(value)[1] != '':
                     print(parseaddr(value)[1])
           #          print("Email match")
                     email_count += 1
             elif re_currency.search(value):
+                print(value)
                 print ("Group")
                 print (re_currency.search(value).group())
                 currency_count += 1
             elif re_boolean.search(value):
+                print(value)
                 boolean_count += 1
+                #print(value)
                 temp_value = str(value.upper())
+                print(temp_value)
                 if temp_value == ' TRUE' or temp_value == ' T' or temp_value == 'TRUE' or temp_value == 'T':
                     self.total_true += 1
                 if temp_value == ' FALSE' or temp_value == ' F' or temp_value == 'FALSE' or temp_value == 'F':
@@ -150,8 +157,9 @@ class Column(object):
                 if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
                     self.total_no += 1
             elif re_sci_notation.fullmatch(value):
-                #print("Sci not match:", value)
+                print("Sci not match:", value)
                 sci_not_count += 1
+                print("sci not count ", sci_not_count)
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
@@ -332,6 +340,7 @@ class Data(object):
         self.header_row = 0
         self.data_start = 1
         self.data_size = {}
+        print(len(args))
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
@@ -366,7 +375,8 @@ class Data(object):
                     csvfile.seek(0)
                     f = csv.reader(csvfile, dialect)
                     for row in f:
-                       self.raw_data.append(row)
+                        #print(row)
+                        self.raw_data.append(row)
         else:
             #template specified delimiter
             with open(csv_file, newline='') as csvfile:
@@ -384,7 +394,7 @@ class Data(object):
         for index, row in enumerate(self.raw_data):
             if len(row) != len(self.raw_data[0]):
                 self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
-           #     print(self.invalid_rows)
+                #print(self.invalid_rows)
                 count = count + 1
             else:
                 self.valid_rows.append(row)
@@ -394,8 +404,7 @@ class Data(object):
     def create_columns(self):
         """For each row in raw_data variable, assigns the first value to the 
         headers variable and creates a Column object with that header provided.
-        Then removes header row from valid_rows. (Todo: Maybe can read straight 
-        from valid rows? Why/Why not?). Then for each row in valid_rows,
+        Then removes header row from valid_rows. Then for each row in valid_rows,
         populates relevant column object with row data.
         """
         if self.header_row >=0:
@@ -403,9 +412,10 @@ class Data(object):
                 self.columns.append(Column(header=value))
               #  self.headers.append(value)
             self.valid_rows.pop(self.header_row)            
-
+        for vrows in self.valid_rows:
+            print(vrows)
         length = len(self.valid_rows)
-        for row_num in range(self.data_start, length):
+        for row_num in range(self.data_start - 1, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
 
@@ -423,6 +433,7 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
+                    print("col type: ", column.type)
                     column.analysis = self.analysers[column.type](column.values)  
             
     def find_errors(self):
