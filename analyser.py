@@ -237,8 +237,11 @@ class SciNotationAnalyser(Analyser):
         Keyword arguments:
             value -- The value to be converted to scientific notation.
         """
+        if value == 0:
+            return str(0E+0)
         power = floor(log10(abs(value)))
         base = round(value / pow(10, power), 2)
+    
         if power > 0:
             return str(base) + "E+" + str(power)
         else:
