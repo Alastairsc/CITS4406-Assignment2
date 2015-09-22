@@ -3,8 +3,11 @@
 Classes:
 Report -- Contains methods to generate and output appropriate HTML for the report.
 """
+try:
+	from .template import *
+except SystemError:
+	from template import *
 
-from .template import *
 from os import path
 
 class Report(object):

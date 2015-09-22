@@ -15,7 +15,10 @@ for pth in sys.path:
 import csv
 import re
 from collections import Counter
-from .analyser import *
+try:
+	from .analyser import *
+except SystemError:
+	from analyser import *
 
 #  Config
 invalid_values = ['-', '*', '_', '$']

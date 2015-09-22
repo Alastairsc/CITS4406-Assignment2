@@ -7,10 +7,14 @@ import textwrap
 import pandas as pd
 import os
 
-from .data import *
-from .report import *
-from .editor import *
-
+try:
+	from .data import *
+	from .report import *
+	from .editor import *
+except SystemError:
+	from data import *
+	from report import *
+	from editor import *
 
 def main(*args):
     """Create Data and Report objects, providing necessary information for them 
