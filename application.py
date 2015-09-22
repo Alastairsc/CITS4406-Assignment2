@@ -31,9 +31,8 @@ def main(*args):
     data.analysis()
   #  editor.make_corrected(file)
     report = Report(data, filename)
-    report.html_report()
-    #change html_report() func before commenting below line
-    #str_report = report.get_html_report()
+    str_report = report.html_report()
+    #returns string of html, also generates html report for debugging purposes
             
 def get_file_dir(location):
     """Returns the directory of the file with the file name

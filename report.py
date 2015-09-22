@@ -54,6 +54,7 @@ class Report(object):
     def html_report(self):
         """Write a HTML file based on analysis of CSV file by calling the various
         type analyses.
+            Returns string of html report
         """
         html = base_template.format(
             header= path.basename(self.file_name), 
@@ -72,11 +73,9 @@ class Report(object):
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis()
             )
-        #Remove following 3 lines to stop html file generation
-        html_file = open("{}_report.html".format(self.file_name), "w")
-        html_file.write(html)
-        html_file.close()
-        #return str(html) will return html report as a string
+        self.gen_html(html)
+        #gen report for debugging
+        return str(html) 
 
     @staticmethod
     def list_creator(list_items):
@@ -116,9 +115,8 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Float' or column.type == 'Integer'\
             or column.type == 'Sci_Notation':
-                print(column.header)
-                row = [column.header,
-                       column.analysis.min,
+               # print(column.header)
+                math_stats= [column.analysis.min,
                        column.analysis.max,
                        column.analysis.mode,
                        column.analysis.mean,
@@ -131,6 +129,14 @@ class Report(object):
                        column.most_common[:5],
                        column.least_common[:5],
                        column.analysis.unique]
+                row = [column.header]
+                for stats in math_stats:
+                    if not stats == 'N/A':
+                        row.append(stats)
+                    else:
+                        row.append(stats)
+                        #causes problems if some columns have different stats to others of
+                        #same type
                 rows += self.row_creator(row)
         return rows
         
@@ -247,6 +253,8 @@ class Report(object):
                 rows += self.row_creator(row)
         return rows
         
-    def get_html_report(self):
-        """Returns the html report for the file as a string"""
-        return html_report(self)
+    def gen_html(self, html):
+        """Generates html report for the file"""
+        html_file = open("{}_report.html".format(self.file_name), "w")
+        html_file.write(html)
+        html_file.close()
