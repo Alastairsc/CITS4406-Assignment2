@@ -371,12 +371,13 @@ class Data(object):
             with open(csv_file, newline='') as csvfile:
                     try:
                         dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
+                        csvfile.seek(0)
+                        f = csv.reader(csvfile, dialect)
                     except:
-                        print("Delimiter Error: could not determine delimiter, consider",\
-                        "specifying using template")
-                        exit(0)
-                    csvfile.seek(0)
-                    f = csv.reader(csvfile, dialect)
+                        print("Delimiter Warning: could not determine delimiter, consider",\
+                        "specifying using template. Continuing using comma")
+                        csvfile.seek(0)
+                        f = csv.reader(csvfile, delimiter=',')                    
                     for row in f:
                         #print(row)
                         self.raw_data.append(row)
