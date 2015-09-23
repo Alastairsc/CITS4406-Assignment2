@@ -331,6 +331,7 @@ class Data(object):
         self.formatted_errors = []
         self.raw_data = []
         self.valid_rows = []
+        self.headers = []
         self.analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
@@ -395,14 +396,18 @@ class Data(object):
         skipped by the point the xth row has been accessed from valid_rows.
         """
         count = 0
+        self.headers = self.raw_data[self.header_row]
         for index, row in enumerate(self.raw_data):
-            if len(row) != len(self.raw_data[0]):
+            if len(row) != len(self.headers):
                 self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
+                self.raw_data[index] = []
                 #print(self.invalid_rows)
                 count = count + 1
             else:
                 self.valid_rows.append(row)
                 self.invalid_rows_pos.append(count)
+                self.raw_data[index] = []
+        self.raw_data = []
     #    print("Invalid row pos: ", self.invalid_rows_pos)
 
     def create_columns(self):
@@ -412,16 +417,19 @@ class Data(object):
         populates relevant column object with row data.
         """
         if self.header_row >=0:
-            for value in self.raw_data[self.header_row]:
+            for value in self.headers:
                 self.columns.append(Column(header=value))
               #  self.headers.append(value)
             self.valid_rows.pop(self.header_row)            
-        for vrows in self.valid_rows:
-            print(vrows)
+       # for vrows in self.valid_rows:
+        #    print(vrows)
         length = len(self.valid_rows)
         for row_num in range(self.data_start - 1, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
+            self.valid_rows[row_num] = []
+        self.valid_rows = []
+        
 
     def clean(self):
         """Calls cleaning methods on all columns.

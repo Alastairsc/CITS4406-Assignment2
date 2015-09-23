@@ -10,11 +10,11 @@ import os
 try:
 	from .data import *
 	from .report import *
-	from .editor import *
+	from .template_reader import *
 except SystemError:
 	from data import *
 	from report import *
-	from editor import *
+	from template_reader import *
 
 def main(*args):
     """Create Data and Report objects, providing necessary information for them 
@@ -93,9 +93,14 @@ if __name__ == '__main__':
             for name in filenames:
                 main(name, args.t[0])
         else:
-            for i in range(0, len(filenames)):
-                main(filenames[i], args.t[i])
-                #TODO keep functionality when files have multiple sheets
+            num_templates = len(args.t)
+            num_files = len(filenames)
+            if(num_templates == num_files):
+                for i in range(0, num_files):
+                    main(filenames[i], args.t[i])
+            else:
+                #TODO keep functionality when excel files have multiple sheets
+                print("Error, different number of files and templates")
     else:
         for name in filenames:
             print("working here")
