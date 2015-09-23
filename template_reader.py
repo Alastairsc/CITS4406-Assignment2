@@ -1,6 +1,10 @@
 """Class for reading templates to pass on information about how
 to process the data for the data class"""     
-        
+
+import sys
+import os
+import csv
+
 class Template(object):
     """Object storing user input that describes data given. Able to specify:
         Columns - state column number and data type
