@@ -108,6 +108,8 @@ class Column(object):
         for i, e in reversed(list(enumerate(temp_list))):
             if i < 15:
                 self.least_common.append(e)
+        print("Column: ", self.values)
+        print("Most Common: ", self.most_common)
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
@@ -323,7 +325,8 @@ class Data(object):
         """Can take up to two arguments, 
             first argument -- filename
             second argument -- template"""
-
+        
+        self.filename = args[0]
         self.columns = []
         self.invalid_rows = []
         self.invalid_rows_pos = []
@@ -331,7 +334,6 @@ class Data(object):
         self.formatted_errors = []
         self.raw_data = []
         self.valid_rows = []
-        self.headers = []
         self.analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
@@ -352,7 +354,7 @@ class Data(object):
             self.data_start = self.template.data_start
             self.data_size = self.template.data_size
         #Process data
-        self.read(args[0])
+        self.read(self.filename)
         self.remove_invalid()
         self.create_columns()
         
@@ -396,9 +398,13 @@ class Data(object):
         skipped by the point the xth row has been accessed from valid_rows.
         """
         count = 0
-        self.headers = self.raw_data[self.header_row]
+        preamble = []
+        if self.data_start != 0:
+            for row in range(0, self.data_start):
+                preamble.append(self.raw_data[row])
+        row_length = len(self.raw_data[self.header_row])
         for index, row in enumerate(self.raw_data):
-            if len(row) != len(self.headers):
+            if len(row) != row_length:
                 self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
                 self.raw_data[index] = []
                 #print(self.invalid_rows)
@@ -407,7 +413,7 @@ class Data(object):
                 self.valid_rows.append(row)
                 self.invalid_rows_pos.append(count)
                 self.raw_data[index] = []
-        self.raw_data = []
+        self.raw_data = preamble
     #    print("Invalid row pos: ", self.invalid_rows_pos)
 
     def create_columns(self):
@@ -417,9 +423,8 @@ class Data(object):
         populates relevant column object with row data.
         """
         if self.header_row >=0:
-            for value in self.headers:
+            for value in self.raw_data[self.header_row]:
                 self.columns.append(Column(header=value))
-              #  self.headers.append(value)
             self.valid_rows.pop(self.header_row)            
        # for vrows in self.valid_rows:
         #    print(vrows)
@@ -464,6 +469,7 @@ class Data(object):
         """
         
         for colNo, column in enumerate(self.columns):
+            print("Col: ",colNo)
             column.define_most_least_common()
             if not column.empty:
                 if self.template != None and colNo in self.template.columns:
@@ -491,5 +497,24 @@ class Data(object):
     def gen_file(self):
         """Generates a csv file based on the data for after
         data has been corrected"""
-        #TODO implement functionality
-        print("Generate file :D")
+        new_file = open(os.path.splitext(self.filename)[0] + "_corrected.csv", "w")
+        #Write header rows
+        print ("Headers: ",self.raw_data)
+        for rowNo in range(0, self.data_start):
+            print('Rowno: ', rowNo)
+            row_len = len(self.raw_data[rowNo])
+            for i, cell in enumerate(self.raw_data[rowNo]):
+                new_file.write(cell)
+                if(i == row_len - 1):
+                    new_file.write("\n")
+                else:
+                    new_file.write(",")
+        num_rows = len(self.columns[0].values)
+        row_len = len(self.columns)
+        for rowNo in range(0, num_rows):
+            for colNo, column in enumerate(self.columns):
+                new_file.write(column.values[rowNo])
+                if(colNo == row_len - 1):
+                    new_file.write("\n")
+                else:
+                    new_file.write(",")

@@ -76,7 +76,6 @@ class Report(object):
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis()
             )
-        self.gen_html(html)
         #gen report for debugging
         return str(html) 
 
@@ -258,6 +257,7 @@ class Report(object):
         
     def gen_html(self, html):
         """Generates html report for the file"""
-        html_file = open("{}_report.html".format(self.file_name), "w")
+        
+        html_file = open(path.splitext(self.file_name)[0] + "_report.html", "w")
         html_file.write(html)
         html_file.close()
