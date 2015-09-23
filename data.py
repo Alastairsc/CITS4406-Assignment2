@@ -472,4 +472,24 @@ class Data(object):
                     column.define_type()
                 if column.type == 'Identifier' and self.data_size != None and \
                     colNo in self.data_size:
-                    column.set_size(self.data_size[colNo])                     
+                    column.set_size(self.data_size[colNo])             
+                    
+    def get_row(self, row_num):
+        """Returns the values of a row in list"""
+        row = []
+        for colNo, column in enumerate(self.columns):
+            row.append(column.values[row_num])
+        return row
+        
+    def change_row(self, row_num, new_values):
+        """Edits a row of the data given:
+            row_num - number of row being changed
+            new_values - list of values row is to be changed to"""
+        for colNo, column in enumerate(self.columns):
+            column.values[row_num] = new_values[colNo - 1]
+        
+    def gen_file(self):
+        """Generates a csv file based on the data for after
+        data has been corrected"""
+        #TODO implement functionality
+        print("Generate file :D")
