@@ -62,9 +62,19 @@ class Analyser(object):
             stDevOutliers -- List of values outside a certain number of standard deviations
                         from the mean.
                         
-    CurrencyAnalyser -- Child class of NumericalAnalyser
+        CurrencyAnalyser -- Child class of NumericalAnalyser
     
-    BooleanAnalyser -- Boolean column analysis
+        BooleanAnalyser -- Boolean column analysis
+
+        DateAnalyser -- Date column analysis
+
+        TimeAnalyser -- Time column analysis
+
+        CharAnalyser -- Character column Analysis
+
+        DayAnalyser -- Day column Analysis
+
+        HyperAnalyser -- Hyperlink column Analysis
     """
     def uniqueCount(self, values):
         """Return the amount of unique values in the values list.
@@ -247,3 +257,51 @@ class SciNotationAnalyser(Analyser):
         else:
             return str(base) + "E" + str(power)
         
+class DateAnalyser(Analyser):
+    """Run date analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
+    def __init__(self, values):
+        super().__init__(values)
+        # TODO Implement some date unique stats, eg seasonal groupings, month/year/decade frequency etc
+
+class TimeAnalyser(Analyser):
+    """Run time analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
+    def __init__(self, values):
+        super().__init__(values)
+        # TODO Implement some time unique stats. eg. hourly frequencies, day/night etc.
+
+class CharAnalyser(Analyser):
+    """Run char analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
+    def __init__(self, values):
+        super().__init__(values)
+        
+class DayAnalyser(Analyser):
+    """Run day analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
+    def __init__(self, values):
+        super().__init__(values)
+        # TODO Implement some day unique stats. eg. weekday versus weekend
+
+class HyperAnalyser(Analyser):
+    """Run hyperlink analysis, currently only using Analyser super class methods.
+    
+    Keyword arguments:
+        Analyser -- An analyser object.
+    """
+    def __init__(self, values):
+        super().__init__(values)
+        # TODO Implement some hyperlink unique stats, e.g. domain frequency.

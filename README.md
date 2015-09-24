@@ -3,8 +3,8 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 
 ### Running the program
 * The program requires Python3, the scipy module, numpy module, alabaster module and pandas 
-* module to run, it is reccomended that you install these via the python distribution "Anaconda"
-* found here: http://continuum.io/downloads.
+* module to run, it is recommended that you install these via the python distribution "Anaconda"
+* found here: http://continuum.io/downloads
 * 
 
 ### Data types
