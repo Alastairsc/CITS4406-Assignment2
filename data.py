@@ -282,10 +282,23 @@ class Column(object):
         """Sets type of column for use with tempaltes"""
         self.type = type
 
-    def set_size(self, size):
+    def set_Identifier_size(self, size):
         """Sets the size of the data for use when checking for errors.
             For use with the 'Identifier' data type"""
         self.data_size = size
+    
+    def set_empty(self):
+        """Set Column to be empty"""
+        self.empty = True
+    
+    def set_not_empty(self):
+        """Set Column to be not empty"""
+        self.empty  False
+    
+    def is_Empty(self):
+        """Whether or not column is empty"""
+        return self.empty == True
+        
         
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
@@ -450,7 +463,7 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
-                    print("col type: ", column.type)
+                 #   print("col type: ", column.type)
                     column.analysis = self.analysers[column.type](column.values)  
             
     def find_errors(self):
@@ -478,7 +491,7 @@ class Data(object):
                     column.define_type()
                 if column.type == 'Identifier' and self.data_size != None and \
                     colNo in self.data_size:
-                    column.set_size(self.data_size[colNo])             
+                    column.set_Identifier_size(self.data_size[colNo])             
                     
     def get_row(self, row_num):
         """Returns the values of a row in list"""
@@ -499,9 +512,7 @@ class Data(object):
         data has been corrected"""
         new_file = open(os.path.splitext(self.filename)[0] + "_corrected.csv", "w")
         #Write header rows
-        print ("Headers: ",self.raw_data)
         for rowNo in range(0, self.data_start):
-            print('Rowno: ', rowNo)
             row_len = len(self.raw_data[rowNo])
             for i, cell in enumerate(self.raw_data[rowNo]):
                 new_file.write(cell)
@@ -518,3 +529,17 @@ class Data(object):
                     new_file.write("\n")
                 else:
                     new_file.write(",")
+                    
+    def get_column(self, colNo):
+        """Returns a column of the data given a column number"""
+        return self.columns[colNo]
+    
+    def get_headers(self):
+        """Returns the headers of data"""
+        print self.raw_data[self.header_row]
+    
+    def set_headers(self, header_map):
+        """Sets headers of columns taking a dictionary 
+        mapping column numbers to headers"""
+        for colNo, header in header_map:
+            self.raw_data[self.header_row][colNo] = header

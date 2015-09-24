@@ -37,7 +37,6 @@ def main(*args):
     report = Report(data, filename)
     str_report = report.html_report()
     report.gen_html(str_report)
-    data.gen_file()
     #returns string of html, also generates html report for debugging purposes
             
 def get_file_dir(location):
