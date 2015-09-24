@@ -31,6 +31,11 @@ re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
 #[\+-]?\d+(\.\d+)?[eE]\d
 re_separation = re.compile('[\s,;]+')
+re_date = re.compile('^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$')
+re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$)|(^(1[012]|0?[1-9]):[0-5][0-9](\ )?(?i)(am|pm)$)')
+re_char = re.compile('^\D$')
+re_day = re.compile('^(?i)(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$')
+re_hyper = re.compile('^(?i)(https?:\/\/).+$')
 
     
 class Column(object):
@@ -124,7 +129,12 @@ class Column(object):
         currency_count = 0
         boolean_count = 0
         sci_not_count = 0
-
+        date_count = 0
+        time_count = 0
+        char_count = 0
+        day_count = 0
+        hyper_count = 0
+        
         #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
@@ -165,6 +175,21 @@ class Column(object):
                 print("Sci not match:", value)
                 sci_not_count += 1
                 print("sci not count ", sci_not_count)
+            elif re_date.search(value) :
+                print(value)
+                date_count += 1
+            elif re_time.search(value) :
+                print(value)
+                time_count += 1
+            elif re_char.search(value) :
+                print(value)
+                char_count += 1
+            elif re_day.search(value) :
+                print(value)
+                day_count += 1
+            elif re_hyper.search(value) :
+                print(value)
+                hyper_count +=1
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
@@ -180,6 +205,16 @@ class Column(object):
             self.type = 'Boolean'
         elif sci_not_count / len(self.values) >= threshold:
             self.type = 'Sci_Notation'
+        elif date_count / len(self.values) >= threshold:
+            self.type = 'Date'
+        elif time_count / len(self.values) >= threshold:
+            self.type = 'Time'
+        elif char_count / len(self.values) >= threshold:
+            self.type = 'Char'
+        elif day_count / len(self.values) >= threshold:
+            self.type = 'Day'
+        elif hyper_count / len(self.values) >= threshold:
+            self.type = 'Hyperlink'
         elif len(self.most_common) < 10:
             self.type = 'Enum'
         else:
@@ -276,29 +311,51 @@ class Column(object):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+        elif self.type == 'Date':
+            for x, value in enumerate(self.values):           
+                if not re_date.match(value):
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+
+        elif self.type == 'Time':
+            for x, value in enumerate(self.values):           
+                if not re_time.match(value):
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+
+        elif self.type == 'Char':
+            for x, value in enumerate(self.values):           
+                if not re_char.match(value):
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+
+        elif self.type == 'Day':
+            for x, value in enumerate(self.values):           
+                if not re_day.match(value):
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+
+        elif self.type == 'Hyperlink':
+            for x, value in enumerate(self.values):           
+                if not re_float.match(value):
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                
        # print("Errors: ", errors)
 
     def set_type(self, type):
-        """Sets type of column for use with tempaltes"""
+        """Sets type of column for use with templates"""
         self.type = type
 
-    def set_Identifier_size(self, size):
+    def set_size(self, size):
         """Sets the size of the data for use when checking for errors.
             For use with the 'Identifier' data type"""
         self.data_size = size
-    
-    def set_empty(self):
-        """Set Column to be empty"""
-        self.empty = True
-    
-    def set_not_empty(self):
-        """Set Column to be not empty"""
-        self.empty  False
-    
-    def is_Empty(self):
-        """Whether or not column is empty"""
-        return self.empty == True
-        
         
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
@@ -351,7 +408,9 @@ class Data(object):
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
                      'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser,
-                     'Identifier': IdentifierAnalyser}
+                     'Identifier': IdentifierAnalyser, 'Date': DateAnalyser,
+                     'Time': TimeAnalyser, 'Char': CharAnalyser,
+                     'Day': DayAnalyser, 'Hyperlink': HyperAnalyser}
         
         #Template settings
         self.template = None
@@ -463,7 +522,7 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
-                 #   print("col type: ", column.type)
+                    print("col type: ", column.type)
                     column.analysis = self.analysers[column.type](column.values)  
             
     def find_errors(self):
@@ -491,7 +550,7 @@ class Data(object):
                     column.define_type()
                 if column.type == 'Identifier' and self.data_size != None and \
                     colNo in self.data_size:
-                    column.set_Identifier_size(self.data_size[colNo])             
+                    column.set_size(self.data_size[colNo])             
                     
     def get_row(self, row_num):
         """Returns the values of a row in list"""
@@ -512,7 +571,9 @@ class Data(object):
         data has been corrected"""
         new_file = open(os.path.splitext(self.filename)[0] + "_corrected.csv", "w")
         #Write header rows
+        print ("Headers: ",self.raw_data)
         for rowNo in range(0, self.data_start):
+            print('Rowno: ', rowNo)
             row_len = len(self.raw_data[rowNo])
             for i, cell in enumerate(self.raw_data[rowNo]):
                 new_file.write(cell)
@@ -529,17 +590,3 @@ class Data(object):
                     new_file.write("\n")
                 else:
                     new_file.write(",")
-                    
-    def get_column(self, colNo):
-        """Returns a column of the data given a column number"""
-        return self.columns[colNo]
-    
-    def get_headers(self):
-        """Returns the headers of data"""
-        print self.raw_data[self.header_row]
-    
-    def set_headers(self, header_map):
-        """Sets headers of columns taking a dictionary 
-        mapping column numbers to headers"""
-        for colNo, header in header_map:
-            self.raw_data[self.header_row][colNo] = header
