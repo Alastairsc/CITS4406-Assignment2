@@ -479,14 +479,14 @@ class Data(object):
           #  print("Here")
             with open(csv_file, newline='') as csvfile:
                     try:
-                        dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
+                        dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
                         csvfile.seek(0)
                         f = csv.reader(csvfile, dialect)
                     except:
                         print("Delimiter Warning: could not determine delimiter, consider",\
                         "specifying using template. Continuing using comma")
                         csvfile.seek(0)
-                        f = csv.reader(csvfile, delimiter=',')                    
+                        f = csv.reader(csvfile, delimiter=' ')
                     for row in f:
                         #print(row)
                         self.raw_data.append(row)
