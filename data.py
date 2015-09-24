@@ -80,6 +80,7 @@ class Column(object):
         self.total_yes = 0
         self.total_no = 0
         self.data_size = -1
+        self.ignore_empty = False
         #  Todo: Does initialising as None even make sense?
 
     def change_misc_values(self):
@@ -108,8 +109,8 @@ class Column(object):
         for i, e in reversed(list(enumerate(temp_list))):
             if i < 15:
                 self.least_common.append(e)
-        print("Column: ", self.values)
-        print("Most Common: ", self.most_common)
+       # print("Column: ", self.values)
+      #  print("Most Common: ", self.most_common)
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
@@ -128,31 +129,31 @@ class Column(object):
         #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
-            print("Values: " , value)
+          #  print("Values: " , value)
             if re_float.match(value):
-                print(value)
+               # print(value)
                 float_count += 1
             elif re_int.match(value):
-                print(value)
+               # print(value)
                 int_count += 1
                 value = value.strip()
             elif re_email.search(value):
-                print(value)
+              #  print(value)
                 if parseaddr(value)[1] != '':
-                    print(parseaddr(value)[1])
+              #      print(parseaddr(value)[1])
           #          print("Email match")
                     email_count += 1
             elif re_currency.search(value):
-                print(value)
-                print ("Group")
-                print (re_currency.search(value).group())
+              #  print(value)
+             #   print ("Group")
+               # print (re_currency.search(value).group())
                 currency_count += 1
             elif re_boolean.search(value):
-                print(value)
+              #  print(value)
                 boolean_count += 1
                 #print(value)
                 temp_value = str(value.upper())
-                print(temp_value)
+              #  print(temp_value)
                 if temp_value == ' TRUE' or temp_value == ' T' or temp_value == 'TRUE' or temp_value == 'T':
                     self.total_true += 1
                 if temp_value == ' FALSE' or temp_value == ' F' or temp_value == 'FALSE' or temp_value == 'F':
@@ -162,23 +163,26 @@ class Column(object):
                 if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
                     self.total_no += 1
             elif re_sci_notation.fullmatch(value):
-                print("Sci not match:", value)
+                #print("Sci not match:", value)
                 sci_not_count += 1
-                print("sci not count ", sci_not_count)
-        if float_count / len(self.values) >= threshold:
-            self.type = 'Float'
-        elif int_count / len(self.values) >= threshold:
+               # print("sci not count ", sci_not_count)
+        num_values = len(self.values)
+        if int_count / num_values >= threshold:
             self.type = 'Integer'
-        elif email_count / len(self.values) >= threshold:
+        elif float_count / num_values >= threshold:
+            self.type = 'Float'
+        elif (float_count + int_count) / num_values >= threshold:
+            self.type = 'Numeric'
+        elif email_count / num_values >= threshold:
         #    print('Email type')
             self.type = 'Email'
-        elif currency_count / len(self.values) >= threshold:
+        elif currency_count / num_values >= threshold:
       #     print('Currency type')
             self.type = 'Currency'
-        elif boolean_count / len(self.values) >= threshold:
+        elif boolean_count / num_values >= threshold:
        #     print('Boolean type')
             self.type = 'Boolean'
-        elif sci_not_count / len(self.values) >= threshold:
+        elif sci_not_count / num_values >= threshold:
             self.type = 'Sci_Notation'
         elif len(self.most_common) < 10:
             self.type = 'Enum'
@@ -214,10 +218,19 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
-                if not re_int.match(value):
+                if not re_int.match(value) and not value == '0':
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+        elif self.type == 'Numeric':
+            for x, value in enumerate(self.values):
+                if value == '' and self.ignore_empty:
+                    continue
+                if not re_int.match(value) and not re_float.match(value) and not value == '0':
+                    print("Value: ", value)
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s - not a number" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
                 if re_email.search(value):
@@ -232,7 +245,7 @@ class Column(object):
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Currency':
-            print('Currency errors')
+           # print('Currency errors')
             for x, value in enumerate(self.values):
                 if not re_currency.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
@@ -242,6 +255,8 @@ class Column(object):
                     self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
         elif self.type == 'String':
             for x, value in enumerate(self.values):
+                if (value == '' or value == ' ') and self.ignore_empty:
+                    continue
                 if value == '' or value == ' ':
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
@@ -293,7 +308,7 @@ class Column(object):
     
     def set_not_empty(self):
         """Set Column to be not empty"""
-        self.empty  False
+        self.empty = False
     
     def is_Empty(self):
         """Whether or not column is empty"""
@@ -351,7 +366,7 @@ class Data(object):
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
                      'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
                      'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser,
-                     'Identifier': IdentifierAnalyser}
+                     'Identifier': IdentifierAnalyser, 'Numeric': NumericalAnalyser}
         
         #Template settings
         self.template = None
@@ -359,13 +374,15 @@ class Data(object):
         self.header_row = 0
         self.data_start = 1
         self.data_size = {}
-        print(len(args))
+        self.ignore_empty = False
+       # print(len(args))
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
             self.header_row = self.template.header_row
             self.data_start = self.template.data_start
             self.data_size = self.template.data_size
+            self.ignore_empty = self.template.ignore_empty
         #Process data
         self.read(self.filename)
         self.remove_invalid()
@@ -382,8 +399,8 @@ class Data(object):
         #for row in f:
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
-        if self.template == None:
-            print("Here")
+        if self.delimiter == '':
+          #  print("Here")
             with open(csv_file, newline='') as csvfile:
                     try:
                         dialect = csv.Sniffer().sniff(csvfile.read(), delimiters=',;-\t')
@@ -482,7 +499,7 @@ class Data(object):
         """
         
         for colNo, column in enumerate(self.columns):
-            print("Col: ",colNo)
+           # print("Col: ",colNo)
             column.define_most_least_common()
             if not column.empty:
                 if self.template != None and colNo in self.template.columns:
@@ -491,7 +508,9 @@ class Data(object):
                     column.define_type()
                 if column.type == 'Identifier' and self.data_size != None and \
                     colNo in self.data_size:
-                    column.set_Identifier_size(self.data_size[colNo])             
+                    column.set_Identifier_size(self.data_size[colNo])
+                if self.ignore_empty:
+                    column.ignore_empty = True
                     
     def get_row(self, row_num):
         """Returns the values of a row in list"""
@@ -536,7 +555,7 @@ class Data(object):
     
     def get_headers(self):
         """Returns the headers of data"""
-        print self.raw_data[self.header_row]
+        return self.raw_data[self.header_row]
     
     def set_headers(self, header_map):
         """Sets headers of columns taking a dictionary 

@@ -84,7 +84,7 @@ class Analyser(object):
         try:
             self.mode = mode(values)
         except StatisticsError:
-            print("Statistics error")
+            #print("Statistics error")
             self.mode = 'N/A'
         self.unique = self.uniqueCount(values)
 
@@ -96,7 +96,7 @@ class EmailAnalyser(Analyser):
     """
     def __init__(self, values):
         super().__init__(values)
-        print(self.mode)
+       # print(self.mode)
         # TODO Something actually useful for emails.
         
 class NumericalAnalyser(Analyser):

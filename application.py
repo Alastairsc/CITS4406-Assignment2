@@ -22,7 +22,7 @@ def main(*args):
     """
 
     filename = args[0]
-    print (len(args))
+  #  print (len(args))
     if len(args) > 1:
         temp = Template(args[1])
         data = Data(filename, temp)
@@ -61,11 +61,11 @@ if __name__ == '__main__':
         help='one or more filenames for the processor to analyse')
     parser.add_argument('-t', nargs='+', metavar='template', help='a template for the given files')
     args = parser.parse_args()
-    print(args)
+  #  print(args)
     filenames = []
     for file in args.filenames:
         name_ext = os.path.splitext(file)
-        print("name_ext: ", name_ext)
+        #print("name_ext: ", name_ext)
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
             xls=pd.ExcelFile(file)
             sheet_names = xls.sheet_names
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         else:
             filenames.append(file)
                           
-    print(args.t)     
+  #  print(args.t)     
     if args.t != None:
         if len(args.t) == 1:
             for name in filenames:
@@ -104,5 +104,5 @@ if __name__ == '__main__':
                 print("Error, different number of files and templates")
     else:
         for name in filenames:
-            print("working here")
+          #  print("working here")
             main(name)

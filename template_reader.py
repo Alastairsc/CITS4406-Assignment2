@@ -19,6 +19,7 @@ class Template(object):
         self.header_row = 0
         self.data_start = 1
         self.data_size = {}
+        self.ignore_empty = False
         
         self.read(filename)
         
@@ -43,4 +44,7 @@ class Template(object):
                         print("Set header: ", self.header_row)
                     elif row[0].lower() == 'data_start':
                         self.data_start = int(row[1]) - 1
-                        
+                    elif row[0].lower() == 'ignore_empty':
+                        if row[1] == 'all':
+                            self.ignore_empty = True
+                            #TODO allow user to specify certain columns that empty cells should be ignored

@@ -116,7 +116,7 @@ class Report(object):
         rows = ''
         for column in self.data.columns:
             if column.type == 'Float' or column.type == 'Integer'\
-            or column.type == 'Sci_Notation':
+            or column.type == 'Sci_Notation' or column.type == 'Numeric':
                # print(column.header)
                 math_stats= [column.analysis.min,
                        column.analysis.max,
@@ -260,4 +260,5 @@ class Report(object):
         
         html_file = open(path.splitext(self.file_name)[0] + "_report.html", "w")
         html_file.write(html)
+        print("Report Successfully Generated!!")
         html_file.close()
