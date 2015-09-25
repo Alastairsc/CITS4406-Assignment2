@@ -10,21 +10,13 @@ from numpy import array
 from email.utils import parseaddr
 from math import floor, log10, pow
 
-threshold = 0.9
-enum_threshold = 1
 standardDeviations = 3
 
 class Analyser(object):
     """
     Base analysis class object. Initiate the object, and assigns the statistical mode, if any.
     
-    Global variables:
-        threshold -- The percentage threshold which the column must have of a type before
-        it is declared that type.
-        
-        enum_threshold -- The integer threshold which if the count of occurence of a value is
-        less than the value is declared an error.
-        
+    Global variables:        
         standardDeviations -- The amount of standard deviations away from the mean (mean +-
         standardDeviations) which if the value is outside the value is declared an error.
         

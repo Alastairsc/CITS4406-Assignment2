@@ -28,6 +28,10 @@ def main(*args):
     if len(args) > 1:
         temp = Template(args[1])
         data = Data(filename, temp)
+        if(temp.threshold_val != -1.0):
+            data.threshold = temp.threshold_val
+        if(temp.enum_threshold_val != -1):
+            data.enum_threshold = temp.enum_threshold_val
     else:
         data = Data(filename)
     data.clean()
@@ -55,7 +59,11 @@ def get_file_dir(location):
     """
     return location.rpartition('\\')
     
-if __name__ == '__main__': 
+if __name__ == '__main__':
+    print ('sys.argv[0] =', sys.argv[0])             
+    pathname = os.path.dirname(sys.argv[0])        
+    print ('path =', pathname)
+    print ('full path =', os.path.abspath(pathname)) 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,\
         description=textwrap.dedent('''\
                 Processes Csv files.
@@ -72,6 +80,7 @@ if __name__ == '__main__':
   #  print(args)
     filenames = []
     for file in args.filenames:
+        print(file)
         name_ext = os.path.splitext(file)
         #print("name_ext: ", name_ext)
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
@@ -83,14 +92,13 @@ if __name__ == '__main__':
                     df.to_csv(new_name, index=False) 
                     filenames.append(new_name)
             else:
-                file_dir = get_file_dir(file)
-                if not os.path.exists(file_dir[0] + "\csv_copies"):
-                    os.makedirs(file_dir[0] + "\csv_copies")
+                file_dir = os.path.abspath(pathname)
+                if not os.path.exists(os.path.join(file_dir, "csv_copies")):
+                    os.makedirs(os.path.join(file_dir, "csv_copies"))
                     #makes new directory to store new csv files
                 for sheet in sheet_names:
                     df = xls.parse(sheet, index_col=None, na_values=['NA'])
-                    new_name = file_dir[0] + "\csv_copies\\" + os.path.splitext(file_dir[2])[0] \
-                    + "_" + sheet + ".csv"
+                    new_name = os.path.join(file_dir, "csv_copies" , os.path.split(file)[1] + "_" + sheet + ".csv")
                     df.to_csv(new_name, index=False)
                     filenames.append(new_name)
         else:

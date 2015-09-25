@@ -20,6 +20,9 @@ try:
 except SystemError:
 	from analyser import *
 
+threshold = 0.9
+enum_threshold = 1
+
 #  Config
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
@@ -384,6 +387,13 @@ class Column(object):
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
     assigning out to relevant variables.
+    
+    Global variables:
+        threshold -- The percentage threshold which the column must have of a type before
+        it is declared that type.
+        
+        enum_threshold -- The integer threshold which if the count of occurence of a value is
+        less than the value is declared an error.
     
     Methods:
         read -- Reads the CSV file and outputs to raw_data variable.
