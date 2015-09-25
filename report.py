@@ -260,5 +260,4 @@ class Report(object):
         
         html_file = open(path.splitext(self.file_name)[0] + "_report.html", "w")
         html_file.write(html)
-        print("Report Successfully Generated!!")
         html_file.close()

@@ -22,7 +22,9 @@ def main(*args):
     """
 
     filename = args[0]
+    print("[Step 1/7] Processing file: ",filename)
   #  print (len(args))
+    print("[Step 2/7] Reading data")
     if len(args) > 1:
         temp = Template(args[1])
         data = Data(filename, temp)
@@ -30,14 +32,20 @@ def main(*args):
         data = Data(filename)
     data.clean()
   #  editor = Editor(data)
+    print("[Step 3/7] Running pre-analysis")
     data.pre_analysis()
+    print("[Step 4/7] Finding Errors")
     data.find_errors()
+    print("[Step 5/7] Running Analysis")
     data.analysis()
   #  editor.make_corrected(file)
     report = Report(data, filename)
     str_report = report.html_report()
+    print("Step[6/7] Generating report")
     report.gen_html(str_report)
     #returns string of html, also generates html report for debugging purposes
+    print("[Step 7/7] Report Successfully Generated")
+    print("Completed analysis for: ",filename)
             
 def get_file_dir(location):
     """Returns the directory of the file with the file name

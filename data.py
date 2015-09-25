@@ -176,23 +176,16 @@ class Column(object):
                 #print("Sci not match:", value)
                 sci_not_count += 1
             elif re_date.search(value) :
-                print(value)
                 date_count += 1
             elif re_time.search(value) :
-                print(value)
                 time_count += 1
             elif re_char.search(value) :
-                print(value)
                 char_count += 1
             elif re_day.search(value) :
-                print(value)
                 day_count += 1
             elif re_hyper.search(value) :
-                print(value)
                 hyper_count +=1
         num_values = len(self.values)
-        if int_count / num_values >= threshold:
-                print("sci not count ", sci_not_count)
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
@@ -486,7 +479,7 @@ class Data(object):
                         print("Delimiter Warning: could not determine delimiter, consider",\
                         "specifying using template. Continuing using comma")
                         csvfile.seek(0)
-                        f = csv.reader(csvfile, delimiter=' ')
+                        f = csv.reader(csvfile, delimiter=',')
                     for row in f:
                         #print(row)
                         self.raw_data.append(row)
@@ -556,7 +549,7 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
-                    print("col type: ", column.type)
+                    #print("col type: ", column.type)
                     column.analysis = self.analysers[column.type](column.values)  
             
     def find_errors(self):
@@ -607,9 +600,7 @@ class Data(object):
         data has been corrected"""
         new_file = open(os.path.splitext(self.filename)[0] + "_corrected.csv", "w")
         #Write header rows
-        print ("Headers: ",self.raw_data)
         for rowNo in range(0, self.data_start):
-            print('Rowno: ', rowNo)
             row_len = len(self.raw_data[rowNo])
             for i, cell in enumerate(self.raw_data[rowNo]):
                 new_file.write(cell)
