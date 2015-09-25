@@ -45,14 +45,9 @@
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">Analyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.Analyser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base analysis class object. Initiate the object, and assigns the statistical mode, if any.</p>
 <dl class="docutils">
-<dt>Global variables:</dt>
-<dd><p class="first">threshold &#8211; The percentage threshold which the column must have of a type before
-it is declared that type.</p>
-<p>enum_threshold &#8211; The integer threshold which if the count of occurence of a value is
-less than the value is declared an error.</p>
-<p class="last">standardDeviations &#8211; The amount of standard deviations away from the mean (mean +-
-standardDeviations) which if the value is outside the value is declared an error.</p>
-</dd>
+<dt>Global variables:        </dt>
+<dd>standardDeviations &#8211; The amount of standard deviations away from the mean (mean +-
+standardDeviations) which if the value is outside the value is declared an error.</dd>
 <dt>Class variables:</dt>
 <dd><p class="first">mode &#8211; Returns the mode of the column analysed.</p>
 <p class="last">unique &#8211; The count of unique values in the column.</p>
@@ -61,7 +56,7 @@ standardDeviations) which if the value is outside the value is declared an error
 <dd><p class="first">StringAnalyser &#8211; String column analysis.</p>
 <p>EmailAnalyser &#8211; Email column analysis.</p>
 <p>EnumAnalyser &#8211; Enumerated column analysis.</p>
-<dl class="last docutils">
+<dl class="docutils">
 <dt>NumericalAnalyser &#8211; String/Float column analysis.</dt>
 <dd><p class="first">min &#8211; Minimum value in column values.</p>
 <p>max &#8211; Maximum value in column values.</p>
@@ -78,10 +73,15 @@ standardDeviations) which if the value is outside the value is declared an error
 </dl>
 </dd>
 </dl>
-</dd>
-</dl>
 <p>CurrencyAnalyser &#8211; Child class of NumericalAnalyser</p>
 <p>BooleanAnalyser &#8211; Boolean column analysis</p>
+<p>DateAnalyser &#8211; Date column analysis</p>
+<p>TimeAnalyser &#8211; Time column analysis</p>
+<p>CharAnalyser &#8211; Character column Analysis</p>
+<p>DayAnalyser &#8211; Day column Analysis</p>
+<p class="last">HyperAnalyser &#8211; Hyperlink column Analysis</p>
+</dd>
+</dl>
 <dl class="method">
 <dt id="analyser.Analyser.uniqueCount">
 <code class="descname">uniqueCount</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.Analyser.uniqueCount" title="Permalink to this definition">¶</a></dt>
@@ -105,12 +105,42 @@ standardDeviations) which if the value is outside the value is declared an error
 </dd></dl>
 
 <dl class="class">
+<dt id="analyser.CharAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">CharAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.CharAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run char analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
 <dt id="analyser.CurrencyAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">CurrencyAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.CurrencyAnalyser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run currency analysis, using NumericalAnalyser as a super class</p>
 <dl class="docutils">
 <dt>Keyword arguments:</dt>
 <dd>NumericalAnalyser &#8211; A NumericalAnalyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.DateAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">DateAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.DateAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run date analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.DayAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">DayAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.DayAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run day analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
 </dl>
 </dd></dl>
 
@@ -128,6 +158,16 @@ standardDeviations) which if the value is outside the value is declared an error
 <dt id="analyser.EnumAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">EnumAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.EnumAnalyser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run enumerated analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.HyperAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">HyperAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.HyperAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run hyperlink analysis, currently only using Analyser super class methods.</p>
 <dl class="docutils">
 <dt>Keyword arguments:</dt>
 <dd>Analyser &#8211; An analyser object.</dd>
@@ -178,6 +218,16 @@ standardDeviations) which if the value is outside the value is declared an error
 <dt id="analyser.StringAnalyser">
 <em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">StringAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.StringAnalyser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run string analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.TimeAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">TimeAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.TimeAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run time analysis, currently only using Analyser super class methods.</p>
 <dl class="docutils">
 <dt>Keyword arguments:</dt>
 <dd>Analyser &#8211; An analyser object.</dd>

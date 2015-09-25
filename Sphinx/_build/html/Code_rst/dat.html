@@ -112,6 +112,24 @@ as appropriate.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="data.Column.is_Empty">
+<code class="descname">is_Empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.is_Empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether or not column is empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Column.set_empty">
+<code class="descname">set_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Column to be empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Column.set_not_empty">
+<code class="descname">set_not_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_not_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Column to be not empty</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="data.Column.set_size">
 <code class="descname">set_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the size of the data for use when checking for errors.
@@ -121,7 +139,7 @@ For use with the &#8216;Identifier&#8217; data type</p>
 <dl class="method">
 <dt id="data.Column.set_type">
 <code class="descname">set_type</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets type of column for use with tempaltes</p>
+<dd><p>Sets type of column for use with templates</p>
 </dd></dl>
 
 </dd></dl>
@@ -132,6 +150,12 @@ For use with the &#8216;Identifier&#8217; data type</p>
 <dd><p>Main store for CSV data, reading the data from the CSV file and then 
 assigning out to relevant variables.</p>
 <dl class="docutils">
+<dt>Global variables:</dt>
+<dd><p class="first">threshold &#8211; The percentage threshold which the column must have of a type before
+it is declared that type.</p>
+<p class="last">enum_threshold &#8211; The integer threshold which if the count of occurence of a value is
+less than the value is declared an error.</p>
+</dd>
 <dt>Methods:</dt>
 <dd><p class="first">read &#8211; Reads the CSV file and outputs to raw_data variable.</p>
 <p>remove_invalid &#8211; Reads from raw_data variable and assigns rows to 
@@ -161,6 +185,14 @@ columns type analyser.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="data.Data.change_row">
+<code class="descname">change_row</code><span class="sig-paren">(</span><em>row_num</em>, <em>new_values</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.change_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits a row of the data given:
+row_num - number of row being changed
+new_values - list of values row is to be changed to</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="data.Data.clean">
 <code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls cleaning methods on all columns.</p>
@@ -171,8 +203,7 @@ columns type analyser.</p>
 <code class="descname">create_columns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.create_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each row in raw_data variable, assigns the first value to the 
 headers variable and creates a Column object with that header provided.
-Then removes header row from valid_rows. (Todo: Maybe can read straight 
-from valid rows? Why/Why not?). Then for each row in valid_rows,
+Then removes header row from valid_rows. Then for each row in valid_rows,
 populates relevant column object with row data.</p>
 </dd></dl>
 
@@ -181,6 +212,31 @@ populates relevant column object with row data.</p>
 <code class="descname">find_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.find_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterates through each column and finds any errors according to pre-determined
 conditions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.gen_file">
+<code class="descname">gen_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.gen_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a csv file based on the data for after
+data has been corrected</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.get_column">
+<code class="descname">get_column</code><span class="sig-paren">(</span><em>colNo</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.get_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a column of the data given a column number</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.get_headers">
+<code class="descname">get_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.get_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the headers of data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.get_row">
+<code class="descname">get_row</code><span class="sig-paren">(</span><em>row_num</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.get_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the values of a row in list</p>
 </dd></dl>
 
 <dl class="method">
@@ -209,6 +265,13 @@ size to me no more than data_size.</p>
 valid_rows variable if same length as headers, else appends to 
 invalid_rows variable. invalid_rows_pos holds the amount of rows that have been
 skipped by the point the xth row has been accessed from valid_rows.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.set_headers">
+<code class="descname">set_headers</code><span class="sig-paren">(</span><em>header_map</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.set_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets headers of columns taking a dictionary 
+mapping column numbers to headers</p>
 </dd></dl>
 
 </dd></dl>

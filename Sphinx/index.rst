@@ -28,6 +28,7 @@ Contents:
    /Code_rst/rep
    /Code_rst/templ
    /Code_rst/analy
+   /Code_rst/templ_rdr
 
 
 Indices and tables

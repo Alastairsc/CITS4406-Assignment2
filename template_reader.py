@@ -7,9 +7,11 @@ import csv
 
 class Template(object):
     """Object storing user input that describes data given. Able to specify:
-        Columns - state column number and data type
-        Delimiter - state delimiter character (for comma use the word not ',')
-        Start row - row of header (0 for no header)
+            Columns - state column number and data type.
+            
+            Delimiter - state delimiter character (for comma use the word not ',').
+            
+            Start row - row of header (0 for no header).
         
         Columns and rows start at 1 not 0"""
         

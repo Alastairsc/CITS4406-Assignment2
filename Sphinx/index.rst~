@@ -13,7 +13,7 @@ This contains the documentation for the online data analysis project
 Requirements
 ------------
 
-This requires Python 3, scipy and numpy
+This requires Python 3, scipy, numpy and pandas
 
 
 The program currently consists of 4 files
