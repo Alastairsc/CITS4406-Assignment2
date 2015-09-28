@@ -146,7 +146,7 @@ class Column(object):
             if re_float.match(value):
                # print(value)
                 float_count += 1
-            elif re_int.match(value):
+            elif re_int.match(value) or value == '0':
                # print(value)
                 int_count += 1
                 value = value.strip()
@@ -252,7 +252,7 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
-                if not re_int.match(value) and not value == '0':
+                if not re_int.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
