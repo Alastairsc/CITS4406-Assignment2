@@ -502,7 +502,7 @@ class Data(object):
         else:
             #template specified delimiter
             with open(csv_file, newline='') as csvfile:
-                f = csv.reader(open(csvfile, delimiter=self.delimiter))
+                f = csv.reader(csvfile, delimiter=self.delimiter)
                 for row in f:
                    self.raw_data.append(row)
 
