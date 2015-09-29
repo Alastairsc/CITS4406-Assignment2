@@ -11,6 +11,7 @@ from email.utils import parseaddr
 from math import floor, log10, pow
 
 standardDeviations = 3
+max_Outliers = 100
 
 class Analyser(object):
     """
@@ -137,11 +138,16 @@ class NumericalAnalyser(Analyser):
             self.normDist = 'Yes'
         elif self.pval == 100:
             self.normDist = 'N/A'
-        if self.normDist != 'No':
+        if self.normDist == 'Yes':
+            outlier_count = 0
             for x, value in enumerate(values):
                 if value < (self.mean - standardDeviations * self.stdev) or \
-                value > (self.mean + standardDeviations * self.stdev):                
+                value > (self.mean + standardDeviations * self.stdev):  
+                    if outlier_count > max_Outliers:
+                        self.stDevOutliers = ">%d outliers" % max_Outliers
+                        break
                     self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
+                    outlier_count += 1
         
 class CurrencyAnalyser(NumericalAnalyser):
     """Run currency analysis, using NumericalAnalyser as a super class
@@ -227,11 +233,16 @@ class SciNotationAnalyser(Analyser):
             self.normDist = 'Yes'
         elif(self.pval == 100):
             self.normDist = 'N/A'
-        if self.normDist != 'No':
+        if self.normDist == 'Yes':
+            outlier_count = 0
             for value in values:
                 if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
                 value > (float(self.mean) + standardDeviations * float(self.stdev)):               
+                    if outlier_count > max_Outliers:
+                        self.stDevOutliers = ">%d outliers" % max_Outliers
+                        break
                     self.stDevOutliers.append(self.int_to_sci(value))
+                    outlier_count += 1
 
     def int_to_sci(self, value):
         """Converts numbers into a string in scientific notation form
@@ -242,7 +253,7 @@ class SciNotationAnalyser(Analyser):
         if value == 0:
             return "0E+0"
         power = floor(log10(abs(value)))
-        base = round(value / pow(10, power), 2)
+        base = round(value / pow(10, power), 4)
     
         if power > 0:
             return str(base) + "E+" + str(power)

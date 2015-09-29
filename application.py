@@ -60,10 +60,10 @@ def get_file_dir(location):
     return location.rpartition('\\')
     
 if __name__ == '__main__':
-    print ('sys.argv[0] =', sys.argv[0])             
+    #print ('sys.argv[0] =', sys.argv[0])             
     pathname = os.path.dirname(sys.argv[0])        
-    print ('path =', pathname)
-    print ('full path =', os.path.abspath(pathname)) 
+    #print ('path =', pathname)
+    #print ('full path =', os.path.abspath(pathname)) 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,\
         description=textwrap.dedent('''\
                 Processes Csv files.
@@ -83,6 +83,7 @@ if __name__ == '__main__':
         print(file)
         name_ext = os.path.splitext(file)
         #print("name_ext: ", name_ext)
+        #TODO handle empty sheets
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
             xls=pd.ExcelFile(file)
             sheet_names = xls.sheet_names
@@ -120,5 +121,5 @@ if __name__ == '__main__':
                 print("Error, different number of files and templates")
     else:
         for name in filenames:
-          #  print("working here")
+            #  print("working here")
             main(name)

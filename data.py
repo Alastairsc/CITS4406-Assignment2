@@ -144,12 +144,18 @@ class Column(object):
         for x, value in enumerate(self.values):
           #  print("Values: " , value)
             if re_float.match(value):
-               # print(value)
-                float_count += 1
+                # print(value)
+                if abs(eval(value)) < 0.000001:
+                    sci_not_count +=1
+                else:
+                    float_count += 1
             elif re_int.match(value) or value == '0':
-               # print(value)
-                int_count += 1
-                value = value.strip()
+                # print(value)
+                if abs(eval(value)) > 1000000:
+                    sci_not_count += 1
+                else:
+                    int_count += 1
+                    value = value.strip()
             elif re_email.search(value):
               #  print(value)
                 if parseaddr(value)[1] != '':
@@ -496,7 +502,7 @@ class Data(object):
         else:
             #template specified delimiter
             with open(csv_file, newline='') as csvfile:
-                f = csv.reader(csvfile, delimiter=self.delimiter)
+                f = csv.reader(open(csvfile, delimiter=self.delimiter))
                 for row in f:
                    self.raw_data.append(row)
 
