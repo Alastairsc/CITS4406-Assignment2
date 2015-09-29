@@ -85,6 +85,7 @@ if __name__ == '__main__':
         #print("name_ext: ", name_ext)
         #TODO handle empty sheets
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
+            print("[Step 0/7] Converting to csv file")
             xls=pd.ExcelFile(file)
             sheet_names = xls.sheet_names
             if len(sheet_names) == 1:
@@ -104,6 +105,7 @@ if __name__ == '__main__':
                     filenames.append(new_name)
         else:
             filenames.append(file)
+            
                           
   #  print(args.t)     
     if args.t != None:

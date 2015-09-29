@@ -486,26 +486,26 @@ class Data(object):
         #separation of comma, semicolon, dash, tab delimited csv files
         if self.delimiter == '':
           #  print("Here")
-            with open(csv_file, newline='') as csvfile:
-                    try:
-                        dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
-                        csvfile.seek(0)
-                        f = csv.reader(csvfile, dialect)
-                    except:
-                        print("Delimiter Warning: could not determine delimiter, consider",\
-                        "specifying using template. Continuing using comma")
-                        csvfile.seek(0)
-                        f = csv.reader(csvfile, delimiter=',')
-                    for row in f:
-                        #print(row)
-                        self.raw_data.append(row)
+            with open(csv_file,'rU', newline='') as csvfile:
+                try:
+                    dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
+                    csvfile.seek(0)
+                    f = csv.reader(csvfile, dialect)
+                except:
+                    print("Delimiter Warning: could not determine delimiter, consider",\
+                    "specifying using template. Continuing using comma")
+                    csvfile.seek(0)
+                    f = csv.reader(csvfile, delimiter=',')
+                for row in f:
+                    self.raw_data.append(row)
         else:
             #template specified delimiter
-            with open(csv_file, newline='') as csvfile:
-                f = csv.reader(csvfile, delimiter=self.delimiter)
+            with open(csv_file, 'rU') as csvfile:
+                f = csv.reader( csvfile, delimiter=self.delimiter)
                 for row in f:
-                   self.raw_data.append(row)
-
+                    self.raw_data.append(row)
+   
+                
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
         valid_rows variable if same length as headers, else appends to 

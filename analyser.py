@@ -115,9 +115,8 @@ class NumericalAnalyser(Analyser):
             if i != '':
                 try:
                     new_values.append(eval(i))
-                except NameError:
-                    print ("NameError:", i, " is not a numeric type")
-                    sys.exit(0)
+                except:
+                    pass #already picked up by error checks
         values = new_values
        # values = [eval(i) for i in values]
         super().__init__(values)
@@ -211,7 +210,10 @@ class SciNotationAnalyser(Analyser):
         new_values = []
         for i in values:
             if i != '':
-                new_values.append(eval(i))
+                try:
+                    new_values.append(eval(i))
+                except:
+                    pass #already picked up in error checks
         values = new_values
        # values = [eval(i) for i in values]
         super().__init__(values)
