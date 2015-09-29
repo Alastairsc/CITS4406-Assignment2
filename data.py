@@ -33,7 +33,7 @@ re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Ye
 re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
 #[\+-]?\d+(\.\d+)?[eE]\d
-re_separation = re.compile('[\s,;]+')
+re_separation = re.compile('[\|\\\;\s\t-]+')
 re_date = re.compile('^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$')
 re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$)|(^(1[012]|0?[1-9]):[0-5][0-9](\ )?(?i)(am|pm)$)')
 re_char = re.compile('^\D$')
@@ -488,16 +488,26 @@ class Data(object):
           #  print("Here")
             with open(csv_file,'rU', newline='') as csvfile:
                 try:
-                    dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
-                    csvfile.seek(0)
-                    f = csv.reader(csvfile, dialect)
+                    #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
+                    #csvfile.seek(0)
+                    #f = csv.reader(csvfile, dialect)
+                    #NEW SPLIT DELIMITER
+                    f = csv.reader(csvfile)
+                    for line in f:
+                        n_col = len(line)
+                        #print(n_col)
+                        if n_col == 1:
+                            result = re.split(re_separation, line[0])
+                            self.raw_data.append(result)
+                            #print(self.raw_data)
+
                 except:
                     print("Delimiter Warning: could not determine delimiter, consider",\
                     "specifying using template. Continuing using comma")
                     csvfile.seek(0)
                     f = csv.reader(csvfile, delimiter=',')
-                for row in f:
-                    self.raw_data.append(row)
+                    for row in f:
+                        self.raw_data.append(row)
         else:
             #template specified delimiter
             with open(csv_file, 'rU') as csvfile:
