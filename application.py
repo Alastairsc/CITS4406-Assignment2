@@ -105,7 +105,7 @@ if __name__ == '__main__':
                     filenames.append(new_name)
         elif os.path.isdir(file):
             for dir_files in os.listdir(file):
-                if dir_files.endswith(".csv")
+                if dir_files.endswith(".csv"):
                     filenames.append(os.path.join(file, dir_files))
         else:
             filenames.append(file)
