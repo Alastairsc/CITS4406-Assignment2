@@ -1,4 +1,4 @@
-# CITS4406 - Assignment 2
+# UWA Data Analysis
 Provide a Python file to perform basic cleansing and statistical analysis on data provided via a csv file. Ideally structure the project so that other students can easily pick up/extend the functionality at a later date.
 
 ### Contributors
@@ -15,7 +15,11 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * The program requires Python3, the scipy module, numpy module, alabaster module and pandas 
 * module to run, it is recommended that you install these via the python distribution "Anaconda"
 * found here: http://continuum.io/downloads
-* 
+
+###Directory Structure
+* The source code is all in the main directory
+* csv_files contains test files used to evaluate the program
+* Sphinx contains documentation of classes and methods of the         	program
 
 ### Supported Data types
 * Int
