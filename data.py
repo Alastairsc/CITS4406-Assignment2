@@ -500,6 +500,9 @@ class Data(object):
                             result = re.split(re_separation, line[0])
                             self.raw_data.append(result)
                             #print(self.raw_data)
+                        else:
+                            self.raw_data.append(line)
+                            #print(self.raw_data)
 
                 except:
                     print("Delimiter Warning: could not determine delimiter, consider",\
