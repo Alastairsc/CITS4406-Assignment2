@@ -265,6 +265,7 @@ class Column(object):
         elif self.type == 'Numeric':
             for x, value in enumerate(self.values):
                 if value == '' and self.ignore_empty:
+                    #TODO do for all types
                     continue
                 if not re_int.match(value) and not re_float.match(value) and not value == '0':
                     print("Value: ", value)

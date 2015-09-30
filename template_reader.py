@@ -9,9 +9,14 @@ class Template(object):
     """Object storing user input that describes data given. Able to specify:
             Columns - state column number and data type.
             
-            Delimiter - state delimiter character (for comma use the word not ',').
+            Delimiter - state delimiter character (for comma and space use the word not ',' or ' ').
             
-            Start row - row of header (0 for no header).
+            Header row - row of header (0 for no header).
+            
+            Start row - row that data starts on
+            
+            Threshold value - minimum proportion of column that has the correct data type
+            
         
         Columns and rows start at 1 not 0"""
         
