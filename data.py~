@@ -33,7 +33,7 @@ re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Ye
 re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
 #[\+-]?\d+(\.\d+)?[eE]\d
-re_separation = re.compile('[\s,;]+')
+re_separation = re.compile('[\|\\\;\s\t-]+')
 re_date = re.compile('^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$')
 re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$)|(^(1[012]|0?[1-9]):[0-5][0-9](\ )?(?i)(am|pm)$)')
 re_char = re.compile('^\D$')
@@ -144,12 +144,18 @@ class Column(object):
         for x, value in enumerate(self.values):
           #  print("Values: " , value)
             if re_float.match(value):
-               # print(value)
-                float_count += 1
-            elif re_int.match(value):
-               # print(value)
-                int_count += 1
-                value = value.strip()
+                # print(value)
+                if abs(eval(value)) < 0.000001:
+                    sci_not_count +=1
+                else:
+                    float_count += 1
+            elif re_int.match(value) or value == '0':
+                # print(value)
+                if abs(eval(value)) > 1000000:
+                    sci_not_count += 1
+                else:
+                    int_count += 1
+                    value = value.strip()
             elif re_email.search(value):
               #  print(value)
                 if parseaddr(value)[1] != '':
@@ -252,7 +258,7 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
-                if not re_int.match(value) and not value == '0':
+                if not re_int.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
@@ -388,6 +394,13 @@ class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
     assigning out to relevant variables.
     
+    Global variables:
+        threshold -- The percentage threshold which the column must have of a type before
+        it is declared that type.
+        
+        enum_threshold -- The integer threshold which if the count of occurence of a value is
+        less than the value is declared an error.
+    
     Methods:
         read -- Reads the CSV file and outputs to raw_data variable.
         
@@ -473,26 +486,36 @@ class Data(object):
         #separation of comma, semicolon, dash, tab delimited csv files
         if self.delimiter == '':
           #  print("Here")
-            with open(csv_file, newline='') as csvfile:
-                    try:
-                        dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
-                        csvfile.seek(0)
-                        f = csv.reader(csvfile, dialect)
-                    except:
-                        print("Delimiter Warning: could not determine delimiter, consider",\
-                        "specifying using template. Continuing using comma")
-                        csvfile.seek(0)
-                        f = csv.reader(csvfile, delimiter=',')
+            with open(csv_file,'rU', newline='') as csvfile:
+                try:
+                    #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
+                    #csvfile.seek(0)
+                    #f = csv.reader(csvfile, dialect)
+                    #NEW SPLIT DELIMITER
+                    f = csv.reader(csvfile)
+                    for line in f:
+                        n_col = len(line)
+                        #print(n_col)
+                        if n_col == 1:
+                            result = re.split(re_separation, line[0])
+                            self.raw_data.append(result)
+                            #print(self.raw_data)
+
+                except:
+                    print("Delimiter Warning: could not determine delimiter, consider",\
+                    "specifying using template. Continuing using comma")
+                    csvfile.seek(0)
+                    f = csv.reader(csvfile, delimiter=',')
                     for row in f:
-                        #print(row)
                         self.raw_data.append(row)
         else:
             #template specified delimiter
-            with open(csv_file, newline='') as csvfile:
-                f = csv.reader(csvfile, delimiter=self.delimiter)
+            with open(csv_file, 'rU') as csvfile:
+                f = csv.reader( csvfile, delimiter=self.delimiter)
                 for row in f:
-                   self.raw_data.append(row)
-
+                    self.raw_data.append(row)
+   
+                
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
         valid_rows variable if same length as headers, else appends to 
@@ -503,6 +526,7 @@ class Data(object):
         preamble = []
         if self.data_start != 0:
             for row in range(0, self.data_start):
+                print(row)
                 preamble.append(self.raw_data[row])
         row_length = len(self.raw_data[self.header_row])
         for index, row in enumerate(self.raw_data):
