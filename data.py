@@ -529,6 +529,7 @@ class Data(object):
         preamble = []
         if self.data_start != 0:
             for row in range(0, self.data_start):
+                print(row)
                 preamble.append(self.raw_data[row])
         row_length = len(self.raw_data[self.header_row])
         for index, row in enumerate(self.raw_data):
