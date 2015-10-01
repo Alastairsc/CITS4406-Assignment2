@@ -375,7 +375,9 @@ class Column(object):
 
     def set_size(self, size):
         """Sets the size of the data for use when checking for errors.
-            For use with the 'Identifier' data type"""
+            For use with the 'Identifier' data type
+            
+            size -- length of identifier"""
         self.data_size = size
     
     def set_empty(self):
@@ -390,6 +392,18 @@ class Column(object):
         """Whether or not column is empty"""
         return self.empty == True
         
+    def set_Identifier_size(self, size):
+        """Sets the size of the data for identifier type"""
+        self.data_size = size
+    
+    def updateCell(self, pos, new_value):
+        """Changes the value of a cell given
+        
+            pos -- position of cell in column to change
+            
+            new_value -- value to set cell too"""
+        self.values[pos] = new_value
+    
         
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
@@ -649,6 +663,19 @@ class Data(object):
                 else:
                     new_file.write(",")
                     
+    def getCellErrors(self):
+        """Returns list of all cells containing invalid data, contains
+            row number,. column number and its value."""
+        return self.errors
+        
+    def getRowErrors(self):
+        """Returns a list of all row errors"""
+        return self.invalid_rows
+        
+    def getColumns(self):
+        """Returns a list of all columns"""
+        return self.columns
+        
     def get_column(self, colNo):
         """Returns a column of the data given a column number"""
         return self.columns[colNo]
