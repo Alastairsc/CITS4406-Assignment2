@@ -59,7 +59,15 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Bottom 5 occuring results
 * Number of unique entries
 
+###Ubuntu
+
 You can run the project by extracting the zip, and running 'python3 application.py *csv filename here*'. 
+
+###Windows
+
+Run the program using 'python application.py *csv filename here*'.
+
+
 You can specify multiple files using 'python3 application.py *csv_fileame* *csv_filename*'
 You can use templates using 'python3 application.py *csv_filaname* -t *template_name*'
 
