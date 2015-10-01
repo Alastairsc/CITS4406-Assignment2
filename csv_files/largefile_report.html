@@ -1,0 +1,194 @@
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="../main.css">
+
+<title>Analysis Report on largefile.csv</title>
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Contents</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#invalid">Invalid/Empty</a></li>
+            <li><a href="#numerical">Numerical</a></li>
+            <li><a href="#string">String</a></li>
+            <li><a href="#identifier">String</a></li>
+            <li><a href="#enum">Enum</a></li>
+            <li><a href="#email">Email</a></li>
+            <li><a href="#currency">Currency</a></li>
+            <li><a href="#boolean">Boolean</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+<br>&nbsp<br>
+<div class="container">
+    <h1>Analysis Report on largefile.csv</h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <hr id="invalid"/>
+        <div class="col-md-6">
+            <h2>Invalid Rows (0)</h2>
+            <p>These rows contain either too many or too few columns.</p>
+            <ul><li>Empty</li></ul>
+        </div>
+
+        <div class="col-md-6">
+            <h2>Empty Columns (0)</h2>
+            <p>These columns contain >= 90% empty values.</p>
+            <ul><li>Empty</li></ul>
+        </div>
+        
+        <div class="col-md-6">
+            <h2>Error Cells (0)</h2>
+            <p>These cells contain invalid values.</p>
+            <ul><li>Empty</li></ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Column Analysis (Based on 0 rows)</h2>
+            <hr id="numerical"/>
+            <h2>Numerical</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Mode</th>
+                    <th>Mean</th>                   
+                    <th>Median Low</th>
+                    <th>Median</th>
+                    <th>Median High</th>
+                    <th>Normally Distributed</th>
+                    <th>Standard Deviation</th>
+                    <th>Outliers</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                </tr>
+                <tr><td>TSKey</td><td>4.6551E+18</td><td>6.7115E+18</td><td>N/A</td><td>6.0869E+18</td><td>6.0976E+18</td><td>6.0976E+18</td><td>6.0976E+18</td><td>No</td><td>4.4534E+17</td><td>[]</td><td>[('6089738778186272768', 5), ('6221153880234577920', 5), ('5792267428305276928', 5), ('6221788100804136960', 5), ('5433024875621920768', 5)]</td><td>[('5243278522779406336', 5), ('5432428765591810048', 5), ('6334036394409676800', 5), ('6487135218097627136', 5), ('6532783387255910400', 5)]</td><td>963580</td></tr><tr><td>Status</td><td>101</td><td>634</td><td>101</td><td>368.75188</td><td>306</td><td>306.0</td><td>306</td><td>No</td><td>220.56</td><td>[]</td><td>[('101', 791505), ('605', 610980), ('303', 539780), ('602', 517475), ('104', 331080)]</td><td>[('311', 47835), ('615', 51365), ('102', 60785), ('304', 92050), ('604', 93195)]</td><td>159</td></tr><tr><td>SummaryKey</td><td>4.6551E+18</td><td>6.7115E+18</td><td>5651775899516145664</td><td>6.0869E+18</td><td>6.0976E+18</td><td>6.0976E+18</td><td>6.0976E+18</td><td>No</td><td>4.4534E+17</td><td>[]</td><td>[('5651775899516145664', 285), ('5821250981136621568', 265), ('5651775908476203008', 260), ('5821250976656564224', 255), ('5821483562033618944', 235)]</td><td>[('5919966452375388160', 190), ('6334296363384786944', 190), ('5346214622801031168', 195), ('5370446696324157440', 195), ('5349443776905965568', 205)]</td><td>765302</td></tr><tr><td>EventSource</td><td>1</td><td>2</td><td>1</td><td>1.00909</td><td>1</td><td>1.0</td><td>1</td><td>Yes</td><td>0.09</td><td>>100 outliers</td><td>[('1', 4774105), ('2', 43795)]</td><td>[('2', 43795), ('1', 4774105)]</td><td>2</td></tr>
+            </table>
+            
+            <hr id="string"/>
+            <h2>String</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                </tr>
+                <tr><td>ShKey</td><td>20140118P1</td><td>[('20140118P1', 9005), ('20131205P2', 8620), ('20131224P1', 8495), ('20131222P1', 8490), ('20140116P2', 8480)]</td><td>[('20131206P2', 8090), ('20140120P1', 8090), ('20140117P1', 8105), ('20140119P2', 8125), ('20131125P1', 8200)]</td><td>1354</td></tr><tr><td>Equipment</td><td>EX131</td><td>[('EX131', 138875), ('EX125', 115090), ('TR203', 113725), ('TR201', 109620), ('TR204', 107885)]</td><td>[('EX121', 88090), ('LD047', 88390), ('LD048', 90495), ('TR206', 98020), ('LDB059', 98295)]</td><td>241</td></tr><tr><td>Location</td><td>ATH_GBY_1</td><td>[('ATH_GBY_1', 155045), ('ATH_WKS_1', 132250), ('BEL_GBY_01', 113900), ('REV_GBY_01', 105505), ('BEL_PIT_01', 104715)]</td><td>[('PDY_PIT_01', 41150), ('LEV_GBY_01', 43520), ('OFF_MWD_WM_1', 53315), ('MAR_PIT_01', 57660), ('NEP_275_6001_W02', 64200)]</td><td>5699</td></tr><tr><td>Destn</td><td>--?--</td><td>[('--?--', 3801445), ('BEL_MWD_WM_1', 88010), ('BEL_MWD_WO_1', 56310), ('MAR_MWD_WM_1', 54070), ('LEF_LCF_HM_1', 46325)]</td><td>[('BEL_MOP_HO_3', 19845), ('WID_MWD_WM_1', 20415), ('LEF_LFS_HF_1', 22820), ('BEL_MOP_PO_1', 26430), ('LEF_LFS_HF_2', 26630)]</td><td>810</td></tr><tr><td>Operator</td><td>--?--</td><td>[('--?--', 1286400), ('3072', 45745), ('3058', 39655), ('3087', 37050), ('50016', 36710)]</td><td>[('3075', 30355), ('3084', 31055), ('50015', 32335), ('50004', 32590), ('70001', 32820)]</td><td>731</td></tr><tr><td>PrimaryEquipment</td><td>--?--</td><td>[('--?--', 3475985), ('EX131', 313515), ('EX125', 203230), ('EX121', 145610), ('LDB056', 56645)]</td><td>[('LDM0195', 22415), ('LD039', 26195), ('LD046', 26260), ('LD045', 31940), ('LD048', 36195)]</td><td>59</td></tr><tr><td>Material</td><td>ORE</td><td>[('ORE', 998665), ('--?--', 930935), ('W', 683995), ('WF', 443055), ('HF', 367325)]</td><td>[('O', 26265), ('PF', 49720), ('HO', 51110), ('LF', 68505), ('NAP', 80890)]</td><td>47</td></tr><tr><td>AssignedDestn</td><td>--?--</td><td>[('--?--', 3035995), ('HAM_MWD_WF_1', 185880), ('ATH_FUE_1', 121440), ('CAV_SSP___BIO', 78690), ('HAM_9055_HAM_SPA', 48400)]</td><td>[('ATH_8828_JUP_ACC', 24290), ('HAM_9075_HAM_SPA', 25300), ('ATH_8803__JUP__DEC', 25435), ('CAV_FUE_1', 25830), ('HAM_9095_HAM_SPA', 28510)]</td><td>303</td></tr><tr><td>EventDateTime</td><td>N/A</td><td>[('2014-03-10 06:00:00', 920), ('2014-03-09 18:00:00', 920), ('2014-03-10 18:00:00', 920), ('2014-03-05 18:00:00', 915), ('2014-03-01 06:00:00', 915)]</td><td>[('2014-03-08 18:00:00', 915), ('2014-03-03 06:00:00', 915), ('2014-03-04 18:00:00', 915), ('2014-03-06 18:00:00', 915), ('2014-03-06 06:00:00', 915)]</td><td>809923</td></tr>
+            </table>
+            
+            <hr id="identifier"/>
+            <h2>Identifier</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                </tr>
+                
+            </table>
+            
+            <hr id="enum"/>
+            <h2>Enumerated</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                </tr>
+                
+            </table>
+            
+            <hr id="email"/>
+            <h2>Email</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                </tr>
+                
+            </table>
+            
+            <hr id="currency"/>
+            <h2>Currency</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Mode</th>
+                    <th>Mean</th>
+                    <th>Median Low</th>
+                    <th>Median</th>
+                    <th>Median High</th>
+                    <th>Normally Distributed</th>
+                    <th>Standard Deviation</th>
+                    <th>Outliers</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                </tr>
+                
+            </table>
+            
+            <hr id="boolean"/>
+            <h2>Boolean</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>Total "True"</th>
+                    <th>Total "False"</th>
+                    <th>Total "Yes"</th>
+                    <th>Total "No"</th>
+                    <th>Total Boolean Values</th>
+                </tr>
+                
+            </table>
+            
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
