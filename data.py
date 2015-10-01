@@ -7,6 +7,7 @@ import sys
 import os
 import csv
 import re
+#from pympler import classtracker
 from collections import Counter
 try:
 	from .analyser import *
@@ -448,6 +449,7 @@ class Data(object):
         self.data_start = 1
         self.data_size = {}
         self.ignore_empty = False
+        self.std_devs_val = 3
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
