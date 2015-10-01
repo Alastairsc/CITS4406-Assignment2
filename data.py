@@ -5,13 +5,6 @@ runs analysis on said data."""
 
 import sys
 import os
-
-"""sysPathStr = "%s%s" % (os.path.dirname(os.path.realpath(__file__)), "/lib/python3.4/site-packages")
-#print (sysPathStr)
-sys.path.append(sysPathStr)
-for pth in sys.path:
-    print (pth)"""
-
 import csv
 import re
 from collections import Counter
@@ -22,6 +15,8 @@ except SystemError:
 
 threshold = 0.9
 enum_threshold = 1
+num_headers = 1
+#std_devs_val = 3
 
 #  Config
 invalid_values = ['-', '*', '_', '$']
@@ -117,8 +112,6 @@ class Column(object):
         for i, e in reversed(list(enumerate(temp_list))):
             if i < 15:
                 self.least_common.append(e)
-       # print("Column: ", self.values)
-      #  print("Most Common: ", self.most_common)
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
@@ -139,40 +132,27 @@ class Column(object):
         day_count = 0
         hyper_count = 0
         
-        #  Todo: Define date type.
 
         for x, value in enumerate(self.values):
-          #  print("Values: " , value)
             if re_float.match(value):
-                # print(value)
                 if abs(eval(value)) < 0.000001:
                     sci_not_count +=1
                 else:
                     float_count += 1
             elif re_int.match(value) or value == '0':
-                # print(value)
                 if abs(eval(value)) > 1000000:
                     sci_not_count += 1
                 else:
                     int_count += 1
                     value = value.strip()
             elif re_email.search(value):
-              #  print(value)
                 if parseaddr(value)[1] != '':
-              #      print(parseaddr(value)[1])
-          #          print("Email match")
                     email_count += 1
             elif re_currency.search(value):
-              #  print(value)
-             #   print ("Group")
-               # print (re_currency.search(value).group())
                 currency_count += 1
             elif re_boolean.search(value):
-              #  print(value)
                 boolean_count += 1
-                #print(value)
                 temp_value = str(value.upper())
-              #  print(temp_value)
                 if temp_value == ' TRUE' or temp_value == ' T' or temp_value == 'TRUE' or temp_value == 'T':
                     self.total_true += 1
                 if temp_value == ' FALSE' or temp_value == ' F' or temp_value == 'FALSE' or temp_value == 'F':
@@ -182,7 +162,6 @@ class Column(object):
                 if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
                     self.total_no += 1
             elif re_sci_notation.fullmatch(value):
-                #print("Sci not match:", value)
                 sci_not_count += 1
             elif re_date.search(value) :
                 date_count += 1
@@ -204,13 +183,10 @@ class Column(object):
         elif (float_count + int_count) / num_values >= threshold:
             self.type = 'Numeric'
         elif email_count / num_values >= threshold:
-        #    print('Email type')
             self.type = 'Email'
         elif currency_count / num_values >= threshold:
-      #     print('Currency type')
             self.type = 'Currency'
         elif boolean_count / num_values >= threshold:
-       #     print('Boolean type')
             self.type = 'Boolean'
         elif sci_not_count / num_values >= threshold:
             self.type = 'Sci_Notation'
@@ -268,7 +244,6 @@ class Column(object):
                     #TODO do for all types
                     continue
                 if not re_int.match(value) and not re_float.match(value) and not value == '0':
-                    print("Value: ", value)
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - not a number" % (tup[0] + 1, tup[1], tup[2]))
@@ -286,7 +261,6 @@ class Column(object):
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Currency':
-           # print('Currency errors')
             for x, value in enumerate(self.values):
                 if not re_currency.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
@@ -367,7 +341,6 @@ class Column(object):
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
                 
-       # print("Errors: ", errors)
 
     def set_type(self, type):
         """Sets type of column for use with templates"""
@@ -461,7 +434,6 @@ class Data(object):
         self.data_start = 1
         self.data_size = {}
         self.ignore_empty = False
-       # print(len(args))
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
@@ -469,6 +441,9 @@ class Data(object):
             self.data_start = self.template.data_start
             self.data_size = self.template.data_size
             self.ignore_empty = self.template.ignore_empty
+            threshold = self.template.threshold_val
+            enum_threshold = self.template.enum_threshold_val
+            self.std_devs_val = self.template.std_devs
         #Process data
         self.read(self.filename)
         self.remove_invalid()
@@ -486,7 +461,6 @@ class Data(object):
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
         if self.delimiter == '':
-          #  print("Here")
             with open(csv_file,'rU', newline='') as csvfile:
                 try:
                     #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
@@ -496,14 +470,11 @@ class Data(object):
                     f = csv.reader(csvfile)
                     for line in f:
                         n_col = len(line)
-                        #print(n_col)
                         if n_col == 1:
                             result = re.split(re_separation, line[0])
                             self.raw_data.append(result)
-                            #print(self.raw_data)
                         else:
                             self.raw_data.append(line)
-                            #print(self.raw_data)
 
                 except:
                     print("Delimiter Warning: could not determine delimiter, consider",\
@@ -530,21 +501,18 @@ class Data(object):
         preamble = []
         if self.data_start != 0:
             for row in range(0, self.data_start):
-                print(row)
                 preamble.append(self.raw_data[row])
         row_length = len(self.raw_data[self.header_row])
         for index, row in enumerate(self.raw_data):
             if len(row) != row_length:
                 self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
                 self.raw_data[index] = []
-                #print(self.invalid_rows)
                 count = count + 1
             else:
                 self.valid_rows.append(row)
                 self.invalid_rows_pos.append(count)
                 self.raw_data[index] = []
         self.raw_data = preamble
-    #    print("Invalid row pos: ", self.invalid_rows_pos)
 
     def create_columns(self):
         """For each row in raw_data variable, assigns the first value to the 
@@ -553,11 +521,17 @@ class Data(object):
         populates relevant column object with row data.
         """
         if self.header_row >=0:
+            i = 1
             for value in self.raw_data[self.header_row]:
-                self.columns.append(Column(header=value))
+                tmp_list = []
+                tmp_list.append(value)
+                tmp_list.append(" (column ")
+                tmp_list.append(str(i))
+                tmp_list.append(")")
+                s = ''.join(tmp_list)
+                i = i + 1
+                self.columns.append(Column(header=s))
             self.valid_rows.pop(self.header_row)            
-       # for vrows in self.valid_rows:
-        #    print(vrows)
         length = len(self.valid_rows)
         for row_num in range(self.data_start - 1, length):
             for index, value in enumerate(self.valid_rows[row_num]):
@@ -580,9 +554,13 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
-                    #print("col type: ", column.type)
-                    column.analysis = self.analysers[column.type](column.values)  
-            
+                    if( column.type == 'Integer' or column.type == 'Float' \
+                        or column.type == 'Currency' or column.type == 'Sci_Notation' \
+                        or column.type == 'Numeric'):
+                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val)  
+                    else:
+                        column.analysis = self.analysers[column.type](column.values)
+        
     def find_errors(self):
         """Iterates through each column and finds any errors according to pre-determined
         conditions.
@@ -599,7 +577,6 @@ class Data(object):
         """
         
         for colNo, column in enumerate(self.columns):
-           # print("Col: ",colNo)
             column.define_most_least_common()
             if not column.empty:
                 if self.template != None and colNo in self.template.columns:

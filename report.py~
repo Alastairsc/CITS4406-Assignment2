@@ -3,8 +3,11 @@
 Classes:
 Report -- Contains methods to generate and output appropriate HTML for the report.
 """
+try:
+	from .template import *
+except SystemError:
+	from template import *
 
-from template import *
 from os import path
 
 class Report(object):
@@ -73,7 +76,6 @@ class Report(object):
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis()
             )
-        self.gen_html(html)
         #gen report for debugging
         return str(html) 
 
@@ -114,7 +116,7 @@ class Report(object):
         rows = ''
         for column in self.data.columns:
             if column.type == 'Float' or column.type == 'Integer'\
-            or column.type == 'Sci_Notation':
+            or column.type == 'Sci_Notation' or column.type == 'Numeric':
                # print(column.header)
                 math_stats= [column.analysis.min,
                        column.analysis.max,
@@ -130,6 +132,7 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 row = [column.header]
+                print (column.header)
                 for stats in math_stats:
                     if not stats == 'N/A':
                         row.append(stats)
@@ -255,6 +258,7 @@ class Report(object):
         
     def gen_html(self, html):
         """Generates html report for the file"""
-        html_file = open("{}_report.html".format(self.file_name), "w")
+        
+        html_file = open(path.splitext(self.file_name)[0] + "_report.html", "w")
         html_file.write(html)
         html_file.close()

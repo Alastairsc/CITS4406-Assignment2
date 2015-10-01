@@ -9,8 +9,8 @@ from scipy.stats import mstats
 from numpy import array
 from email.utils import parseaddr
 from math import floor, log10, pow
+import data
 
-standardDeviations = 3
 max_Outliers = 100
 
 class Analyser(object):
@@ -18,9 +18,7 @@ class Analyser(object):
     Base analysis class object. Initiate the object, and assigns the statistical mode, if any.
     
     Global variables:        
-        standardDeviations -- The amount of standard deviations away from the mean (mean +-
-        standardDeviations) which if the value is outside the value is declared an error.
-        
+        max_Outliers -- the maximum amount of outliers that will be found.    
     
     Class variables:
         mode -- Returns the mode of the column analysed.
@@ -78,9 +76,6 @@ class Analyser(object):
         valSet = set()
         for vals in values:
             valSet.add(vals)
-   #     print("Set stuff")
-     #   print(valSet)
-     #   print(len(valSet))
         return len(valSet)
 
     def __init__(self, values):
@@ -99,7 +94,6 @@ class EmailAnalyser(Analyser):
     """
     def __init__(self, values):
         super().__init__(values)
-       # print(self.mode)
         # TODO Something actually useful for emails.
         
 class NumericalAnalyser(Analyser):
@@ -108,10 +102,9 @@ class NumericalAnalyser(Analyser):
     Keyword arguments:
         Analyser -- An analyser object.    
     """
-    def __init__(self, values): 
+    def __init__(self, values, stdDevs): 
         new_values = []
         for i in values:
-            #print("Value: ",i)
             if i != '':
                 try:
                     new_values.append(eval(i))
@@ -121,6 +114,7 @@ class NumericalAnalyser(Analyser):
        # values = [eval(i) for i in values]
         super().__init__(values)
         self.stDevOutliers = []
+        self.standardDeviations = stdDevs
         if len(values) >= 8:
             self.pval = mstats.normaltest(array(values))[1]
         else:
@@ -154,12 +148,12 @@ class CurrencyAnalyser(NumericalAnalyser):
     Keyword arguments:
         NumericalAnalyser -- A NumericalAnalyser object.
     """
-    def __init__(self, values):
+    def __init__(self, values, stdDevs):
         """for x, value in enumerate(self.values):
             try:
                 value[x] = eval(self.values[x])
             except SyntaxError:"""
-        super().__init__(values)
+        super().__init__(values, stdDevs)
 
 class StringAnalyser(Analyser):
     """Run string analysis, currently only using Analyser super class methods.
@@ -206,7 +200,8 @@ class SciNotationAnalyser(Analyser):
     Keyword arguments:
         Analyser -- An analyser object.
     """
-    def __init__(self, values): 
+    def __init__(self, values, stdDevs):
+        standardDeviations = stdDevs 
         new_values = []
         for i in values:
             if i != '':
@@ -225,7 +220,6 @@ class SciNotationAnalyser(Analyser):
         self.min = self.int_to_sci(min(values))
         self.max = self.int_to_sci(max(values))
         self.mean = self.int_to_sci(mean(values))
-   
         self.median_low = self.int_to_sci(median_low(values))
         self.median = self.int_to_sci(median(values))
         self.median_high =  self.int_to_sci(median_high(values))

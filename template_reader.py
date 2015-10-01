@@ -27,8 +27,9 @@ class Template(object):
         self.data_start = 1
         self.data_size = {}
         self.ignore_empty = False
-        self.threshold_val = -1.0
-        self.enum_threshold_val = -1
+        self.threshold_val = 0.90
+        self.enum_threshold_val = 1
+        self.std_devs = 3
         
         self.read(filename)
         
@@ -60,4 +61,6 @@ class Template(object):
                     elif row[0].lower() == 'threshold_val':
                         self.threshold_val = float(row[1])
                     elif row[0].lower() == 'enum_threshold_val':
-                        self.enum_threshold_val = int(row[1])    
+                        self.enum_threshold_val = int(row[1])
+                    elif row[0].lower() == 'std_devs': 
+                        self.std_devs = float(row[1])
