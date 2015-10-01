@@ -73,4 +73,3 @@ class Template(object):
                     elif row[0].lower() == 'range':
                         #TODO Implement
                         pass
->>>>>>> 813538c92d92150ad63ed1ce72eacacf09a88dfe
