@@ -4,6 +4,9 @@ to process the data for the data class"""
 import sys
 import os
 import csv
+import re 
+
+re_int = re.compile('^\s*[1-9]\d*$')
 
 class Template(object):
     """Object storing user input that describes data given. Able to specify:
@@ -34,18 +37,21 @@ class Template(object):
         
     def read(self, filename):
         """Reads template file, assumes correct formatting, if user editing
-        is permitted will need to be improved with more checks"""
+        is permitted will need to be improved with more checks
+        
+        See documentation"""
         with open(filename, newline='') as csvfile:
             f = csv.reader(csvfile, delimiter=',')
             for row in f:
                 if len(row) > 1:
                     if row[0].lower() == 'column':
                         self.columns[int(row[1])-1] = row[2] #column numbering starts at 1 instead of 0
-                        if len(row) > 3 and row[2] == 'Identifier' and row[3] == 'size':
+                        if len(row) > 3 and row[2] == 'Identifier' and row[3].lower() == 'size':
                             self.data_size[int(row[1])-1] = int(row[4])
                     elif row[0].lower() == 'delimiter':
                         if(row[1] == 'comma'):
                             self.delimiter = ','
+                            #TODO add space
                         else:
                             self.delimiter = row[1]
                     elif row[0].lower() == 'header':
@@ -61,3 +67,9 @@ class Template(object):
                         self.threshold_val = float(row[1])
                     elif row[0].lower() == 'enum_threshold_val':
                         self.enum_threshold_val = int(row[1])    
+                    elif row[0].lower() ==  'std_dev':
+                        #TODO Implement
+                        pass
+                    elif row[0].lower() == 'range':
+                        #TODO Implement
+                        pass
