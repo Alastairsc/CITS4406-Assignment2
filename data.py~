@@ -7,7 +7,6 @@ import sys
 import os
 import csv
 import re
-from pympler import classtracker
 from collections import Counter
 try:
 	from .analyser import *
@@ -17,7 +16,6 @@ except SystemError:
 threshold = 0.9
 enum_threshold = 1
 num_headers = 1
-#std_devs_val = 3
 
 #  Config
 invalid_values = ['-', '*', '_', '$']
@@ -206,7 +204,7 @@ class Column(object):
         else:
             self.type = 'String'
 
-    def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos):
+    def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos, range_list2):
         """Define all the rows/columns with invalid values and append to errors, and
         formatted_errors once formatted properly. invalid_rows_pos holds the amount of
         rows that have been skipped by the time the current row x is being considered.
@@ -226,19 +224,36 @@ class Column(object):
             invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
             been removed from analysis.
         """
-        tup = ()        
+        tup = () 
+        print(self.type)
+        print(range_list2)       
         if self.type == 'Float':
             for x, value in enumerate(self.values):           
                 if not re_float.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    
+                if len(range_list2) > 0:
+                    if value < range_list2[0] or value > range_list2[1]:
+                        tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s - out of template range" % (tup[0] + 1, tup[1], tup[2]))
+                    
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
                 if not re_int.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    
+                if len(range_list2) > 0:
+                    print("here")
+                    if value < range_list2[0] or value > range_list2[1]:
+                        tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s - out of template range" % (tup[0] + 1, tup[1], tup[2]))
+                    
         elif self.type == 'Numeric':
             for x, value in enumerate(self.values):
                 if value == '' and self.ignore_empty:
@@ -248,6 +263,13 @@ class Column(object):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - not a number" % (tup[0] + 1, tup[1], tup[2]))
+                    
+                if len(range_list2) > 0:
+                    print("here")
+                    if value < range_list2[0] or value > range_list2[1]:
+                        tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s - out of template range" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
                 if re_email.search(value):
@@ -450,6 +472,7 @@ class Data(object):
         self.data_size = {}
         self.ignore_empty = False
         self.std_devs_val = 3
+        self.range_list = []
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
@@ -460,6 +483,8 @@ class Data(object):
             threshold = self.template.threshold_val
             enum_threshold = self.template.enum_threshold_val
             self.std_devs_val = self.template.std_devs
+            self.range_list = self.template.range_vals
+            print("here", self.range_list)
         #Process data
         self.read(self.filename)
         self.remove_invalid()
@@ -583,7 +608,7 @@ class Data(object):
         """
         for colNo, column in enumerate(self.columns):
              if not column.empty:
-                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos)
+                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list)
 
     def pre_analysis(self):
         """First defines their least and most common elements, then if 

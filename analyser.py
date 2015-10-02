@@ -12,6 +12,7 @@ from math import floor, log10, pow
 import data
 
 max_Outliers = 100
+standardDeviations = 3
 
 class Analyser(object):
     """
@@ -114,7 +115,7 @@ class NumericalAnalyser(Analyser):
        # values = [eval(i) for i in values]
         super().__init__(values)
         self.stDevOutliers = []
-        self.standardDeviations = stdDevs
+        standardDeviations = stdDevs
         if len(values) >= 8:
             self.pval = mstats.normaltest(array(values))[1]
         else:

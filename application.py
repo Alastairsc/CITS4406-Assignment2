@@ -6,6 +6,7 @@ import argparse
 import textwrap
 import pandas as pd
 import os
+from pympler import classtracker
 
 try:
 	from .data import *
@@ -20,7 +21,9 @@ def main(*args):
     """Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
     """
-
+    tr = classtracker.ClassTracker()
+    tr.track_class(Data)
+    tr.create_snapshot()
     filename = args[0]
     print("[Step 1/7] Processing file: ",filename)
   #  print (len(args))
@@ -28,10 +31,6 @@ def main(*args):
     if len(args) > 1:
         temp = Template(args[1])
         data = Data(filename, temp)
-        if(temp.threshold_val != -1.0):
-            data.threshold = temp.threshold_val
-        if(temp.enum_threshold_val != -1):
-            data.enum_threshold = temp.enum_threshold_val
     else:
         data = Data(filename)
     data.clean()
@@ -50,6 +49,8 @@ def main(*args):
     #returns string of html, also generates html report for debugging purposes
     print("[Step 7/7] Report Successfully Generated")
     print("Completed analysis for: ",filename)
+    tr.create_snapshot()
+    tr.stats.print_summary()
             
 def get_file_dir(location):
     """Returns the directory of the file with the file name

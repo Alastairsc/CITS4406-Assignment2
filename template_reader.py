@@ -33,6 +33,7 @@ class Template(object):
         self.threshold_val = 0.90
         self.enum_threshold_val = 1
         self.std_devs = 3
+        self.range_vals = []
         
         self.read(filename)
         
@@ -71,5 +72,6 @@ class Template(object):
                     elif row[0].lower() == 'std_devs': 
                         self.std_devs = float(row[1])
                     elif row[0].lower() == 'range':
-                        #TODO Implement
-                        pass
+                        self.range_vals.append(float(row[1]))
+                        self.range_vals.append(float(row[2]))
+                        print (self.range_vals)
