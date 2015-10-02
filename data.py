@@ -224,9 +224,7 @@ class Column(object):
             invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
             been removed from analysis.
         """
-        tup = () 
-        print(self.type)
-        print(range_list2)       
+        tup = ()     
         if self.type == 'Float':
             for x, value in enumerate(self.values):           
                 if not re_float.match(value):
@@ -248,7 +246,6 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
                     
                 if len(range_list2) > 0:
-                    print("here")
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
@@ -265,7 +262,6 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s - not a number" % (tup[0] + 1, tup[1], tup[2]))
                     
                 if len(range_list2) > 0:
-                    print("here")
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
@@ -484,7 +480,6 @@ class Data(object):
             enum_threshold = self.template.enum_threshold_val
             self.std_devs_val = self.template.std_devs
             self.range_list = self.template.range_vals
-            print("here", self.range_list)
         #Process data
         self.read(self.filename)
         self.remove_invalid()
