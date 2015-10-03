@@ -12,7 +12,7 @@ from math import floor, log10, pow
 
 try:
     import data
-except SystemError:
+except ImportError:
     from .data import *
 
 
