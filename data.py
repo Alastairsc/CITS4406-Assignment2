@@ -727,4 +727,4 @@ class Data(object):
     	"""Wipes recorded errors to allow find_errors() to be rerun"""
     	self.errors = []
     	self.formatted_errors = []
-    	self.invalid_rows_pos = []
+    	#self.invalid_rows = []
