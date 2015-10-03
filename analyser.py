@@ -13,7 +13,7 @@ from math import floor, log10, pow
 try:
     import data
 except SystemError:
-    import .data
+    from .data import *
 
 
 max_Outliers = 100
