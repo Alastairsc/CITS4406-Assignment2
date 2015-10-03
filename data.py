@@ -722,3 +722,9 @@ class Data(object):
         mapping column numbers to headers"""
         for colNo, header in header_map:
             self.raw_data[self.header_row][colNo] = header
+    
+    def clear_errors(self):
+    	"""Wipes recorded errors to allow find_errors() to be rerun"""
+    	self.errors = []
+    	self.formatted_errors = []
+    	self.invalid_rows_pos = []
