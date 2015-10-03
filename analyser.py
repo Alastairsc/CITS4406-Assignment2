@@ -9,7 +9,12 @@ from scipy.stats import mstats
 from numpy import array
 from email.utils import parseaddr
 from math import floor, log10, pow
-import data
+
+try:
+    import data
+except SystemError:
+    import .data
+
 
 max_Outliers = 100
 standardDeviations = 3
