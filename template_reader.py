@@ -34,6 +34,7 @@ class Template(object):
         self.enum_threshold_val = 1
         self.std_devs = 3
         self.range_vals = []
+        self.ignore_set = set()
         
         self.read(filename)
         
@@ -64,7 +65,6 @@ class Template(object):
                     elif row[0].lower() == 'ignore_empty':
                         if row[1] == 'all':
                             self.ignore_empty = True
-                            #TODO allow user to specify certain columns that empty cells should be ignored
                     elif row[0].lower() == 'threshold_val':
                         self.threshold_val = float(row[1])
                     elif row[0].lower() == 'enum_threshold_val':
@@ -75,3 +75,8 @@ class Template(object):
                         self.range_vals.append(float(row[1]))
                         self.range_vals.append(float(row[2]))
                         print (self.range_vals)
+                    elif row[0].lower() == 'ignore_empty_column':
+                        for x, value in enumerate(row):
+                            if value != 'ignore_empty_column':
+                                self.ignore_set.add(int(value))
+                                print(self.ignore_set)  

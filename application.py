@@ -21,9 +21,9 @@ def main(*args):
     """Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
     """
-    """tr = classtracker.ClassTracker()
+    tr = classtracker.ClassTracker()
     tr.track_class(Data)
-    tr.create_snapshot()"""
+    tr.create_snapshot()
     filename = args[0]
     print("[Step 1/7] Processing file: ",filename)
   #  print (len(args))
@@ -33,6 +33,7 @@ def main(*args):
         data = Data(filename, temp)
     else:
         data = Data(filename)
+    tr.create_snapshot()
     data.clean()
   #  editor = Editor(data)
     print("[Step 3/7] Running pre-analysis")
@@ -49,8 +50,8 @@ def main(*args):
     #returns string of html, also generates html report for debugging purposes
     print("[Step 7/7] Report Successfully Generated")
     print("Completed analysis for: ",filename)
-    """tr.create_snapshot()
-    tr.stats.print_summary()"""
+    tr.create_snapshot()
+    tr.stats.print_summary()
             
 def get_file_dir(location):
     """Returns the directory of the file with the file name

@@ -108,7 +108,10 @@ class NumericalAnalyser(Analyser):
         for i in values:
             if i != '':
                 try:
-                    new_values.append(eval(i))
+                    if "." in i:
+                        new_values.append(float(i))
+                    else:
+                        new_values.append(int(i))
                 except:
                     pass #already picked up by error checks
         values = new_values
@@ -208,6 +211,7 @@ class SciNotationAnalyser(Analyser):
             if i != '':
                 try:
                     new_values.append(eval(i))
+                    print(eval(i))
                 except:
                     pass #already picked up in error checks
         values = new_values

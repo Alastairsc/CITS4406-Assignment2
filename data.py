@@ -22,7 +22,7 @@ invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
 re_int = re.compile('^\s*[1-9]\d*$')
 re_email = re.compile('@')
-re_currency = re.compile('(^\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
+re_currency = re.compile('^(\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
 re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
@@ -148,6 +148,7 @@ class Column(object):
                 if parseaddr(value)[1] != '':
                     email_count += 1
             elif re_currency.search(value):
+                self.values[x].replace('"', '')
                 currency_count += 1
             elif re_boolean.search(value):
                 boolean_count += 1
@@ -204,7 +205,7 @@ class Column(object):
         else:
             self.type = 'String'
 
-    def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos, range_list2):
+    def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos, range_list2, set_to_ignore):
         """Define all the rows/columns with invalid values and append to errors, and
         formatted_errors once formatted properly. invalid_rows_pos holds the amount of
         rows that have been skipped by the time the current row x is being considered.
@@ -232,7 +233,8 @@ class Column(object):
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
                     
-                if len(range_list2) > 0:
+                elif len(range_list2) > 0:
+                    print(value)
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
@@ -240,12 +242,15 @@ class Column(object):
                     
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
+                if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber + 1 in set_to_ignore):
+                    continue
                 if not re_int.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
                     
                 if len(range_list2) > 0:
+                    print(value)
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
@@ -253,8 +258,7 @@ class Column(object):
                     
         elif self.type == 'Numeric':
             for x, value in enumerate(self.values):
-                if value == '' and self.ignore_empty:
-                    #TODO do for all types
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
                     continue
                 if not re_int.match(value) and not re_float.match(value) and not value == '0':
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
@@ -266,37 +270,51 @@ class Column(object):
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - out of template range" % (tup[0] + 1, tup[1], tup[2]))
+                        
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue
                 if re_email.search(value):
                     if parseaddr(value)[1] == '':
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                        
         elif self.type == 'Boolean':
             for x, value in enumerate(self.values):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue
                 if not re_boolean.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    
         elif self.type == 'Currency':
             for x, value in enumerate(self.values):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue
                 if not re_currency.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    print(errors)
+                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))                  
                 else:
                     self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
+                    
         elif self.type == 'String':
             for x, value in enumerate(self.values):
-                if (value == '' or value == ' ') and self.ignore_empty:
+                if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
                     continue
                 if value == '' or value == ' ':
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    
         elif self.type == 'Enum':
-            for x, value in enumerate(self.least_common):  
+            for x, value in enumerate(self.least_common):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue  
                 if self.least_common[x][1] <= enum_threshold:
                     i = 0 
                     freq = 0
@@ -309,38 +327,50 @@ class Column(object):
                         i+=1
                     if freq == 0:
                          raise Exception('Least common value not found')
+                         
         elif self.type == 'Sci_Notation':
             for x, value in enumerate(self.values):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue
                 if not re_sci_notation.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    
         elif self.type == 'Identifier':
             if self.data_size != -1:
                 size = self.data_size
             else:
                 size = len(self.values[0])
             for x, value in enumerate(self.values):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue
                 if len(value) != size:
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
         elif self.type == 'Date':
-            for x, value in enumerate(self.values):           
+            for x, value in enumerate(self.values):       
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue    
                 if not re_date.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
 
         elif self.type == 'Time':
-            for x, value in enumerate(self.values):           
+            for x, value in enumerate(self.values):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue           
                 if not re_time.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
 
         elif self.type == 'Char':
-            for x, value in enumerate(self.values):           
+            for x, value in enumerate(self.values):    
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue       
                 if not re_char.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
@@ -354,8 +384,10 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
 
         elif self.type == 'Hyperlink':
-            for x, value in enumerate(self.values):           
-                if not re_float.match(value):
+            for x, value in enumerate(self.values):     
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                    continue      
+                if not re_hyperlink.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
@@ -469,6 +501,7 @@ class Data(object):
         self.ignore_empty = False
         self.std_devs_val = 3
         self.range_list = []
+        self.set_ignore = set()
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
@@ -480,6 +513,7 @@ class Data(object):
             enum_threshold = self.template.enum_threshold_val
             self.std_devs_val = self.template.std_devs
             self.range_list = self.template.range_vals
+            self.set_ignore = self.template.ignore_set
         #Process data
         self.read(self.filename)
         self.remove_invalid()
@@ -603,7 +637,7 @@ class Data(object):
         """
         for colNo, column in enumerate(self.columns):
              if not column.empty:
-                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list)
+                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list, self.set_ignore)
 
     def pre_analysis(self):
         """First defines their least and most common elements, then if 
