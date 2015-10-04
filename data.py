@@ -474,7 +474,7 @@ class Data(object):
         """Can take up to two arguments, 
             first argument -- filename
             second argument -- template"""
-        
+        self.delimiter_type = ''
         self.filename = args[0]
         self.columns = []
         self.invalid_rows = []
@@ -543,14 +543,23 @@ class Data(object):
                         if n_col == 1:
                             result = re.split(re_separation, line[0])
                             self.raw_data.append(result)
+                            delimiter_search = re.search(re_separation, line[0]).group(0)   #NEW
+                            if delimiter_search == ' ':
+                                self.delimiter_type = 'Space'
+                            elif delimiter_search == '\t':
+                                self.delimiter_type = 'Tab'
+                            else:
+                                self.delimiter_type = delimiter_search   #NEW
                         else:
                             self.raw_data.append(line)
+                            self.delimiter_type = ','   #NEW
 
                 except:
                     print("Delimiter Warning: could not determine delimiter, consider",\
                     "specifying using template. Continuing using comma")
                     csvfile.seek(0)
                     f = csv.reader(csvfile, delimiter=',')
+                    self.delimiter_type = ','
                     for row in f:
                         self.raw_data.append(row)
         else:

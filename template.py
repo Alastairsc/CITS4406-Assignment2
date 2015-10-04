@@ -69,6 +69,12 @@ base_template = \
             <p>These cells contain invalid values.</p>
             {error_columns}
         </div>
+
+        <div class="col-md-6">
+            <h2>Delimiter</h2>
+            <p>This file contains the delimiter type:</p>
+            <h4><b>{delimiter_type}</b></h4>
+        </div>
     </div>
 </div>
 
