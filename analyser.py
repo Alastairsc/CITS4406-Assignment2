@@ -215,8 +215,8 @@ class SciNotationAnalyser(Analyser):
         for i in values:
             if i != '':
                 try:
-                    new_values.append(eval(i))
-                    print(eval(i))
+                    new_values.append(float(i))
+                    print(float(i))
                 except:
                     pass #already picked up in error checks
         values = new_values
