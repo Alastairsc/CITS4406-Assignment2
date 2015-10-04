@@ -52,9 +52,27 @@ class Template(object):
                         if len(row) > 3 and row[2] == 'Identifier' and row[3].lower() == 'size':
                             self.data_size[int(row[1])-1] = int(row[4])
                     elif row[0].lower() == 'delimiter':
-                        if(row[1] == 'comma'):
+                        if(row[1].lower() == 'comma') or (row[1] == ','):
                             self.delimiter = ','
-                            #TODO add space
+                            self.delimiter_type = ','
+                        elif(row[1].lower() == 'semicolon') or (row[1] == ';'):
+                            self.delimiter = ';'
+                            self.delimiter_type = ';'
+                        elif(row[1].lower() == 'space') or (row[1] == '\\s'):
+                            self.delimiter = ' '
+                            self.delimiter_type = 'Space'
+                        elif(row[1].lower() == 'dash') or (row[1] == '-'):
+                            self.delimiter = '-'
+                            self.delimiter_type = '-'
+                        elif(row[1].lower() == 'backslash') or (row[1] == '\\'):
+                            self.delimiter = '\\'
+                            self.delimiter_type = '\\'
+                        elif(row[1].lower() == 'pipe') or (row[1] == '|'):
+                            self.delimiter = '|'
+                            self.delimiter_type = '|'
+                        elif(row[1].lower() == 'tab') or (row[1] == '\\t'):
+                            self.delimiter = '\t'
+                            self.delimiter_type = 'Tab'
                         else:
                             self.delimiter = row[1]
                     elif row[0].lower() == 'header':

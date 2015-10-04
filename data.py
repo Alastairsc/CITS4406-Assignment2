@@ -505,6 +505,7 @@ class Data(object):
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter = self.template.delimiter
+            self.delimiter_type = self.template.delimiter_type
             self.header_row = self.template.header_row
             self.data_start = self.template.data_start
             self.data_size = self.template.data_size
