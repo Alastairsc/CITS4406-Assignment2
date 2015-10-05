@@ -95,3 +95,5 @@ class Template(object):
                         for x, value in enumerate(row):
                             if value != 'ignore_empty_column':
                                 self.ignore_set.add(int(value))
+                    else:
+                        print("Not an option: ", row)
