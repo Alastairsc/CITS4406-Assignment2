@@ -390,7 +390,7 @@ class Column(object):
                 if not re_hyperlink.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s" % (tup[0] + 1, tup[1], tup[2]))
+                    formatted_errors.append("Row: %d Column: %d Value: %s - not a recognised hyperlink" % (tup[0] + 1, tup[1], tup[2]))
                 
 
     def set_type(self, type):

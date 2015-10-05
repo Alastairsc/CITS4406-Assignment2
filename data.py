@@ -234,7 +234,6 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s - not a decimal number" % (tup[0] + 1, tup[1], tup[2]))
                     
                 elif len(range_list2) > 0:
-                    print(value)
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
@@ -250,7 +249,6 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s - not an integer" % (tup[0] + 1, tup[1], tup[2]))
                     
                 if len(range_list2) > 0:
-                    print(value)
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                         errors.append(tup)
@@ -297,7 +295,6 @@ class Column(object):
                 if not re_currency.match(value):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
-                    print(errors)
                     formatted_errors.append("Row: %d Column: %d Value: %s - not a recognised currency" % (tup[0] + 1, tup[1], tup[2]))                  
                 else:
                     self.values[x] = re.sub('(\$)|(€)|(£)', '', value)

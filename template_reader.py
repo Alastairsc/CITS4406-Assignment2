@@ -59,7 +59,6 @@ class Template(object):
                             self.delimiter = row[1]
                     elif row[0].lower() == 'header':
                         self.header_row = int(row[1]) - 1
-                        print("Set header: ", self.header_row)
                     elif row[0].lower() == 'data_start':
                         self.data_start = int(row[1]) - 1
                     elif row[0].lower() == 'ignore_empty':
@@ -74,9 +73,7 @@ class Template(object):
                     elif row[0].lower() == 'range':
                         self.range_vals.append(float(row[1]))
                         self.range_vals.append(float(row[2]))
-                        print (self.range_vals)
                     elif row[0].lower() == 'ignore_empty_column':
                         for x, value in enumerate(row):
                             if value != 'ignore_empty_column':
                                 self.ignore_set.add(int(value))
-                                print(self.ignore_set)  
