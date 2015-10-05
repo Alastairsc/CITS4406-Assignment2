@@ -1,0 +1,36 @@
+Python program - https://github.com/lilfolr/CITS4406-Assignment2/issues
+
+16/09/15 Leighton - #1 Scientific notation regex
+16/09/15 Leighton - #2 Delimeters not detected Oil original
+16/09/15 Jordan - #3 Excel spreadsheets for linux
+20/09/15 Jordan - #4 Files being read wrong
+22/09/15 Alastair C - #5 Reading Delimiters
+23/09/15 Alastair C - #6 Extra template functionality
+23/09/15 Alastair C - #7 Space Delimited
+23/09/15 Alastair M - #8 Whole numbers in column of floats considered errors
+23/09/15 Alastair M - #9 Column.empty True for columns > 90% empty values
+24/09/15 Alastair C - #10 Explicit Error Messages
+25/09/15 Alastair C - #11 New Datatypes
+28/09/15 Alastair C - #12 Add column number to statistics
+29/09/15 Alastair C - #13 Run over directories
+30/09/15 Jordan - #14 Email csv not working
+30/09/15 Alastair C - #15 Currency Problem
+30/09/15 Jan - C#16 Dates recognized as String types
+01/10/15 Alastair C - #17 Output file
+03/10/15 Jordan - #18 Scientific notaton error
+04/10/15 Alastair M - #19 MaskError Exception in data.analysis()
+
+Django portion - https://github.com/Alastairm/django_env/issues
+
+13/09/15 Alastair M - #1 Make cleaning options page
+13/09/15 Alastair M - #2 Make analyser options page
+13/09/15 Alastair M - #3 Add report generation
+13/09/15 Alastair M - #4 Add data privacy statement
+13/09/15 Alastair M - #5 Add bug / issue / feedback submission page to site enhancement
+13/09/15 Alastair M - #6 Deploy site with Apache
+13/09/15 Alastair M - #7 Seperate Header from individual page templates
+16/09/15 Alastair M - #8 Add support for multiple csv files
+22/09/15 Leighton - #9 Set up website-down monitoring service
+01/10/15 Leighton - #10 Group Errors
+01/10/15 Leighton - #11 Template download
+01/10/15 Leighton - #12 Download Python app
