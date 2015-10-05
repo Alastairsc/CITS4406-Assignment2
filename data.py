@@ -333,6 +333,12 @@ class Column(object):
                     tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - not scientific notation" % (tup[0] + 1, tup[1], tup[2]))
+                elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                    tup = (x + 1 + invalid_rows_pos[x], columnNumber + 1, value)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s - too large or too small" % (tup[0] + 1, tup[1], tup[2]))
+                    self.updateCell(x, '')
+            print(errors)
                     
         elif self.type == 'Identifier':
             if self.data_size != -1:
