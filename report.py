@@ -68,6 +68,7 @@ class Report(object):
             error_columns=self.list_creator(self.data.formatted_errors),
             len_error_columns=len(self.data.errors),
             len_columns=len(self.data.valid_rows),
+            delimiter_type = self.data.delimiter_type,   #   NEW
             numerical_analysis=self.numerical_analysis(),
             string_analysis=self.string_analysis(),
             identifier_analysis=self.identifier_analysis(),
