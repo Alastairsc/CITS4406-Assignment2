@@ -462,7 +462,11 @@ class Data(object):
         headers -- List of column headers.
         
         invalid_rows -- List of invalid rows (i.e., more or less columns than
-        number of headers).
+        number of headers). Copied from raw_data
+        
+        invalid_rows_indexes -- List of indexes corresponding to invalid rows.
+
+        formatted_invalid_rows -- List of invalid rows for report.
         
         formatted_errors -- List of errors in file, each error contains: row, column 
         and value of the error.
@@ -481,6 +485,8 @@ class Data(object):
         self.filename = args[0]
         self.columns = []
         self.invalid_rows = []
+        self.invalid_rows_indexes = []
+        self.formatted_invalid_rows = []
         self.invalid_rows_pos = []
         self.errors = []     
         self.formatted_errors = []
@@ -520,8 +526,6 @@ class Data(object):
             self.set_ignore = self.template.ignore_set
         #Process data
         self.read(self.filename)
-        self.remove_invalid()
-        self.create_columns()
         
 
     def read(self, csv_file):
@@ -588,7 +592,9 @@ class Data(object):
         row_length = len(self.raw_data[self.header_row])
         for index, row in enumerate(self.raw_data):
             if len(row) != row_length:
-                self.invalid_rows.append(["%s: %d" % ("Line", index + 1)])
+                self.invalid_rows_indexes.append( index)
+                self.formatted_invalid_rows.append(["%s: %d" % ("Line", index + 1)])
+                self.invalid_rows.append(row)
                 self.raw_data[index] = []
                 count = count + 1
             else:
