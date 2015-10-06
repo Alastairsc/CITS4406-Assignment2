@@ -33,6 +33,8 @@ def main(*args):
         data = Data(filename, temp)
     else:
         data = Data(filename)
+    data.remove_invalid()
+    data.create_columns()
     tr.create_snapshot()
     data.clean()
   #  editor = Editor(data)
