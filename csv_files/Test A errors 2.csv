@@ -1,0 +1,25 @@
+Item,Mass,Colour,Direction,Brittle,Height,Address,Cost,Description,Test time,Test Date,Day,Latitude,Longitude,Capacity,Large Numbers,Sci,Identifier,Numeric
+1,2,Blue,Right,TRUE,0.2,Hello@gmail.com,$54.96 ,Works well,13:45,,Thursday,-31.9522,115.8589,25%,3462160000000000,5600000,s5s1a5s2,5.1
+2,5,Red,Left,FALSE,1,World@gmail.com,$95.60 ,Too red,15:45,04-Sep,Friday,-31.9465,115.6231,52%,469457000000000,5100000,6d5d2d4s,2
+3,6,Yellow,Diagonal,TRUE,0.7,Pony@hotmail.com,$65.32 ,white car,13:00,03-Sep,Wednesday,-30.9666,115.3026,32%,2465470000000000,4800000,5f12f1d5d,32
+4,8,Purple,Down,Faslse,1.5,Exodus@apple.com,$85.20 ,forgot where,15:45,02-Aug,Sunday,-30.8822,115.3012,65%,565632000000000,0.0000008,d35f2d3s,8.5
+5,4,Black,Up,TRUE,1.8,movie@hotmail.com,$95.00 ,nuwar,13:38,04-Jul,Saturday,-31.6642,0,92%,565252000000000,-850000000,3d23f23d,25.6
+6,2,White,Left,FALSE,1.2,George.Cluney@gmail.com,$36.50 ,robot,14:40,06-May,Wednesday,-31.0163,115.6465,87%,265652000000000000,1,2451361f,3
+7,3,P!nk,Right,Men,0.6,Hibarry.sksbnfik,$20.00 ,hello,6:30,03-Aug,Monday,-31.6981,115.3233,10%,0,-5.6562,fssefefe0,1
+8,9,White,Dwon,FALSE,0.35,People@gmail.com,$50.00 ,words,6:40,12-Aug,Wednesday,,115.4642,15%,62165100000000000,500,000sd6f4,0
+9,5,Purple,Right,TRUE,1.1,Left@hotmail.com,($9.33),people,8:20,09-Oct,Friday,-31.3223,114.9982,36%,56465500000000000,3800000,dfg6d54f,6.5
+10,4,Red,Left,FALSE,1.52,Good@apple.com,($95.63),places,6:50,32-3-2015,Friiday,-31.6253,114.8522,25%,4651650000000000,0.00000509,fdg455df,45
+10,1,Green,Up,T,0.98,Horrific@apple.com,($58.20),things,11:15,21-Aug,Friday,-31.2566,115.6235,31%,564648000000000000,-850000,545g54fd,-0.8
+12,26,Blue,Down,F,0.78,yesterday@hotmail.com,$44.00 ,italy,19:45,06-Sep,Sunday,-30.9442,115.8985,,566546000000000,0.0000053,0154f4g4,-100
+13,5.002,Red,Left,TRUE,0.6,walking@gmail.com,$6.00 ,Poland,25:65,02-Sep,Wednesday,-30.8651,115.6332,10%,-516000000000000,5e-99355,fdg55,52
+12,20,White,Right,FALSE,4,newlogo@gmail.com,$32.89 ,Greece,12:04,30-Jul,Thursday,-30.7541,115.6465,6%,6546570000000000,50000,f54g6d54,68
+15,1,Black,Down,TRUE,0.35,newlogo@gmail.com,$22.00 ,Australia,17:14,05-Aug,Wednesday,-31.0645,115.9665,99%,564662000000000,600000000000000000000000000000000000000000000000000000000000,21321510,9.8
+16,5,Pnik,Up,FALSE,0.98,Pony@hotmail.com,$36.54 ,West,22:20,30-2-15,Wednesday,-31.0894,190.56,52%,56115600000000,650,f64g45f2,87
+17,8,Violet,Uptown,TRUE,1.01,,$42.42 ,Direction,22:05,06-Sep,Sunday,-90.434,115.3266,86%,0,630000,6w54t5we,5000
+18,5,Pink,Up,TRUE,1.2,George.Cluney@gmail.com,$66.66 ,Decryption,22:45,15-Aug,Funday,-31.6052,115.8985,46%,5616660000000,8500000,rt56t6r2f,74
+19,2,Gold,Down,TRUE,0,Hello@gmail.com,$33.15 ,Poland,4:14,23-Aug,Sunday,-31.0331,115.6445,36%,16165400000000,-1E-065,f3f2g36r,54.8883
+20,6,Red,Down,FALSE,1.44,World@gmail.com,"$1,112,312,312.20 ", ,1:00,16-Sep,Sunday,-31.655,115.8756,20%,648865000000000,52000000,5fgf2f55,1.0022
+21,0,Pink,Right,FALSE,1.5,Pony@hotmail.com,$45 ,Jon Snow,6:08,30-Sep,Sunday,-31.8546,114.9815,40%,85000000000000,0.000008,fd3f6f26,0.000005
+22,5,Gold,Down,FALSE,-100,hotmail@gmail@uwa.edu,"$10,000 ",Doorbell,4:30,12-Aug,Monday,-31.8649,116.5431,32.30%,0,0.0000078,f545g5g4,
+23,56,Blue,Up,FALSE,1.66,George.Cluney@gmail.com,$42 ,Clean your room,8:45,09-Nov,Tuesday,10,118.5343,43.78%,5600000000000000000,800000,fg6f65f6f,9.5
+24,3.2,Red,Up,TRUE,1.98,Hello@gmail.com,$58.62 ,Whyy,9:45,09-Oct,Wednesday,-31.8723,115.6434,0%,5800000000000,4000000,f4g45f45f,1
