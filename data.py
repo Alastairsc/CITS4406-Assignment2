@@ -520,8 +520,6 @@ class Data(object):
             self.set_ignore = self.template.ignore_set
         #Process data
         self.read(self.filename)
-        self.remove_invalid()
-        self.create_columns()
         
 
     def read(self, csv_file):
