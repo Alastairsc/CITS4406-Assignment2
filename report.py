@@ -11,6 +11,7 @@ except SystemError:
 from os import path
 
 class Report(object):
+
     """The main report object.
     
     Methods:
@@ -39,6 +40,8 @@ class Report(object):
         
         file -- Reference to CSV file.
     """
+
+
     def __init__(self, data, file):
         """Initialise the Report object and assign local variables.
         
@@ -50,6 +53,11 @@ class Report(object):
         self.data = data
         self.file_name = file
     
+    @staticmethod
+    def initial_show_items():
+        """Return the number of items to show initially, where clicking 'show more' will expand."""
+        return 4
+
     def empty_columns(self):
         """Return a list of empty rows in the data object."""
         return [column.header for column in self.data.columns if column.empty]
@@ -87,23 +95,36 @@ class Report(object):
         Keyword arguments:
         list_items -- List of items to be turned into HTML.
         """
+        itemCount = 0
         html_list = '<ul>'
         if list_items:
             for item in list_items:
-                html_list += '<li>' + str(item) + '</li>'
+                itemCount+=1
+                if itemCount>Report.initial_show_items():
+                  html_list += '<li class="hidden">' + str(item) + '</li>'
+                else:
+                  html_list += '<li>' + str(item) + '</li>'
         else:
             html_list += '<li>' + 'Empty' + '</li>'
+        if itemCount>Report.initial_show_items()+1:
+          html_list += "<li class='showMore'>Show More</li>"
         html_list += '</ul>'
         return html_list
 
     @staticmethod
-    def row_creator(row_items):
+    def row_creator(row_items, rowNumber = 0):
         """Return provided list as HTML rows.
         
         Arguments:
         row_items -- List of items to be turned into HTML.
         """
-        html_row = '<tr>'
+        html_row=""
+        if rowNumber>Report.initial_show_items():
+          if rowNumber == Report.initial_show_items()+1:
+            html_row = '<tr><td colspan="100%" class="info showMoreTable">Show More</td></tr>'
+          html_row += '<tr class="hidden">'
+        else:
+          html_row += '<tr>'
         for item in row_items:
             html_row += '<td>' + str(item) + '</td>'
         html_row += '</tr>'
@@ -115,6 +136,7 @@ class Report(object):
         columns.
         """
         rows = ''
+        rowNo = 0;
         for column in self.data.columns:
             if column.type == 'Float' or column.type == 'Integer'\
             or column.type == 'Sci_Notation' or column.type == 'Numeric':
@@ -140,7 +162,8 @@ class Report(object):
                         row.append(stats)
                         #causes problems if some columns have different stats to others of
                         #same type
-                rows += self.row_creator(row)
+                rowNo+=1;
+                rows += self.row_creator(row,rowNo)
         return rows
         
     def string_analysis(self):
@@ -149,6 +172,7 @@ class Report(object):
         columns.
         """
         rows = ''
+        rowNo = 0;
         for column in self.data.columns:
             if column.type == 'String':           
                 row = [column.header,
@@ -156,7 +180,8 @@ class Report(object):
                        column.most_common[:5],
                        column.least_common[:5],
                        column.analysis.unique]
-                rows += self.row_creator(row)
+                rowNo+=1;
+                rows += self.row_creator(row,rowNo)
         return rows
         
     def enum_analysis(self):
@@ -164,6 +189,7 @@ class Report(object):
         in the data object by accessing the various class variables of the
         columns.
         """
+        rowNo = 0;
         rows = ''
         for column in self.data.columns:
             if column.type == 'Enum':
@@ -172,7 +198,8 @@ class Report(object):
                        column.most_common[:5],
                        column.least_common[:5],
                        column.analysis.unique]
-                rows += self.row_creator(row)
+                rowNo+=1;
+                rows += self.row_creator(row,rowNo)
         return rows
         
         
@@ -181,6 +208,7 @@ class Report(object):
         in the data objectby accessing the various class variables of the
         columns.
         """      
+        rowNo = 0;
         rows = ''
         for column in self.data.columns:
             if column.type == 'Email':
@@ -189,7 +217,8 @@ class Report(object):
                         column.most_common[:5],
                         column.least_common[:5],
                        column.analysis.unique]
-                rows += self.row_creator(row)
+                rowNo+=1;
+                rows += self.row_creator(row,rowNo)
         return rows
         
     def boolean_analysis(self):
@@ -197,6 +226,7 @@ class Report(object):
         in the data objectby accessing the various class variables of the
         columns.
         """      
+        rowNo = 0;
         rows = ''
         for column in self.data.columns:
             if column.type == 'Boolean':
@@ -210,7 +240,8 @@ class Report(object):
                        column.total_yes,
                        column.total_no,
                        column.total_true + column.total_false + column.total_yes + column.total_no]
-                rows += self.row_creator(row)
+                rowNo+=1;
+                rows += self.row_creator(row,rowNo)
         return rows
         
     def currency_analysis(self):
@@ -218,6 +249,7 @@ class Report(object):
          in the data object by accessing the various class variables of the
         columns.
         """
+        rowNo = 0;
         rows = ''
         for column in self.data.columns:
             if column.type == 'Currency':
@@ -236,7 +268,8 @@ class Report(object):
                        column.most_common[:5],
                        column.least_common[:5],
                        column.analysis.unique]
-                rows += self.row_creator(row)
+                rowNo+=1;
+                rows += self.row_creator(row,rowNo)
         return rows
 
     def identifier_analysis(self):
@@ -245,6 +278,7 @@ class Report(object):
         columns by accessing the various class variables of the
         columns.
         """
+        rowNo = 0;
         rows = ''
         for column in self.data.columns:
             if column.type == 'Identifier':           
@@ -253,7 +287,8 @@ class Report(object):
                        column.most_common[:5],
                        column.least_common[:5],
                        column.analysis.unique]
-                rows += self.row_creator(row)
+                rowNo+=1;
+                rows += self.row_creator(row,rowNo)
         return rows
         
     def gen_html(self, html):

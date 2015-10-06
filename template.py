@@ -63,7 +63,6 @@ base_template = \
             <p>These columns contain >= 90% empty values.</p>
             {empty_columns}
         </div>
-        <br/>
         <div class="col-md-6">
             <h2 class="titleRow">Error Cells ({len_error_columns})</h2>
             <p>These cells contain invalid values.</p>
