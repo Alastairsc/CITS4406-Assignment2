@@ -9,3 +9,14 @@ body {
     margin-top: 50px;
     visibility: hidden;
 }
+
+.titleRow{
+    text-decoration: underline;
+}
+.titleRow:hover{
+    color:blue;
+    cursor: pointer;
+}
+.hidden{
+    display: none;
+}

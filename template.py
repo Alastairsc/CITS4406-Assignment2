@@ -12,11 +12,11 @@ base_template = \
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="../main.css">
-
+<script src="../main.js"></script>
 <title>Analysis Report on {header}</title>
 
 </head>
-<body>
+<body onload="init()">
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -53,25 +53,25 @@ base_template = \
     <div class="row">
         <hr id="invalid"/>
         <div class="col-md-6">
-            <h2>Invalid Rows ({len_invalid_rows})</h2>
+            <h2 class="titleRow">Invalid Rows ({len_invalid_rows})</h2>
             <p>These rows contain either too many or too few columns.</p>
             {invalid_rows}
         </div>
 
         <div class="col-md-6">
-            <h2>Empty Columns ({len_empty_columns})</h2>
+            <h2 class="titleRow">Empty Columns ({len_empty_columns})</h2>
             <p>These columns contain >= 90% empty values.</p>
             {empty_columns}
         </div>
-        
+        <br/>
         <div class="col-md-6">
-            <h2>Error Cells ({len_error_columns})</h2>
+            <h2 class="titleRow">Error Cells ({len_error_columns})</h2>
             <p>These cells contain invalid values.</p>
             {error_columns}
         </div>
 
         <div class="col-md-6">
-            <h2>Delimiter</h2>
+            <h2 class="titleRow">Delimiter</h2>
             <p>This file contains the delimiter type:</p>
             <h4><b>{delimiter_type}</b></h4>
         </div>
@@ -81,9 +81,9 @@ base_template = \
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>Column Analysis (Based on {len_columns} rows)</h2>
+            <h2 class="titleRow">Column Analysis (Based on {len_columns} rows)</h2>
             <hr id="numerical"/>
-            <h2>Numerical</h2>
+            <h2 class="titleRow">Numerical</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -105,7 +105,7 @@ base_template = \
             </table>
             
             <hr id="string"/>
-            <h2>String</h2>
+            <h2 class="titleRow">String</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -118,7 +118,7 @@ base_template = \
             </table>
             
             <hr id="identifier"/>
-            <h2>Identifier</h2>
+            <h2 class="titleRow">Identifier</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -131,7 +131,7 @@ base_template = \
             </table>
             
             <hr id="enum"/>
-            <h2>Enumerated</h2>
+            <h2 class="titleRow">Enumerated</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -144,7 +144,7 @@ base_template = \
             </table>
             
             <hr id="email"/>
-            <h2>Email</h2>
+            <h2 class="titleRow">Email</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -157,7 +157,7 @@ base_template = \
             </table>
             
             <hr id="currency"/>
-            <h2>Currency</h2>
+            <h2 class="titleRow">Currency</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -179,7 +179,7 @@ base_template = \
             </table>
             
             <hr id="boolean"/>
-            <h2>Boolean</h2>
+            <h2 class="titleRow">Boolean</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
