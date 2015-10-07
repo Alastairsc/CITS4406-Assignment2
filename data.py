@@ -491,6 +491,7 @@ class Data(object):
         self.errors = []     
         self.formatted_errors = []
         self.raw_data = []
+        self.raw_copy = []
         self.valid_rows = []
         self.analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
                      'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
@@ -576,14 +577,15 @@ class Data(object):
                 f = csv.reader( csvfile, delimiter=self.delimiter)
                 for row in f:
                     self.raw_data.append(row)
-   
                 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
         valid_rows variable if same length as headers, else appends to 
-        invalid_rows variable. invalid_rows_pos holds the amount of rows that have been
+        invalid_rows variable. invalid_rows_indexes holds the amount of rows that have been
         skipped by the point the xth row has been accessed from valid_rows.
         """
+        print(self.raw_data)
+        self.raw_copy = list(self.raw_data)
         count = 0
         preamble = []
         if self.data_start != 0:
@@ -640,6 +642,9 @@ class Data(object):
         """Iterates through each column and analyses the columns values using the
         columns type analyser.
         """
+        self.update_raw_data()
+        print("RAW")
+        print(self.raw_copy)
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
@@ -747,3 +752,16 @@ class Data(object):
     	self.errors = []
     	self.formatted_errors = []
     	#self.invalid_rows = []
+    	
+    def update_raw_data(self):
+        if (len(self.invalid_rows_indexes) != 0):
+            skip_count = 0
+            col_length = len(self.valid_rows) + self.invalid_rows_indexes[len(self.invalid_rows_indexes) - 1]
+            for x in range(0, col_length):
+                if(invalid_rows_indexes[x] > skip_count):
+                    self.raw_copy[x] = self.invalid_rows[skip_count]
+                    ++skip_count    
+                else:
+                    self.raw_copy[x] = self.valid_rows[x - skip_count]
+                    
+        
