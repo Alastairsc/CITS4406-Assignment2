@@ -11,8 +11,8 @@ base_template = \
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="../main.css">
-<script src="../main.js"></script>
+<link rel="stylesheet" href="/static/report/main.css">
+<script src="/static/report/main.js"></script>
 <title>Analysis Report on {header}</title>
 
 </head>
