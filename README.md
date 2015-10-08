@@ -11,7 +11,8 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Alastair Mory
 
 
-###Instructions
+Instructions
+===============
 
 1. Install python 3 from 	https://www.python.org/downloads/release/python-343/
 
@@ -25,15 +26,15 @@ Run the terminal, navigate to the directory containing the applicaiton.py and ru
 
 ###Windows
 
-Run the program in windows powershell, navigate to the directory containing the application.py file and run using 
+Open windows powershell, navigate to the directory containing the application.py file and run using 
 	'python application.py *csv filename here*'.
 
 
-You can specify multiple files using 'python3 application.py *csv_fileame* *csv_filename*'
-You can use templates using 'python3 application.py *csv_filaname* -t *template_name*'
+You can specify multiple files using 'python application.py *csv_fileame* *csv_filename*'
+You can use templates using 'python application.py *csv_filaname* -t *template_name*'
 
 You must run the program from the directory containing the application.py file.
-csv_filanames must be specified by relative or using its absolute path
+csv_filanames must be specified by relative path or using its absolute path
 
 
 ### Supported Data types
