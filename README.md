@@ -11,15 +11,30 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Alastair Mory
 
 
-### Running the program
-* The program requires Python3, the scipy module, numpy module, alabaster module and pandas 
-* module to run, it is recommended that you install these via the python distribution "Anaconda"
-* found here: http://continuum.io/downloads
+###Instructions
 
-###Directory Structure
-* The source code is all in the main directory
-* csv_files contains test files used to evaluate the program
-* Sphinx contains documentation of classes and methods of the         	program
+1. Install python 3 from 	https://www.python.org/downloads/release/python-343/
+
+2. Install the Anaconda package from:
+	http://continuum.io/downloads
+
+###Ubuntu
+
+Run the terminal, navigate to the directory containing the applicaiton.py and run using
+	'python3 application.py *csv filename here*'. 
+
+###Windows
+
+Run the program in windows powershell, navigate to the directory containing the application.py file and run using 
+	'python application.py *csv filename here*'.
+
+
+You can specify multiple files using 'python3 application.py *csv_fileame* *csv_filename*'
+You can use templates using 'python3 application.py *csv_filaname* -t *template_name*'
+
+You must run the program from the directory containing the application.py file.
+csv_filanames must be specified by relative or using its absolute path
+
 
 ### Supported Data types
 * Int
@@ -31,11 +46,6 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Boolean
 * Scientific notation
 * Identifier
-* Date
-* Time
-* Char
-* Day
-* Hyperlink
 
 
 ### Cleansing
@@ -59,17 +69,8 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Bottom 5 occuring results
 * Number of unique entries
 
-###Ubuntu
 
-You can run the project by extracting the zip, and running 'python3 application.py *csv filename here*'. 
-
-###Windows
-
-Run the program using 'python application.py *csv filename here*'.
-
-
-You can specify multiple files using 'python3 application.py *csv_fileame* *csv_filename*'
-You can use templates using 'python3 application.py *csv_filaname* -t *template_name*'
-
-You must run the program from the directory containing the source files.
-csv_filanames must either be put in the source directory or specified using its absolute path
+###Directory Structure
+* The source code is all in the main directory
+* csv_files contains test files used to evaluate the program
+* Sphinx contains documentation of classes and methods of the         	program
