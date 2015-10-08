@@ -491,6 +491,7 @@ class Data(object):
         self.errors = []     
         self.formatted_errors = []
         self.raw_data = []
+        self.can_edit_rows = False
         self.raw_copy = []
         self.valid_rows = []
         self.analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
@@ -584,14 +585,12 @@ class Data(object):
         invalid_rows variable. invalid_rows_indexes holds the amount of rows that have been
         skipped by the point the xth row has been accessed from valid_rows.
         """
-        print(self.raw_data)
-        self.raw_copy = list(self.raw_data)
         count = 0
         preamble = []
         if self.data_start != 0:
             for row in range(0, self.data_start):
-                preamble.append(self.raw_data[row])
-        row_length = len(self.raw_data[self.header_row])
+                preamble.append(self.raw_data.pop(0))
+        row_length = len(preamble[self.header_row])
         for index, row in enumerate(self.raw_data):
             if len(row) != row_length:
                 self.invalid_rows_indexes.append( index)
@@ -604,6 +603,7 @@ class Data(object):
                 self.invalid_rows_pos.append(count)
                 self.raw_data[index] = []
         self.raw_data = preamble
+        self.can_edit_rows = True
 
     def create_columns(self):
         """For each row in raw_data variable, assigns the first value to the 
@@ -622,14 +622,15 @@ class Data(object):
                 s = ''.join(tmp_list)
                 i = i + 1
                 self.columns.append(Column(header=s))
-            self.valid_rows.pop(self.header_row)            
         length = len(self.valid_rows)
         for row_num in range(self.data_start - 1, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
             self.valid_rows[row_num] = []
         self.valid_rows = []
-        
+        self.invalid_rows = []
+        self.invalid_rows_indexes = []
+        self.can_edit_rows = False
 
     def clean(self):
         """Calls cleaning methods on all columns.
@@ -642,9 +643,6 @@ class Data(object):
         """Iterates through each column and analyses the columns values using the
         columns type analyser.
         """
-        self.update_raw_data()
-        print("RAW")
-        print(self.raw_copy)
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 if column.type in self.analysers:
@@ -758,10 +756,38 @@ class Data(object):
             skip_count = 0
             col_length = len(self.valid_rows) + self.invalid_rows_indexes[len(self.invalid_rows_indexes) - 1]
             for x in range(0, col_length):
-                if(invalid_rows_indexes[x] > skip_count):
+                if(self.invalid_rows_indexes[x] > skip_count):
                     self.raw_copy[x] = self.invalid_rows[skip_count]
                     ++skip_count    
                 else:
                     self.raw_copy[x] = self.valid_rows[x - skip_count]
                     
         
+    def rebuild_raw_data(self):
+        if self.can_edit_rows == True:
+            invalid_pos = 0
+            valid_pos = 0
+            total_rows = len(self.valid_rows) + len(self.invalid_rows)
+            for i in range(0, total_rows):
+                if invalid_pos == self.invalid_rows_pos[valid_pos]:
+                    self.raw_data.append(self.valid_rows.pop(0))
+                    valid_pos += 1
+                else:
+                    self.raw_data.append(self.invalid_rows.pop(0))
+                    invalid_pos += 1
+            self.invalid_rows_pos = []
+            self.invalid_rows_indexes = []
+            self.formatted_invalid_rows = []
+        else:
+            raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
+
+    def delete_invalid_row(self, invalid_row_index):
+        if self.can_edit_rows == True:
+            row_index = self.invalid_rows_indexes[invalid_row_index]
+            for i in range(0,len(self.invalid_rows_pos)):
+                if self.invalid_rows_pos[i] > row_index:
+                    self.invalid_rows_pos[i] = self.invalid_rows_pos[i] - 1
+
+            self.invalid_rows_indexes.pop(invalid_row_index)
+            self.formatted_invalid_rows.pop(invalid_row_index)
+            self.invalid_rows.pop(invalid_row_index)
