@@ -765,19 +765,7 @@ class Data(object):
     	"""Wipes recorded errors to allow find_errors() to be rerun"""
     	self.errors = []
     	self.formatted_errors = []
-    	#self.invalid_rows = []
-    	
-    def update_raw_data(self):
-        if (len(self.invalid_rows_indexes) != 0):
-            skip_count = 0
-            col_length = len(self.valid_rows) + self.invalid_rows_indexes[len(self.invalid_rows_indexes) - 1]
-            for x in range(0, col_length):
-                if(self.invalid_rows_indexes[x] > skip_count):
-                    self.raw_copy[x] = self.invalid_rows[skip_count]
-                    ++skip_count    
-                else:
-                    self.raw_copy[x] = self.valid_rows[x - skip_count]
-                    
+    	#self.invalid_rows = []              
         
     def rebuild_raw_data(self):
         if self.can_edit_rows == True:
