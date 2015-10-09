@@ -467,32 +467,32 @@ class Data(object):
         valid_rows -- List of valid rows (i.e., same number of columns as headers).
         
     """
-    	analysers = {
-    		'String': StringAnalyser,
-		'Integer': NumericalAnalyser,
-		'Float': NumericalAnalyser,
-		'Enum': EnumAnalyser, 
-		'Email': EmailAnalyser,
-		'Currency': CurrencyAnalyser,
-		'Boolean': BooleanAnalyser,
-		'Sci_Notation': SciNotationAnalyser,
-		'Identifier': IdentifierAnalyser,
-		'Date': DateAnalyser,
-		'Time': TimeAnalyser,
-		'Char': CharAnalyser,
-		'Day': DayAnalyser,
-		'Hyperlink': HyperAnalyser, 
-		'Numeric': NumericalAnalyser
+    analysers = {
+        'String': StringAnalyser,
+        'Integer': NumericalAnalyser,
+        'Float': NumericalAnalyser,
+        'Enum': EnumAnalyser, 
+        'Email': EmailAnalyser,
+        'Currency': CurrencyAnalyser,
+        'Boolean': BooleanAnalyser,
+        'Sci_Notation': SciNotationAnalyser,
+        'Identifier': IdentifierAnalyser,
+        'Date': DateAnalyser,
+        'Time': TimeAnalyser,
+        'Char': CharAnalyser,
+        'Day': DayAnalyser,
+        'Hyperlink': HyperAnalyser, 
+        'Numeric': NumericalAnalyser
         }
-        types = (
-		('Integer', 'Integer'),
-        	('Float', 'Real number'),
-        	('Sci_Notation', 'Scientific notation'),
-        	('Boolean', 'Boolean'),
-        	('String', 'String'),
-        	('Enum', 'Enumerable Set'),
+    types = (
+            ('Integer', 'Integer'),
+            ('Float', 'Real number'),
+            ('Sci_Notation', 'Scientific notation'),
+            ('Boolean', 'Boolean'),
+            ('String', 'String'),
+            ('Enum', 'Enumerable Set'),
         	('Identifier', 'Identification code'),
-        	('Email', 'Email Address')
+            ('Email', 'Email Address')
         )
     
     def __init__(self, *args):
