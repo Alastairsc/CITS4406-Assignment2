@@ -432,6 +432,14 @@ class Data(object):
         analyse -- Calls column analysis methods to run 'analysis' on all columns.
     
     Variables:
+    
+    	analysers -- Dictionary conataining types as keys and their respective
+	analysers as values (i.e. analysers['type'] == TypeAnalyser
+	
+	types -- Tuple containing all valid types as ordered pairs of form 
+	('Type', 'Human readable type'). Used to map types on web site
+	to their correct progammatic name.
+	
     	Filename -- String of path to file containing data
     	
         columns -- List of column objects.
@@ -458,13 +466,35 @@ class Data(object):
         
         valid_rows -- List of valid rows (i.e., same number of columns as headers).
         
-	analysers -- Dictionary conataining types as keys and their respective
-	analysers as values (i.e. analysers['type'] == TypeAnalyser
-	
-	types -- Tuple containing all valid types as ordered pairs of form 
-	('Type', 'Human readable type'). Used to map types on web site
-	to their correct progammatic name.
     """
+    	analysers = {
+    		'String': StringAnalyser,
+		'Integer': NumericalAnalyser,
+		'Float': NumericalAnalyser,
+		'Enum': EnumAnalyser, 
+		'Email': EmailAnalyser,
+		'Currency': CurrencyAnalyser,
+		'Boolean': BooleanAnalyser,
+		'Sci_Notation': SciNotationAnalyser,
+		'Identifier': IdentifierAnalyser,
+		'Date': DateAnalyser,
+		'Time': TimeAnalyser,
+		'Char': CharAnalyser,
+		'Day': DayAnalyser,
+		'Hyperlink': HyperAnalyser, 
+		'Numeric': NumericalAnalyser
+        }
+        types = (
+		('Integer', 'Integer'),
+        	('Float', 'Real number'),
+        	('Sci_Notation', 'Scientific notation'),
+        	('Boolean', 'Boolean'),
+        	('String', 'String'),
+        	('Enum', 'Enumerable Set'),
+        	('Identifier', 'Identification code'),
+        	('Email', 'Email Address')
+        )
+    
     def __init__(self, *args):
         """Can take up to two arguments, 
             first argument -- filename
@@ -482,25 +512,7 @@ class Data(object):
         self.can_edit_rows = False
         self.raw_copy = []
         self.valid_rows = []
-        self.analysers = {'String': StringAnalyser, 'Integer': NumericalAnalyser,
-                     'Float': NumericalAnalyser, 'Enum': EnumAnalyser, 
-                     'Email': EmailAnalyser, 'Currency': CurrencyAnalyser,
-                     'Boolean': BooleanAnalyser, 'Sci_Notation': SciNotationAnalyser,
-                     'Identifier': IdentifierAnalyser, 'Date': DateAnalyser,
-                     'Time': TimeAnalyser, 'Char': CharAnalyser,
-                     'Day': DayAnalyser, 'Hyperlink': HyperAnalyser, 
-                     'Numeric': NumericalAnalyser}
-        #Tuple of valid types tuples: (Type, Human readable) - For use on website
-        self.types = (
-        	('Integer', 'Integer'),
-        	('Float', 'Real number'),
-        	('Sci_Notation', 'Scientific notation'),
-        	('Boolean', 'Boolean'),
-        	('String', 'String'),
-        	('Enum', 'Enumerable Set'),
-        	('Identifier', 'Identification code'),
-        	('Email', 'Email Address'),
-        )
+
         
         #Template settings
         self.template = None
