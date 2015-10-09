@@ -1,4 +1,5 @@
-"""Creates an edited csv where errors has been replaced with default values"""
+"""Creates an edited csv where errors has been replaced with default values.
+        Not used in final program"""
 
 import sys
 import os
