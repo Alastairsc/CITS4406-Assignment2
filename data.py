@@ -208,7 +208,9 @@ class Column(object):
         """
         tup = ()     
         if self.type == 'Float':
-            for x, value in enumerate(self.values):           
+            for x, value in enumerate(self.values): 
+                if (value == "" and self.ignore_empty) or (len(value) == 0 and ColumnNumber in set_to_ignore):
+                    continue          
                 if not re_float.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
                     errors.append(tup)
@@ -222,7 +224,7 @@ class Column(object):
                     
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
-                if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber + 1 in set_to_ignore):
+                if (value == "" and self.ignore_empty) or (len(value) == 0 and ColumnNumber in set_to_ignore):
                     continue
                 if not re_int.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -237,7 +239,7 @@ class Column(object):
                     
         elif self.type == 'Numeric':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
                 if not re_int.match(value) and not re_float.match(value) and not value == '0':
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -252,7 +254,7 @@ class Column(object):
                         
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
                 if re_email.search(value):
                     if parseaddr(value)[1] == '':
@@ -262,7 +264,7 @@ class Column(object):
                         
         elif self.type == 'Boolean':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
                 if not re_boolean.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -271,7 +273,7 @@ class Column(object):
                     
         elif self.type == 'Currency':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
                 if not re_currency.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -282,7 +284,7 @@ class Column(object):
                     
         elif self.type == 'String':
             for x, value in enumerate(self.values):
-                if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
                 if value == '' or value == ' ':
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -291,7 +293,7 @@ class Column(object):
                     
         elif self.type == 'Enum':
             for x, value in enumerate(self.least_common):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue  
                 if self.least_common[x][1] <= enum_threshold:
                     i = 0 
@@ -308,7 +310,7 @@ class Column(object):
                          
         elif self.type == 'Sci_Notation':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
                 if not re_sci_notation.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -326,7 +328,7 @@ class Column(object):
             else:
                 size = len(self.values[0])
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
                 if len(value) != size:
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -334,7 +336,7 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s - too long or too short" % (tup[0] + 1, tup[1] + 1, tup[2]))
         elif self.type == 'Date':
             for x, value in enumerate(self.values):       
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue    
                 if not re_date.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -343,7 +345,7 @@ class Column(object):
 
         elif self.type == 'Time':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue           
                 if not re_time.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -352,7 +354,7 @@ class Column(object):
 
         elif self.type == 'Char':
             for x, value in enumerate(self.values):    
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue       
                 if not re_char.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -368,7 +370,7 @@ class Column(object):
 
         elif self.type == 'Hyperlink':
             for x, value in enumerate(self.values):     
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber + 1 in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue      
                 if not re_hyperlink.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
