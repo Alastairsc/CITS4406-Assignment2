@@ -794,6 +794,7 @@ class Data(object):
             self.invalid_rows_pos = []
             self.invalid_rows_indexes = []
             self.formatted_invalid_rows = []
+            self.can_edit_rows == False
         else:
             raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
 
