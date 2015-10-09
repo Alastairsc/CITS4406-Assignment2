@@ -26,7 +26,6 @@ def main(*args):
     tr.create_snapshot()
     filename = args[0]
     print("[Step 1/7] Processing file: ",filename)
-  #  print (len(args))
     print("[Step 2/7] Reading data")
     if len(args) > 1:
         temp = Template(args[1])
@@ -37,7 +36,6 @@ def main(*args):
     data.create_columns()
     tr.create_snapshot()
     data.clean()
-  #  editor = Editor(data)
     print("[Step 3/7] Running pre-analysis")
     data.pre_analysis()
     tr.create_snapshot()
@@ -47,7 +45,6 @@ def main(*args):
     print("[Step 5/7] Running Analysis")
     data.analysis()
     tr.create_snapshot()
-  #  editor.make_corrected(file)
     report = Report(data, filename)
     str_report = report.html_report()
     print("Step[6/7] Generating report")
@@ -66,11 +63,8 @@ def get_file_dir(location):
     """
     return location.rpartition('\\')
     
-if __name__ == '__main__':
-    #print ('sys.argv[0] =', sys.argv[0])             
+if __name__ == '__main__':             
     pathname = os.path.dirname(sys.argv[0])        
-    #print ('path =', pathname)
-    #print ('full path =', os.path.abspath(pathname)) 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,\
         description=textwrap.dedent('''\
                 Processes Csv files.
@@ -84,12 +78,10 @@ if __name__ == '__main__':
         help='one or more filenames for the processor to analyse')
     parser.add_argument('-t', nargs='+', metavar='template', help='a template for the given files')
     args = parser.parse_args()
-  #  print(args)
     filenames = []
     for file in args.filenames:
         print(file)
         name_ext = os.path.splitext(file)
-        #print("name_ext: ", name_ext)
         #TODO handle empty sheets
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
             print("[Step 0/7] Converting to csv file")
@@ -115,10 +107,7 @@ if __name__ == '__main__':
                 if dir_files.endswith(".csv"):
                     filenames.append(os.path.join(file, dir_files))
         else:
-            filenames.append(file)
-            
-                          
-  #  print(args.t)     
+            filenames.append(file)   
     if args.t != None:
         if len(args.t) == 1:
             for name in filenames:
@@ -134,5 +123,4 @@ if __name__ == '__main__':
                 print("Error, different number of files and templates")
     else:
         for name in filenames:
-            #  print("working here")
             main(name)

@@ -88,7 +88,6 @@ class Analyser(object):
         try:
             self.mode = mode(values)
         except StatisticsError:
-            #print("Statistics error")
             self.mode = 'N/A'
         self.unique = self.uniqueCount(values)
 
@@ -216,7 +215,6 @@ class SciNotationAnalyser(Analyser):
             if i != '':
                 try:
                     new_values.append(float(i))
-                    print(float(i))
                 except:
                     pass #already picked up in error checks
         values = new_values

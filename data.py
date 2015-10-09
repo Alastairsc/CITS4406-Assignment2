@@ -28,11 +28,7 @@ re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
 #[\+-]?\d+(\.\d+)?[eE]\d
 re_separation = re.compile('[\|\\\;\s\t-]+')
-re_date = re.compile('^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$')
-re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$)|(^(1[012]|0?[1-9]):[0-5][0-9](\ )?(?i)(am|pm)$)')
-re_char = re.compile('^\D$')
-re_day = re.compile('^(?i)(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$')
-re_hyper = re.compile('^(?i)(https?:\/\/).+$')
+
 
     
 class Column(object):
@@ -163,16 +159,6 @@ class Column(object):
                     self.total_no += 1
             elif re_sci_notation.fullmatch(value):
                 sci_not_count += 1
-            elif re_date.search(value) :
-                date_count += 1
-            elif re_time.search(value) :
-                time_count += 1
-            elif re_char.search(value) :
-                char_count += 1
-            elif re_day.search(value) :
-                day_count += 1
-            elif re_hyper.search(value) :
-                hyper_count +=1
         num_values = len(self.values)
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
@@ -190,16 +176,6 @@ class Column(object):
             self.type = 'Boolean'
         elif sci_not_count / num_values >= threshold:
             self.type = 'Sci_Notation'
-        elif date_count / len(self.values) >= threshold:
-            self.type = 'Date'
-        elif time_count / len(self.values) >= threshold:
-            self.type = 'Time'
-        elif char_count / len(self.values) >= threshold:
-            self.type = 'Char'
-        elif day_count / len(self.values) >= threshold:
-            self.type = 'Day'
-        elif hyper_count / len(self.values) >= threshold:
-            self.type = 'Hyperlink'
         elif len(self.most_common) < 10:
             self.type = 'Enum'
         else:
@@ -338,7 +314,6 @@ class Column(object):
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - too large or too small" % (tup[0] + 1, tup[1] + 1, tup[2]))
                     self.updateCell(x, '')
-           # print(errors)
                     
         elif self.type == 'Identifier':
             if self.data_size != -1:
