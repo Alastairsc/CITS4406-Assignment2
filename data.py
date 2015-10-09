@@ -492,8 +492,9 @@ class Data(object):
         'Numeric': NumericalAnalyser
         }
     types = (
-            ('Integer', 'Integer'),
-            ('Float', 'Real number'),
+            ('Numeric', 'Real numbers')
+            ('Integer', 'Integers only'),
+            ('Float', 'Decimals only'),
             ('Sci_Notation', 'Scientific notation'),
             ('Boolean', 'Boolean'),
             ('String', 'String'),
