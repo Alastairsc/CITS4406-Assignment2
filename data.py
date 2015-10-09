@@ -20,7 +20,7 @@ num_headers = 1
 #  Config
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
-re_int = re.compile('^\s*\d*$')
+re_int = re.compile('^\s*\d+$')
 re_email = re.compile('@')
 re_currency = re.compile('^(\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
@@ -128,15 +128,14 @@ class Column(object):
         day_count = 0
         hyper_count = 0
         
-
-        for x, value in enumerate(self.values):
+        for x, value in enumerate(self.values):            
             if re_float.match(value):
-                if abs(eval(value)) < 0.000001:
+                if abs(float(value)) < 0.000001:
                     sci_not_count +=1
                 else:
                     float_count += 1
             elif re_int.match(value) or value == '0':
-                if abs(eval(value)) > 1000000:
+                if abs(int(value)) > 1000000:
                     sci_not_count += 1
                 else:
                     int_count += 1
@@ -211,7 +210,7 @@ class Column(object):
             pass  
         elif self.type == 'Float':
             for x, value in enumerate(self.values): 
-                if (value == "" and self.ignore_empty) or (len(value) == 0 and ColumnNumber in set_to_ignore):
+                if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber in set_to_ignore):
                     continue          
                 if not re_float.match(value):
                     reason = 'not a decimal number'
@@ -262,7 +261,7 @@ class Column(object):
                         
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if re_email.search(value):
                     if parseaddr(value)[1] == '':
@@ -295,7 +294,7 @@ class Column(object):
                     
         elif self.type == 'String':
             for x, value in enumerate(self.values):
-                if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if value == '' or value == ' ':
                     reason = 'empty string'
@@ -582,7 +581,7 @@ class Data(object):
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
         if self.delimiter == '':
-            with open(csv_file,'rU', newline='') as csvfile:
+            with open(csv_file,'rU', newline='', encoding='ISO-8859-1') as csvfile:
                 try:
                     #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
                     #csvfile.seek(0)
@@ -612,6 +611,8 @@ class Data(object):
                     f = csv.reader(csvfile, delimiter=',')
                     self.delimiter_type = ','
                     for row in f:
+                        for x, item in enumerate(row):
+                            row[x] = item.encode('utf-8').strip()                            
                         self.raw_data.append(row)
         else:
             #template specified delimiter
