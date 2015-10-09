@@ -432,9 +432,9 @@ class Data(object):
         analyse -- Calls column analysis methods to run 'analysis' on all columns.
     
     Variables:
+    	Filename -- String of path to file containing data
+    	
         columns -- List of column objects.
-        
-        headers -- List of column headers.
         
         invalid_rows -- List of invalid rows (i.e., more or less columns than
         number of headers). Copied from raw_data
@@ -443,14 +443,27 @@ class Data(object):
 
         formatted_invalid_rows -- List of invalid rows for report.
         
+        invalid_rows_pos -- List of the amount of invalid rows in the raw data prior
+        to each valid row (i.e. the nth element contains number of invalid rows
+        prior to the nth valid row)
+        
+        errors -- list of errors in file; error[n][0] is row of error, error[n][1]
+        is column of error, and error[n][2] is the value of in that location.
+        
         formatted_errors -- List of errors in file, each error contains: row, column 
         and value of the error.
         
-        raw_data -- List of raw CSV data as rows.
+        raw_data -- List of raw CSV data as rows. After remove_invalid() has run
+        this only contains rows from the CSV file prior to the start of the data.
         
         valid_rows -- List of valid rows (i.e., same number of columns as headers).
         
-        errors -- List of rows and columns of possibly incorrect values.
+	analysers -- Dictionary conataining types as keys and their respective
+	analysers as values (i.e. analysers['type'] == TypeAnalyser
+	
+	types -- Tuple containing all valid types as ordered pairs of form 
+	('Type', 'Human readable type'). Used to map types on web site
+	to their correct progammatic name.
     """
     def __init__(self, *args):
         """Can take up to two arguments, 
@@ -477,6 +490,17 @@ class Data(object):
                      'Time': TimeAnalyser, 'Char': CharAnalyser,
                      'Day': DayAnalyser, 'Hyperlink': HyperAnalyser, 
                      'Numeric': NumericalAnalyser}
+        #Tuple of valid types tuples: (Type, Human readable) - For use on website
+        self.types = (
+        	('Integer', 'Integer'),
+        	('Float', 'Real number'),
+        	('Sci_Notation', 'Scientific notation'),
+        	('Boolean', 'Boolean'),
+        	('String', 'String'),
+        	('Enum', 'Enumerable Set'),
+        	('Identifier', 'Identification code'),
+        	('Email', 'Email Address'),
+        )
         
         #Template settings
         self.template = None
