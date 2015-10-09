@@ -338,7 +338,7 @@ class Column(object):
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - too large or too small" % (tup[0] + 1, tup[1], tup[2]))
                     self.updateCell(x, '')
-            print(errors)
+           # print(errors)
                     
         elif self.type == 'Identifier':
             if self.data_size != -1:
