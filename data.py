@@ -28,7 +28,8 @@ re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 #[\+-]?((\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?)
 #[\+-]?\d+(\.\d+)?[eE]\d
 re_separation = re.compile('[\|\\\;\s\t-]+')
-
+re_date = re.compile('^((31(\/)(0?[13578]|1[02]))(\/)|((29|30)(\/)(0?[1,3-9]|1[0-2])(\/)))((1[6-9]|[2-9]\d)?\d{2})$|^(29(\/)0?2(\/)(((1[6-9]|[2-9]\d)?(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$|^(0?[1-9]|1\d|2[0-8])(\/)((0?[1-9])|(1[0-2]))(\/)((1[6-9]|[2-9]\d)?\d{2})$')
+re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$)|(^(1[012]|0?[1-9]):[0-5][0-9](\ )?(?i)(am|pm)$)')
 
     
 class Column(object):
@@ -159,6 +160,8 @@ class Column(object):
                     self.total_no += 1
             elif re_sci_notation.fullmatch(value):
                 sci_not_count += 1
+            elif re_date.search(value) :
+                date_count += 1
         num_values = len(self.values)
         if float_count / len(self.values) >= threshold:
             self.type = 'Float'
@@ -176,6 +179,8 @@ class Column(object):
             self.type = 'Boolean'
         elif sci_not_count / num_values >= threshold:
             self.type = 'Sci_Notation'
+        elif date_count / len(self.values) >= threshold:
+            self.type = 'Date'
         elif len(self.most_common) < 10:
             self.type = 'Enum'
         else:

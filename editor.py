@@ -85,8 +85,6 @@ class Editor(object):
         
 
 """Unused type code"""
-#re_date = re.compile('^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$')
-#re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$)|(^(1[012]|0?[1-9]):[0-5][0-9](\ )?(?i)(am|pm)$)')
 #re_char = re.compile('^\D$')
 #re_day = re.compile('^(?i)(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$')
 #re_hyper = re.compile('^(?i)(https?:\/\/).+$')
@@ -96,8 +94,6 @@ class Editor(object):
         day_count = 0
         hyper_count = 0
 
-            elif re_date.search(value) :
-                date_count += 1
             elif re_time.search(value) :
                 time_count += 1
             elif re_char.search(value) :
@@ -108,8 +104,6 @@ class Editor(object):
                 hyper_count +=1
                 
                 
-        elif date_count / len(self.values) >= threshold:
-            self.type = 'Date'
         elif time_count / len(self.values) >= threshold:
             self.type = 'Time'
         elif char_count / len(self.values) >= threshold:

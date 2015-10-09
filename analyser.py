@@ -273,7 +273,7 @@ class DateAnalyser(Analyser):
     def __init__(self, values):
         super().__init__(values)
         # TODO Implement some date unique stats, eg seasonal groupings, month/year/decade frequency etc
-
+        
 class TimeAnalyser(Analyser):
     """Run time analysis, currently only using Analyser super class methods.
     
