@@ -208,7 +208,7 @@ class Column(object):
         tup = ()     
         if self.type == 'Float':
             for x, value in enumerate(self.values): 
-                if (value == "" and self.ignore_empty) or (len(value) == 0 and ColumnNumber in set_to_ignore):
+                if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber in set_to_ignore):
                     continue          
                 if not re_float.match(value):
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
@@ -253,7 +253,7 @@ class Column(object):
                         
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if re_email.search(value):
                     if parseaddr(value)[1] == '':
@@ -283,7 +283,7 @@ class Column(object):
                     
         elif self.type == 'String':
             for x, value in enumerate(self.values):
-                if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if value == '' or value == ' ':
                     tup = (x + invalid_rows_pos[x], columnNumber, value)
