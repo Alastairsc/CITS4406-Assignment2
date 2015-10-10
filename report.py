@@ -39,6 +39,8 @@ class Report(object):
         data -- Reference to Data object.
         
         file -- Reference to CSV file.
+
+        chart_data -- The javascript strings that need to be added to the template for the charts to display.
     """
 
 
@@ -52,6 +54,7 @@ class Report(object):
         """
         self.data = data
         self.file_name = file
+        self.chart_data = ''
     
     @staticmethod
     def initial_show_items():
@@ -83,7 +86,8 @@ class Report(object):
             enum_analysis=self.enum_analysis(),
             email_analysis=self.email_analysis(),
             currency_analysis =self.currency_analysis(),
-            boolean_analysis = self.boolean_analysis()
+            boolean_analysis = self.boolean_analysis(),
+            chart_data = self.chart_data
             )
         #gen report for debugging
         return str(html) 
@@ -112,7 +116,7 @@ class Report(object):
         return html_list
 
     @staticmethod
-    def row_creator(row_items, rowNumber = 0):
+    def row_creator(row_items, rowNumber = 0, type = 'none'):
         """Return provided list as HTML rows.
         
         Arguments:
@@ -127,6 +131,8 @@ class Report(object):
           html_row += '<tr>'
         for item in row_items:
             html_row += '<td>' + str(item) + '</td>'
+        #Chart
+        html_row += '<td><a onclick="showChart(\''+type+'\','+str(rowNumber)+',this)" href="#col_analysis">Show Data</a></td>'
         html_row += '</tr>'
         return html_row
         
@@ -137,9 +143,12 @@ class Report(object):
         """
         rows = ''
         rowNo = 0;
+        self.chart_data += "var numbData = [ "
         for column in self.data.columns:
+            
             if column.type == 'Float' or column.type == 'Integer'\
             or column.type == 'Sci_Notation' or column.type == 'Numeric':
+                self.chart_data += "["
                # print(column.header)
                 math_stats= [column.analysis.min,
                        column.analysis.max,
@@ -162,8 +171,17 @@ class Report(object):
                         row.append(stats)
                         #causes problems if some columns have different stats to others of
                         #same type
+                self.chart_data += "['Row ','Value'],"
+                valueRowNo = 0
+                for value in column.values:
+                  valueRowNo+=1
+                  self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo)
+                rows += self.row_creator(row,rowNo,'N')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
         return rows
         
     def string_analysis(self):
@@ -173,6 +191,7 @@ class Report(object):
         """
         rows = ''
         rowNo = 0;
+        self.chart_data += "var stringData = [ "
         for column in self.data.columns:
             if column.type == 'String':           
                 row = [column.header,
@@ -181,7 +200,15 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo)
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'S')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
         return rows
         
     def enum_analysis(self):
@@ -191,6 +218,7 @@ class Report(object):
         """
         rowNo = 0;
         rows = ''
+        self.chart_data += "var enumData = [ "
         for column in self.data.columns:
             if column.type == 'Enum':
                 row = [column.header,
@@ -198,10 +226,17 @@ class Report(object):
                        column.most_common[:5],
                        column.least_common[:5],
                        column.analysis.unique]
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo)
+                rows += self.row_creator(row,rowNo,'E')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
         return rows
-        
         
     def email_analysis(self):
         """Return HTML string of email analysis on columns of type email
@@ -210,6 +245,7 @@ class Report(object):
         """      
         rowNo = 0;
         rows = ''
+        self.chart_data += "var emailData = [ "
         for column in self.data.columns:
             if column.type == 'Email':
                 row = [column.header,
@@ -218,7 +254,15 @@ class Report(object):
                         column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo)
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'Em')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
         return rows
         
     def boolean_analysis(self):
@@ -228,6 +272,7 @@ class Report(object):
         """      
         rowNo = 0;
         rows = ''
+        self.chart_data += "var boolData = [ "
         for column in self.data.columns:
             if column.type == 'Boolean':
                 row = [column.header,
@@ -240,8 +285,16 @@ class Report(object):
                        column.total_yes,
                        column.total_no,
                        column.total_true + column.total_false + column.total_yes + column.total_no]
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo)
+                rows += self.row_creator(row,rowNo,'B')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
         return rows
         
     def currency_analysis(self):
@@ -269,7 +322,7 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo)
+                rows += self.row_creator(row,rowNo,'C')
         return rows
 
     def identifier_analysis(self):
@@ -280,6 +333,7 @@ class Report(object):
         """
         rowNo = 0;
         rows = ''
+        self.chart_data += "var identData = [ "
         for column in self.data.columns:
             if column.type == 'Identifier':           
                 row = [column.header,
@@ -288,7 +342,15 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo)
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'I')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
         return rows
         
     def gen_html(self, html):
