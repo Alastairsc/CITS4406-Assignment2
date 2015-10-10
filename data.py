@@ -289,12 +289,12 @@ class Column(object):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if not re_currency.match(value):
+                    print(value)
                     reason = 'not a recognised currency'
                     tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))                  
-                else:
-                    self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
+
                     
         elif self.type == 'String':
             for x, value in enumerate(self.values):
@@ -829,3 +829,9 @@ class Data(object):
             self.invalid_rows_indexes.pop(invalid_row_index)
             self.formatted_invalid_rows.pop(invalid_row_index)
             self.invalid_rows.pop(invalid_row_index)
+            
+    def remove_currency_symbol(self):
+        for col in self.columns:
+            if col.type == "Currency":
+                for x, values in enumerate(col.values):
+                    self.values[x] = re.sub('(\$)|(€)|(£)', '', value)
