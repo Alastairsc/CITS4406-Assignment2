@@ -10,7 +10,6 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Jan Villanueva
 * Alastair Mory
 
-* Csv spliiter by scorpion :http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html
 
 Instructions
 ===============
@@ -31,8 +30,6 @@ Open windows powershell, navigate to the directory containing the application.py
 	'python application.py *csv filename here*'.
 
 
-###Usage
-
 You can specify multiple files using 
 	'python application.py *csv_fileame* *csv_filename*'
 You can use templates using the -t flag:
@@ -41,18 +38,9 @@ You can use templates using the -t flag:
 
 Files can either be csv files or excel files. If using csv files the program will create a csv file for each sheet in your excel file. Each sheet is analysed indenpendently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
 
-If multiple files are given with only one template all files will be processed using the template. The same will occur given a excel file with multiple sheets and a single template. For using multiple templates with multiple files there must be an equal number of files and templates.
-
 You must run the program from the directory containing the application.py file.
-csv_filanames can be specified by relative path or using its absolute path
+csv_filanames must be specified by relative path or using its absolute path
 
-###Large files
-
-For files larger than 300Mb we recommend splitting your data using a Csv spliiter. We recommend using one by Sopheap Ly from the fxfisherman forums:
-
-http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html#post727
-
-Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
 
 ### Supported Data types
 * Int
@@ -64,8 +52,6 @@ Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
 * Boolean
 * Scientific notation
 * Identifier
-* Date
-
 
 
 ### Cleansing
