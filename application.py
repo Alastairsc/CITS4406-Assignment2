@@ -6,7 +6,7 @@ import argparse
 import textwrap
 import pandas as pd
 import os
-from pympler import classtracker
+#from pympler import classtracker
 
 try:
 	from .data import *
@@ -21,9 +21,9 @@ def main(*args):
     """Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
     """
-    tr = classtracker.ClassTracker()
-    tr.track_class(Data)
-    tr.create_snapshot()
+    #tr = classtracker.ClassTracker()
+    #tr.track_class(Data)
+    #tr.create_snapshot()
     filename = args[0]
     print("[Step 1/7] Processing file: ",filename)
     print("[Step 2/7] Reading data")
@@ -34,17 +34,17 @@ def main(*args):
         data = Data(filename)
     data.remove_invalid()
     data.create_columns()
-    tr.create_snapshot()
+    #tr.create_snapshot()
     data.clean()
     print("[Step 3/7] Running pre-analysis")
     data.pre_analysis()
-    tr.create_snapshot()
+    #tr.create_snapshot()
     print("[Step 4/7] Finding Errors")
     data.find_errors()
-    tr.create_snapshot()
+    #tr.create_snapshot()
     print("[Step 5/7] Running Analysis")
     data.analysis()
-    tr.create_snapshot()
+    #tr.create_snapshot()
     report = Report(data, filename)
     str_report = report.html_report()
     print("Step[6/7] Generating report")
@@ -52,8 +52,8 @@ def main(*args):
     #returns string of html, also generates html report for debugging purposes
     print("[Step 7/7] Report Successfully Generated")
     print("Completed analysis for: ",filename)
-    tr.create_snapshot()
-    tr.stats.print_summary()
+    #tr.create_snapshot()
+    #tr.stats.print_summary()
             
 def get_file_dir(location):
     """Returns the directory of the file with the file name

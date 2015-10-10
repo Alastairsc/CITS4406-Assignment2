@@ -128,8 +128,8 @@ class Column(object):
         day_count = 0
         hyper_count = 0
         
-        for x, value in enumerate(self.values):            
-            if re_float.match(value):
+        for x, value in enumerate(self.values):           
+            if re_float.match(value):                
                 if abs(float(value)) < 0.000001:
                     sci_not_count +=1
                 else:
@@ -227,7 +227,7 @@ class Column(object):
                     
         elif self.type == 'Integer':
             for x, value in enumerate(self.values):
-                if (value == "" and self.ignore_empty) or (len(value) == 0 and ColumnNumber in set_to_ignore):
+                if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber in set_to_ignore):
                     continue
                 if not re_int.match(value):
                     reason = 'not an integer'
@@ -244,7 +244,7 @@ class Column(object):
                     
         elif self.type == 'Numeric':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if not re_int.match(value) and not re_float.match(value) and not value == '0':
                     reason = 'not a number'
@@ -282,7 +282,7 @@ class Column(object):
                     
         elif self.type == 'Currency':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if not re_currency.match(value):
                     reason = 'not a recognised currency'
@@ -304,7 +304,7 @@ class Column(object):
                     
         elif self.type == 'Enum':
             for x, value in enumerate(self.least_common):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue  
                 if self.least_common[x][1] <= enum_threshold:
                     i = 0 
@@ -322,7 +322,7 @@ class Column(object):
                          
         elif self.type == 'Sci_Notation':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if not re_sci_notation.match(value):
                     reason = 'not scientific notation'
@@ -342,7 +342,7 @@ class Column(object):
             else:
                 size = len(self.values[0])
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if len(value) != size:
                     reason = 'too long or too short'
@@ -351,7 +351,7 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
         elif self.type == 'Date':
             for x, value in enumerate(self.values):       
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue    
                 if not re_date.match(value):
                     reason = 'not a recognised date'
@@ -361,7 +361,7 @@ class Column(object):
 
         elif self.type == 'Time':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue           
                 if not re_time.match(value):
                     reason = 'not a recognised time'
@@ -371,7 +371,7 @@ class Column(object):
 
         elif self.type == 'Char':
             for x, value in enumerate(self.values):    
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue       
                 if not re_char.match(value):
                     reason = 'not a recognised character'
@@ -389,7 +389,7 @@ class Column(object):
 
         elif self.type == 'Hyperlink':
             for x, value in enumerate(self.values):     
-                if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
+                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue      
                 if not re_hyperlink.match(value):
                     reason = 'not a recognised hyperlink'
