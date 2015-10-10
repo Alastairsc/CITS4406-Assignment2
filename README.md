@@ -10,6 +10,7 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Jan Villanueva
 * Alastair Mory
 
+* Csv spliiter by scorpion :http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html
 
 Instructions
 ===============
@@ -30,11 +31,20 @@ Open windows powershell, navigate to the directory containing the application.py
 	'python application.py *csv filename here*'.
 
 
-You can specify multiple files using 'python application.py *csv_fileame* *csv_filename*'
-You can use templates using 'python application.py *csv_filaname* -t *template_name*'
+###Usage
+
+You can specify multiple files using 
+	'python application.py *csv_fileame* *csv_filename*'
+You can use templates using the -t flag:
+	'python application.py *csv_filaname* -t *template_name*'
+
+
+Files can either be csv files or excel files. If using csv files the program will create a csv file for each sheet in your excel file. Each sheet is analysed indenpendently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
+
+If multiple files are given with only one template all files will be processed using the template. The same will occur given a excel file with multiple sheets and a single template. For using multiple templates with multiple files there must be an equal number of files and templates.
 
 You must run the program from the directory containing the application.py file.
-csv_filanames must be specified by relative path or using its absolute path
+csv_filanames can be specified by relative path or using its absolute path
 
 
 ### Supported Data types
