@@ -111,6 +111,10 @@ class Column(object):
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
+        if self.analysis.unique == len(self.values) or self.analysis.unique == 1:
+            self.least_common = []
+            self.most_common = []
+        
 
     def define_type(self):
         """Run column data against regex filters and assign object variable type
@@ -128,7 +132,8 @@ class Column(object):
         day_count = 0
         hyper_count = 0
         
-        for x, value in enumerate(self.values):           
+        for x, value in enumerate(self.values):
+            print(value)           
             if re_float.match(value):                
                 if abs(float(value)) < 0.000001:
                     sci_not_count +=1
@@ -613,9 +618,7 @@ class Data(object):
                     csvfile.seek(0)
                     f = csv.reader(csvfile, delimiter=',')
                     self.delimiter_type = ','
-                    for row in f:
-                        for x, item in enumerate(row):
-                            row[x] = item.encode('utf-8').strip()                            
+                    for row in f:                          
                         self.raw_data.append(row)
         else:
             #template specified delimiter
@@ -623,6 +626,7 @@ class Data(object):
                 f = csv.reader( csvfile, delimiter=self.delimiter)
                 for row in f:
                     self.raw_data.append(row)
+        print(self.raw_data)
                 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
@@ -688,15 +692,17 @@ class Data(object):
         """Iterates through each column and analyses the columns values using the
         columns type analyser.
         """
-        for colNo, column in enumerate(self.columns):
-             if not column.empty:
+        for colNo, column in enumerate(self.columns):            
+            if not column.empty:
                 if column.type in self.analysers:
                     if( column.type == 'Integer' or column.type == 'Float' \
                         or column.type == 'Currency' or column.type == 'Sci_Notation' \
                         or column.type == 'Numeric'):
-                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val)  
+                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val) 
+                        column.define_most_least_common() 
                     else:
                         column.analysis = self.analysers[column.type](column.values)
+                        column.define_most_least_common()
         
     def find_errors(self):
         """Iterates through each column and finds any errors according to pre-determined
@@ -714,7 +720,6 @@ class Data(object):
         """
         
         for colNo, column in enumerate(self.columns):
-            column.define_most_least_common()
             if not column.empty:
                 if self.template != None and colNo in self.template.columns:
                     column.set_type(self.template.columns[colNo])
