@@ -9,10 +9,15 @@ base_template = \
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="/static/report/main.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/static/report/main.js"></script>
+<script src="../main.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+{chart_data}
+</script>
 <title>Analysis Report on {header}</title>
 
 </head>
@@ -80,7 +85,12 @@ base_template = \
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2 class="titleRow">Column Analysis (Based on {len_columns} rows)</h2>
+            <h2 class="titleRow" id="col_analysis">Column Analysis (Based on {len_columns} rows)</h2>
+            <h2 class="titleRow" id="charts_header">Charts</h2>
+            <p>Click 'Show Data' at the end of the table to view a chart</p>
+            <h4>Showing chart for column:</h4>
+            <div id="Stats_Chart_data" class='hidden'>datda here</div>
+            <div id="Stats_Chart" class='hidden' style="width: 900px; height: 500px;"></div>
             <hr id="numerical"/>
             <h2 class="titleRow">Numerical</h2>
             <table class="table table-bordered table-hover">
@@ -99,8 +109,10 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>View Chart</th>
                 </tr>
                 {numerical_analysis}
+                
             </table>
             
             <hr id="string"/>
@@ -112,6 +124,7 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>View Chart</th>
                 </tr>
                 {string_analysis}
             </table>
@@ -125,6 +138,7 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>View Chart</th>
                 </tr>
                 {identifier_analysis}
             </table>
@@ -138,6 +152,7 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>View Chart</th>
                 </tr>
                 {enum_analysis}
             </table>
@@ -151,6 +166,7 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>View Chart</th>
                 </tr>
                 {email_analysis}
             </table>
@@ -173,6 +189,7 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>View Chart</th>
                 </tr>
                 {currency_analysis}
             </table>
@@ -191,6 +208,7 @@ base_template = \
                     <th>Total "Yes"</th>
                     <th>Total "No"</th>
                     <th>Total Boolean Values</th>
+                    <th>View Chart</th>
                 </tr>
                 {boolean_analysis}
             </table>
