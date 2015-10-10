@@ -520,8 +520,11 @@ class Data(object):
             ('Boolean', 'Boolean'),
             ('String', 'String'),
             ('Enum', 'Enumerable Set'),
-        	('Identifier', 'Identification code'),
-            ('Email', 'Email Address')
+            ('Identifier', 'Identification code'),
+            ('Email', 'Email Address'),
+            ('Currency', 'Currency'),
+            ('Time', 'Time'),
+            ('Date', 'Date')
         )
     
     def __init__(self, *args):
