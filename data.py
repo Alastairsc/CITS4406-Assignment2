@@ -132,8 +132,7 @@ class Column(object):
         day_count = 0
         hyper_count = 0
         
-        for x, value in enumerate(self.values):
-            print(value)           
+        for x, value in enumerate(self.values):         
             if re_float.match(value):                
                 if abs(float(value)) < 0.000001:
                     sci_not_count +=1
@@ -461,7 +460,7 @@ class Data(object):
         
         clean -- Calls column cleaning methods to run 'cleaning' on all columns.
         
-        analyse -- Calls column analysis methods to run 'analysis' on all columns.
+        analysis -- Calls column analysis methods to run 'analysis' on all columns.
     
     Variables:
     
@@ -622,11 +621,10 @@ class Data(object):
                         self.raw_data.append(row)
         else:
             #template specified delimiter
-            with open(csv_file, 'rU') as csvfile:
+            with open(csv_file, 'rU', encoding='ISO-8859-1') as csvfile:
                 f = csv.reader( csvfile, delimiter=self.delimiter)
                 for row in f:
                     self.raw_data.append(row)
-        print(self.raw_data)
                 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
@@ -692,7 +690,8 @@ class Data(object):
         """Iterates through each column and analyses the columns values using the
         columns type analyser.
         """
-        for colNo, column in enumerate(self.columns):            
+        for colNo, column in enumerate(self.columns):
+            print(column.type)            
             if not column.empty:
                 if column.type in self.analysers:
                     if( column.type == 'Integer' or column.type == 'Float' \
