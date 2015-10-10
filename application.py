@@ -41,8 +41,6 @@ def main(*args):
     #tr.create_snapshot()
     print("[Step 4/7] Finding Errors")
     data.find_errors()
-    data.clear_errors()
-    data.find_errors()
     data.remove_currency_symbol()
     #tr.create_snapshot()
     print("[Step 5/7] Running Analysis")
