@@ -174,8 +174,12 @@ class Report(object):
                 self.chart_data += "['Row ','Value'],"
                 valueRowNo = 0
                 for value in column.values:
-                  valueRowNo+=1
-                  self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
+                    try:
+                        x = float(value)  
+                        valueRowNo+=1
+                        self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
+                    except:
+                        pass
                 self.chart_data = self.chart_data[:-1]
                 self.chart_data += "],"
                 rowNo+=1;
