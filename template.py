@@ -16,6 +16,7 @@ base_template = \
 <script src="/static/report/main.js"></script>
 <script src="../main.js"></script>
 <script>
+init();
 {chart_data}
 </script>
 <title>Analysis Report on {header}</title>
