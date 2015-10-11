@@ -12,16 +12,17 @@ base_template = \
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="/static/report/main.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script src="/static/report/main.js"></script>
 <script src="../main.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script>
+init();
 {chart_data}
 </script>
 <title>Analysis Report on {header}</title>
 
 </head>
-<body onload="init()">
+<body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
