@@ -369,13 +369,13 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                self.chart_data += "["
-                self.chart_data += "['Row ','Value'],"
+                self.chart_data = ''.join([self.chart_data,"["])
+                self.chart_data = ''.join([self.chart_data,"['Row ','Value'],"])
                 for col in column.most_common[:10]:
-                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                  self.chart_data = ''.join([self.chart_data,"[",str(col).replace("(","").replace(")",""),"],"])
                 self.chart_data = self.chart_data[:-1]
-                self.chart_data += "],"
-                rows += self.row_creator(row,rowNo,'S')
+                self.chart_data = ''.join([self.chart_data,"],"])
+                rows += self.row_creator(row,rowNo,'D')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
@@ -396,13 +396,13 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                self.chart_data += "["
-                self.chart_data += "['Row ','Value'],"
+                self.chart_data = ''.join([self.chart_data,"["])
+                self.chart_data = ''.join([self.chart_data,"['Row ','Value'],"])
                 for col in column.most_common[:10]:
-                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                  self.chart_data = ''.join([self.chart_data,"[",str(col).replace("(","").replace(")",""),"],"])
                 self.chart_data = self.chart_data[:-1]
-                self.chart_data += "],"
-                rows += self.row_creator(row,rowNo,'S')
+                self.chart_data = ''.join([self.chart_data,"],"])
+                rows += self.row_creator(row,rowNo,'T')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
@@ -423,13 +423,13 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                self.chart_data += "["
-                self.chart_data += "['Row ','Value'],"
+                self.chart_data = ''.join([self.chart_data,"["])
+                self.chart_data = ''.join([self.chart_data,"['Row ','Value'],"])
                 for col in column.most_common[:10]:
-                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                  self.chart_data = ''.join([self.chart_data,"[",str(col).replace("(","").replace(")",""),"],"])
                 self.chart_data = self.chart_data[:-1]
-                self.chart_data += "],"
-                rows += self.row_creator(row,rowNo,'S')
+                self.chart_data = ''.join([self.chart_data,"],"])
+                rows += self.row_creator(row,rowNo,'Ch')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
@@ -450,13 +450,13 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                self.chart_data += "["
-                self.chart_data += "['Row ','Value'],"
+                self.chart_data = ''.join([self.chart_data,"["])
+                self.chart_data = ''.join([self.chart_data,"['Row ','Value'],"])
                 for col in column.most_common[:10]:
-                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                  self.chart_data = ''.join([self.chart_data,"[",str(col).replace("(","").replace(")",""),"],"])
                 self.chart_data = self.chart_data[:-1]
-                self.chart_data += "],"
-                rows += self.row_creator(row,rowNo,'S')
+                self.chart_data = ''.join([self.chart_data,"],"])
+                rows += self.row_creator(row,rowNo,'Dy')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
@@ -477,13 +477,13 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo+=1;
-                self.chart_data += "["
-                self.chart_data += "['Row ','Value'],"
+                self.chart_data = ''.join([self.chart_data,"["])
+                self.chart_data = ''.join([self.chart_data,"['Row ','Value'],"])
                 for col in column.most_common[:10]:
-                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                  self.chart_data = ''.join([self.chart_data,"[",str(col).replace("(","").replace(")",""),"],"])
                 self.chart_data = self.chart_data[:-1]
-                self.chart_data += "],"
-                rows += self.row_creator(row,rowNo,'S')
+                self.chart_data = ''.join([self.chart_data,"],"])
+                rows += self.row_creator(row,rowNo,'H')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows

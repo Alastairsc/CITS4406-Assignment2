@@ -1,4 +1,14 @@
 function init(){
+    //Setup charts
+    if(google) {
+    google.load('visualization', '1.0', {
+        packages: ['corechart'],
+        callback: function() {}
+    } )
+    }
+    window.addEventListener("load",initDocLoad);    //Google must load in the head, ~before~ the document, however the initDocLoad must load ~after~ the document.
+}
+function initDocLoad(){
     //Setup H2 groups
     titleElements = document.getElementsByClassName("titleRow");
     for (i=0;i<titleElements.length;i++) {
@@ -17,14 +27,6 @@ function init(){
     for (i=0;i<showTableElements.length;i++) {
         showTableElements[i].addEventListener("click", ShowMore(showTableElements[i],"Table"));
     }
-
-    //Setup charts
-    if(google) {
-    google.load('visualization', '1.0', {
-        packages: ['corechart'],
-        callback: function() {}
-    } )
-}
 }
 $(function(){
   $("a[href^='#']").click(function(){
@@ -67,6 +69,26 @@ function showChart(type, row,caller){
         chart = new google.visualization.ColumnChart(document.getElementById('Stats_Chart'));
     }else if(type=="C"){//Currency
         data = google.visualization.arrayToDataTable(currencyData[row-1]);
+        options = {title: 'Histogram:',legend: { position: 'none' },};
+        chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
+    }else if(type=="D"){//Date
+        data = google.visualization.arrayToDataTable(dateData[row-1]);
+        options = {title: 'Histogram:',legend: { position: 'none' },};
+        chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
+    }else if(type=="T"){//Time
+        data = google.visualization.arrayToDataTable(timeData[row-1]);
+        options = {title: 'Histogram:',legend: { position: 'none' },};
+        chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
+    }else if(type=="Ch"){//Char
+        data = google.visualization.arrayToDataTable(charData[row-1]);
+        options = {title: 'Histogram:',legend: { position: 'none' },};
+        chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
+    }else if(type=="Dy"){//Day
+        data = google.visualization.arrayToDataTable(ddayData[row-1]);
+        options = {title: 'Histogram:',legend: { position: 'none' },};
+        chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
+    }else if(type=="H"){//Hyper
+        data = google.visualization.arrayToDataTable(hyperData[row-1]);
         options = {title: 'Histogram:',legend: { position: 'none' },};
         chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
     }
