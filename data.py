@@ -207,6 +207,7 @@ class Column(object):
             invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
             been removed from analysis.
         """
+        print(self.values)
         tup = ()   
         if self.type == 'Ignore':
             pass  
@@ -287,7 +288,6 @@ class Column(object):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if not re_currency.match(value):
-                    print(value)
                     reason = 'not a recognised currency'
                     tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
                     errors.append(tup)
@@ -623,6 +623,7 @@ class Data(object):
                 f = csv.reader( csvfile, delimiter=self.delimiter)
                 for row in f:
                     self.raw_data.append(row)
+        print(self.raw_data)
                 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
@@ -688,8 +689,7 @@ class Data(object):
         """Iterates through each column and analyses the columns values using the
         columns type analyser.
         """
-        for colNo, column in enumerate(self.columns):
-            print(column.type)            
+        for colNo, column in enumerate(self.columns):          
             if not column.empty:
                 if column.type in self.analysers:
                     if( column.type == 'Integer' or column.type == 'Float' \
