@@ -180,7 +180,7 @@ class Column(object):
             self.type = 'Boolean'
         elif sci_not_count / num_values >= threshold:
             self.type = 'Sci_Notation'
-        elif date_count / len(self.values) >= threshold:
+        elif date_count / num_values >= threshold:
             self.type = 'Date'
         elif len(self.most_common) < 10:
             self.type = 'Enum'

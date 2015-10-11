@@ -87,6 +87,7 @@ class Report(object):
             email_analysis=self.email_analysis(),
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis(),
+            date_analysis=self.date_analysis(),
             chart_data = self.chart_data
             )
         #gen report for debugging
@@ -343,7 +344,32 @@ class Report(object):
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
-
+    def date_analysis(self):
+        """Return HTML string of date analysis on columns of type date 
+        in the data object by accessing the various class variables of the
+        columns.
+        """
+        rows = ''
+        rowNo = 0;
+        self.chart_data += "var dateData = [ "
+        for column in self.data.columns:
+            if column.type == 'Date':           
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rowNo+=1;
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'S')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
+        return rows
     def identifier_analysis(self):
         """Return HTML string of identifier analysis on columns of type identifier
         in the data objectby accessing the various class variables of the
