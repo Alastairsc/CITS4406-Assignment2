@@ -34,6 +34,8 @@ class Report(object):
         bool_analysis -- Return boolean based statistics on input.
     
         email_analysis -- Return email based statistics on input.
+
+        date_analysis -- Return date based statistics on input.
     
     Variables:
         data -- Reference to Data object.
@@ -87,6 +89,11 @@ class Report(object):
             email_analysis=self.email_analysis(),
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis(),
+            date_analysis = self.date_analysis(),
+            time_analysis = self.time_analysis(),
+            char_analysis = self.char_analysis(),
+            day_analysis = self.day_analysis(),
+            hyper_analysis = self.hyper_analysis(),
             chart_data = self.chart_data
             )
         #gen report for debugging
@@ -342,6 +349,141 @@ class Report(object):
                 self.chart_data = ''.join([self.chart_data , "],"])
                 rowNo+=1;
                 rows += self.row_creator(row,rowNo,'C')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
+        return rows
+
+    def date_analysis(self):
+        """Return HTML string of date analysis on columns of type date 
+        in the data object by accessing the various class variables of the
+        columns.
+        """
+        rows = ''
+        rowNo = 0;
+        self.chart_data += "var dateData = [ "
+        for column in self.data.columns:
+            if column.type == 'Date':           
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rowNo+=1;
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'S')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
+        return rows
+
+    def time_analysis(self):
+        """Return HTML string of time analysis on columns of type time 
+        in the data object by accessing the various class variables of the
+        columns.
+        """
+        rows = ''
+        rowNo = 0;
+        self.chart_data += "var timeData = [ "
+        for column in self.data.columns:
+            if column.type == 'Time':           
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rowNo+=1;
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'S')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
+        return rows
+
+    def char_analysis(self):
+        """Return HTML string of char analysis on columns of type char 
+        in the data object by accessing the various class variables of the
+        columns.
+        """
+        rows = ''
+        rowNo = 0;
+        self.chart_data += "var charData = [ "
+        for column in self.data.columns:
+            if column.type == 'Character':           
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rowNo+=1;
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'S')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
+        return rows
+
+    def day_analysis(self):
+        """Return HTML string of day analysis on columns of type day 
+        in the data object by accessing the various class variables of the
+        columns.
+        """
+        rows = ''
+        rowNo = 0;
+        self.chart_data += "var dayData = [ "
+        for column in self.data.columns:
+            if column.type == 'Day':           
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rowNo+=1;
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'S')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
+        return rows
+
+    def hyper_analysis(self):
+        """Return HTML string of hyperlink analysis on columns of type hyper 
+        in the data object by accessing the various class variables of the
+        columns.
+        """
+        rows = ''
+        rowNo = 0;
+        self.chart_data += "var hyperData = [ "
+        for column in self.data.columns:
+            if column.type == 'Hyperlink':           
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rowNo+=1;
+                self.chart_data += "["
+                self.chart_data += "['Row ','Value'],"
+                for col in column.most_common[:10]:
+                  self.chart_data += "["+str(col).replace("(","").replace(")","")+"],"
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
+                rows += self.row_creator(row,rowNo,'S')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
