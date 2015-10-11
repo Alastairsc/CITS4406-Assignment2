@@ -308,8 +308,10 @@ class Report(object):
         """
         rowNo = 0;
         rows = ''
+        self.chart_data += "var currencyData = [ "
         for column in self.data.columns:
             if column.type == 'Currency':
+                self.chart_data += "["
                 print(column.header)
                 row = [column.header,
                        column.analysis.min,
@@ -325,8 +327,21 @@ class Report(object):
                        column.most_common[:5],
                        column.least_common[:5],
                        column.analysis.unique]
+                self.chart_data += "['Row ','Value'],"
+                valueRowNo = 0
+                for value in column.values:
+                    try:
+                        x = float(value)  
+                        valueRowNo+=1
+                        self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
+                    except:
+                        pass
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data += "],"
                 rowNo+=1;
                 rows += self.row_creator(row,rowNo,'C')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
         return rows
 
     def identifier_analysis(self):

@@ -42,34 +42,33 @@ function showChart(type, row,caller){
     var options;
     var data;
     var chart;
-    if (type=="N"){
+    if (type=="N"){//Numerical
         data = google.visualization.arrayToDataTable(numbData[row-1]);
-
-        options = {
-          title: 'Histogram:',
-          legend: { position: 'none' },
-        };
-
+        options = {title: 'Histogram:',legend: { position: 'none' },};
         chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
     }else if(type=="B" || type=="E"){//boolean/enum = pie chart
-        if (type=="B")
+        if (type=="B")//Boolean
             data = google.visualization.arrayToDataTable(boolData[row-1]);
-        else if (type=="E")
+        else if (type=="E")//Enum
             data = google.visualization.arrayToDataTable(enumData[row-1]);
         options = {title: 'Pie Chart:'};
         chart = new google.visualization.PieChart(document.getElementById('Stats_Chart'));
-    }else if(type=="S"){
+    }else if(type=="S"){//String
         data = google.visualization.arrayToDataTable(stringData[row-1]);
         options = {title: 'Column Graph - Top 10 common strings'};
         chart = new google.visualization.ColumnChart(document.getElementById('Stats_Chart'));
-    }else if(type=="Em"){
+    }else if(type=="Em"){//Email
         data = google.visualization.arrayToDataTable(emailData[row-1]);
         options = {title: 'Column Graph - Top 10 common emails'};
         chart = new google.visualization.ColumnChart(document.getElementById('Stats_Chart'));
-    }else if(type=="I"){
+    }else if(type=="I"){//Identifier
         data = google.visualization.arrayToDataTable(identData[row-1]);
         options = {title: 'Column Graph - Top 10 common identifiers'};
         chart = new google.visualization.ColumnChart(document.getElementById('Stats_Chart'));
+    }else if(type=="C"){//Currency
+        data = google.visualization.arrayToDataTable(currencyData[row-1]);
+        options = {title: 'Histogram:',legend: { position: 'none' },};
+        chart = new google.visualization.Histogram(document.getElementById('Stats_Chart'));
     }
     chart.draw(data, options);
 
