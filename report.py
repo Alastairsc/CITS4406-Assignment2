@@ -34,6 +34,8 @@ class Report(object):
         bool_analysis -- Return boolean based statistics on input.
     
         email_analysis -- Return email based statistics on input.
+
+        date_analysis -- Return date based statistics on input.
     
     Variables:
         data -- Reference to Data object.
@@ -87,7 +89,7 @@ class Report(object):
             email_analysis=self.email_analysis(),
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis(),
-            date_analysis=self.date_analysis(),
+            date_analysis = self.date_analysis(),
             chart_data = self.chart_data
             )
         #gen report for debugging

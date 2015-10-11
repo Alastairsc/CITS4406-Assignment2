@@ -43,6 +43,7 @@ init();
             <li><a href="#identifier">String</a></li>
             <li><a href="#enum">Enum</a></li>
             <li><a href="#email">Email</a></li>
+            <li><a href="#date">Date</a></li>
             <li><a href="#currency">Currency</a></li>
             <li><a href="#boolean">Boolean</a></li>
           </ul>
@@ -170,6 +171,20 @@ init();
                     <th>View Chart</th>
                 </tr>
                 {email_analysis}
+            </table>
+
+            <hr id="date"/>
+            <h2 class="titleRow">Date</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {date_analysis}
             </table>
             
             <hr id="currency"/>
