@@ -207,7 +207,6 @@ class Column(object):
             invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
             been removed from analysis.
         """
-        print(self.values)
         tup = ()   
         if self.type == 'Ignore':
             pass  
@@ -623,7 +622,6 @@ class Data(object):
                 f = csv.reader( csvfile, delimiter=self.delimiter)
                 for row in f:
                     self.raw_data.append(row)
-        print(self.raw_data)
                 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
