@@ -1,3 +1,7 @@
+$(function(){
+    init();
+});
+
 function init(){
     //Setup H2 groups
     titleElements = document.getElementsByClassName("titleRow");
