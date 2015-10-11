@@ -44,6 +44,10 @@ init();
             <li><a href="#enum">Enum</a></li>
             <li><a href="#email">Email</a></li>
             <li><a href="#date">Date</a></li>
+            <li><a href="#time">Time</a></li>
+            <li><a href="#char">Character</a></li>
+            <li><a href="#day">Day</a></li>
+            <li><a href="#hyper">Hyperlink</a></li>
             <li><a href="#currency">Currency</a></li>
             <li><a href="#boolean">Boolean</a></li>
           </ul>
@@ -185,6 +189,62 @@ init();
                     <th>View Chart</th>
                 </tr>
                 {date_analysis}
+            </table>
+
+            <hr id="time"/>
+            <h2 class="titleRow">Time</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {time_analysis}
+            </table>
+
+            <hr id="char"/>
+            <h2 class="titleRow">Character</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {char_analysis}
+            </table>
+
+            <hr id="day"/>
+            <h2 class="titleRow">Day</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {day_analysis}
+            </table>
+
+            <hr id="hyper"/>
+            <h2 class="titleRow">Hyperlink</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {hyper_analysis}
             </table>
             
             <hr id="currency"/>

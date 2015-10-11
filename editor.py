@@ -82,33 +82,3 @@ class Editor(object):
            Changes to closest boolean value """
         possible = {"true", "false"}
         self.columns[col].values[row] = get_close_matches(value, possible, 1)[0]
-        
-
-"""Unused type code"""
-#re_char = re.compile('^\D$')
-#re_day = re.compile('^(?i)(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$')
-#re_hyper = re.compile('^(?i)(https?:\/\/).+$')
-       date_count = 0
-        time_count = 0
-        char_count = 0
-        day_count = 0
-        hyper_count = 0
-
-            elif re_time.search(value) :
-                time_count += 1
-            elif re_char.search(value) :
-                char_count += 1
-            elif re_day.search(value) :
-                day_count += 1
-            elif re_hyper.search(value) :
-                hyper_count +=1
-                
-                
-        elif time_count / len(self.values) >= threshold:
-            self.type = 'Time'
-        elif char_count / len(self.values) >= threshold:
-            self.type = 'Char'
-        elif day_count / len(self.values) >= threshold:
-            self.type = 'Day'
-        elif hyper_count / len(self.values) >= threshold:
-            self.type = 'Hyperlink'
