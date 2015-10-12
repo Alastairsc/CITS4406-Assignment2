@@ -4,9 +4,6 @@ to process the data for the data class"""
 import sys
 import os
 import csv
-import re 
-
-re_int = re.compile('^\s*[1-9]\d*$')
 
 class Template(object):
     """Object storing user input that describes data given. Able to specify:
@@ -31,7 +28,7 @@ class Template(object):
         self.data_size = {}
         self.ignore_empty = False
         self.threshold_val = 0.90
-        self.enum_threshold_val = 1
+        self.enum_threshold_val = 10
         self.std_devs = 3
         self.range_vals = []
         self.ignore_set = set()

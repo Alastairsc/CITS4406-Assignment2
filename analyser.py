@@ -127,7 +127,7 @@ class NumericalAnalyser(Analyser):
             self.pval = mstats.normaltest(array(values))[1]
         else:
             self.pval = 100
-        print(values)
+        #print(values)
         self.min = min(values)
         self.max = max(values)
         self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))

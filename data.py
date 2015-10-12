@@ -14,13 +14,13 @@ except SystemError:
 	from analyser import *
 
 threshold = 0.9
-enum_threshold = 1
+enum_threshold = 10
 num_headers = 1
 
 #  Config
 invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
-re_int = re.compile('^\s*\d+$')
+re_int = re.compile('^\s*-?\d+$')
 re_email = re.compile('@')
 re_currency = re.compile('^(\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
@@ -200,7 +200,8 @@ class Column(object):
             self.type = 'Day'
         elif hyper_count / len(self.values) >= threshold:
             self.type = 'Hyperlink'
-        elif len(self.most_common) < 10:
+        elif len(self.most_common) < enum_threshold:
+            #print("Column:  ", self.header, "LEn: ", len(self.most_common))
             self.type = 'Enum'
         else:
             self.type = 'String'
@@ -268,6 +269,7 @@ class Column(object):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if not re_int.match(value) and not re_float.match(value) and not value == '0':
+                    print(value)
                     reason = 'not a number'
                     tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
                     errors.append(tup)
@@ -316,6 +318,7 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
+                print("String: ", val)
                 if value == '' or value == ' ':
                     reason = 'empty string'
                     tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
