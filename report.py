@@ -185,7 +185,7 @@ class Report(object):
                     try:
                         x = float(value)  
                         valueRowNo+=1
-                        self.chart_data.join(["['Row ",str(valueRowNo),"',",str(value),"],"])
+                        self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
                         #self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
                     except:
                         pass
