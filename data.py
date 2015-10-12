@@ -551,7 +551,7 @@ class Data(object):
         """Can take up to two arguments, 
             first argument -- filename
             second argument -- template"""
-        self.delimiter_type = ''
+
         self.filename = args[0]
         self.columns = []
         self.invalid_rows = []
@@ -568,7 +568,7 @@ class Data(object):
         
         #Template settings
         self.template = None
-        self.delimiter = ''
+        self.delimiter_type = ''
         self.header_row = 0
         self.data_start = 1
         self.data_size = {}
@@ -578,7 +578,6 @@ class Data(object):
         self.set_ignore = set()
         if len(args) > 1:  
             self.template = args[1]
-            self.delimiter = self.template.delimiter
             self.delimiter_type = self.template.delimiter_type
             self.header_row = self.template.header_row
             self.data_start = self.template.data_start
@@ -603,7 +602,7 @@ class Data(object):
         #for row in f:
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
-        if self.delimiter == '':
+        if self.delimiter_type == '':
             with open(csv_file,'rU', newline='', encoding='ISO-8859-1') as csvfile:
                 try:
                     #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
@@ -638,7 +637,7 @@ class Data(object):
         else:
             #template specified delimiter
             with open(csv_file, 'rU', encoding='ISO-8859-1') as csvfile:
-                f = csv.reader( csvfile, delimiter=self.delimiter)
+                f = csv.reader( csvfile, delimiter=self.delimiter_type)
                 for row in f:
                     self.raw_data.append(row)
                 
