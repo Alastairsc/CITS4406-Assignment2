@@ -65,6 +65,10 @@ Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
 * Scientific notation
 * Identifier
 * Date
+* Day
+* Time
+* Hyperlink
+* Character
 
 
 

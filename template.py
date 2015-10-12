@@ -41,16 +41,16 @@ init();
             <li><a href="#invalid">Invalid/Empty</a></li>
             <li><a href="#numerical">Numerical</a></li>
             <li><a href="#string">String</a></li>
-            <li><a href="#identifier">String</a></li>
+            <li><a href="#boolean">Boolean</a></li>
             <li><a href="#enum">Enum</a></li>
-            <li><a href="#email">Email</a></li>
+            <li><a href="#identifier">String</a></li>
             <li><a href="#date">Date</a></li>
             <li><a href="#time">Time</a></li>
-            <li><a href="#char">Character</a></li>
             <li><a href="#day">Day</a></li>
+            <li><a href="#email">Email</a></li>
+            <li><a href="#char">Character</a></li>
             <li><a href="#hyper">Hyperlink</a></li>
-            <li><a href="#currency">Currency</a></li>
-            <li><a href="#boolean">Boolean</a></li>
+            <li><a hred="#currency">Currency</a></li>
           </ul>
         </div>
       </div>
@@ -136,8 +136,8 @@ init();
                 {string_analysis}
             </table>
             
-            <hr id="identifier"/>
-            <h2 class="titleRow">Identifier</h2>
+            <hr id="boolean"/>
+            <h2 class="titleRow">Boolean</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -145,9 +145,14 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>Total "True"</th>
+                    <th>Total "False"</th>
+                    <th>Total "Yes"</th>
+                    <th>Total "No"</th>
+                    <th>Total Boolean Values</th>
                     <th>View Chart</th>
                 </tr>
-                {identifier_analysis}
+                {boolean_analysis}
             </table>
             
             <hr id="enum"/>
@@ -164,6 +169,62 @@ init();
                 {enum_analysis}
             </table>
             
+            <hr id="identifier"/>
+            <h2 class="titleRow">Identifier</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {identifier_analysis}
+            </table>
+            
+            <hr id="date"/>
+            <h2 class="titleRow">Date</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {date_analysis}
+            </table>
+            
+            <hr id="time"/>
+            <h2 class="titleRow">Time</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {time_analysis}
+            </table>
+            
+            <hr id="day"/>
+            <h2 class="titleRow">Day</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {day_analysis}
+            </table>
+            
             <hr id="email"/>
             <h2 class="titleRow">Email</h2>
             <table class="table table-bordered table-hover">
@@ -178,34 +239,6 @@ init();
                 {email_analysis}
             </table>
 
-            <hr id="date"/>
-            <h2 class="titleRow">Date</h2>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Column</th>
-                    <th>Mode</th>
-                    <th>Most Common (Top 5)</th>
-                    <th>Least Common (Top 5)</th>
-                    <th>Unique Items</th>
-                    <th>View Chart</th>
-                </tr>
-                {date_analysis}
-            </table>
-
-            <hr id="time"/>
-            <h2 class="titleRow">Time</h2>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Column</th>
-                    <th>Mode</th>
-                    <th>Most Common (Top 5)</th>
-                    <th>Least Common (Top 5)</th>
-                    <th>Unique Items</th>
-                    <th>View Chart</th>
-                </tr>
-                {time_analysis}
-            </table>
-
             <hr id="char"/>
             <h2 class="titleRow">Character</h2>
             <table class="table table-bordered table-hover">
@@ -218,20 +251,6 @@ init();
                     <th>View Chart</th>
                 </tr>
                 {char_analysis}
-            </table>
-
-            <hr id="day"/>
-            <h2 class="titleRow">Day</h2>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Column</th>
-                    <th>Mode</th>
-                    <th>Most Common (Top 5)</th>
-                    <th>Least Common (Top 5)</th>
-                    <th>Unique Items</th>
-                    <th>View Chart</th>
-                </tr>
-                {day_analysis}
             </table>
 
             <hr id="hyper"/>
@@ -271,24 +290,7 @@ init();
                 {currency_analysis}
             </table>
             
-            <hr id="boolean"/>
-            <h2 class="titleRow">Boolean</h2>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Column</th>
-                    <th>Mode</th>
-                    <th>Most Common (Top 5)</th>
-                    <th>Least Common (Top 5)</th>
-                    <th>Unique Items</th>
-                    <th>Total "True"</th>
-                    <th>Total "False"</th>
-                    <th>Total "Yes"</th>
-                    <th>Total "No"</th>
-                    <th>Total Boolean Values</th>
-                    <th>View Chart</th>
-                </tr>
-                {boolean_analysis}
-            </table>
+            
             
         </div>
     </div>
