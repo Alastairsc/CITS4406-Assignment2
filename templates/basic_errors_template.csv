@@ -1,8 +1,4 @@
 Template works with basic_errors.csv
 
-column,1,Float
-column,2,Integer
-column,3,String
-column,5,Sci_Notation
 delimiter,comma
 column,6,Identifier,size,8
