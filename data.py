@@ -740,14 +740,13 @@ class Data(object):
         template is supplied, sets the type of the column to match the template, if not if 
         column is not empty defines its type, and if it's a special data type sets the columns
         size to me no more than data_size.
-        """
-        
+        """             
         for colNo, column in enumerate(self.columns):
+            column.define_most_least_common()   
             if not column.empty:
                 if self.template != None and colNo in self.template.columns:
                     column.set_type(self.template.columns[colNo])
                 else:
-                    column.define_most_least_common()
                     column.define_type()
                 if column.type == 'Identifier' and self.data_size != None and \
                     colNo in self.data_size:

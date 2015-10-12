@@ -320,7 +320,6 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Currency':
                 self.chart_data = ''.join([self.chart_data,"["])
-                print(column.header)
                 row = [column.header,
                        column.analysis.min,
                        column.analysis.max,
