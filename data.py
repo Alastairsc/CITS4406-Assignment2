@@ -74,6 +74,7 @@ class Column(object):
         self.type = ''
         self.values = []
         self.analysis = None
+        self.unique = -1
         self.total_true = 0
         self.total_false = 0
         self.total_yes = 0
@@ -95,12 +96,22 @@ class Column(object):
         pass
         #  Todo: Implement method to handle (strip?) '<', '>'.
         
+    def uniqueCount(self, values):
+        """Return the amount of unique values in the values list.
         
+        Keyword arguments:
+            values -- A list of values.
+        """
+        valSet = set()
+        for vals in values:
+            valSet.add(vals)
+        return len(valSet) 
 
     def define_most_least_common(self):
         """Set 15 most common results to class variable, and set object variable 
         empty if appropriate.
         """
+        self.unique = self.uniqueCount(self.values)
         temp_list = Counter(self.values).most_common()
         for i, e in list(enumerate(temp_list)):
             if i < 15:
@@ -111,7 +122,7 @@ class Column(object):
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
-        if self.analysis.unique == len(self.values) or self.analysis.unique == 1:
+        if self.unique == len(self.values) or self.unique == 1:
             self.least_common = []
             self.most_common = []
         
@@ -236,14 +247,14 @@ class Column(object):
                     continue          
                 if not re_float.match(value):
                     reason = 'not a decimal number'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
                 elif len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         reason = 'out of template range'
-                        tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -253,14 +264,14 @@ class Column(object):
                     continue
                 if not re_int.match(value):
                     reason = 'not an integer'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
                 if len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         reason = 'out of template range'
-                        tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -269,16 +280,15 @@ class Column(object):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
                 if not re_int.match(value) and not re_float.match(value) and not value == '0':
-                    print(value)
                     reason = 'not a number'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
                 if len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         reason = 'out of template range'
-                        tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                         
@@ -286,10 +296,10 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if re_email.search(value):
+                if not re_email.search(value):
                     if parseaddr(value)[1] == '':
                         reason = 'not an email'
-                        tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                         
@@ -299,7 +309,7 @@ class Column(object):
                     continue
                 if not re_boolean.match(value):
                     reason = 'not a recognised yes/no type'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -309,7 +319,7 @@ class Column(object):
                     continue
                 if not re_currency.match(value):
                     reason = 'not a recognised currency'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))                  
 
@@ -318,10 +328,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                print("String: ", val)
                 if value == '' or value == ' ':
                     reason = 'empty string'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -335,7 +344,7 @@ class Column(object):
                     for cell in self.values:
                         if cell == value[0]:
                             reason = 'not in enumerable set'
-                            tup = (i + invalid_rows_pos[x], columnNumber, value[0], reason)
+                            tup = (i + invalid_rows_pos[x] + 1, columnNumber, value[0], reason)
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                             freq += 1
@@ -349,12 +358,12 @@ class Column(object):
                     continue
                 if not re_sci_notation.match(value):
                     reason = 'not scientific notation'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                 elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
                     reason = 'too large or too small'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     self.updateCell(x, '')
@@ -369,7 +378,7 @@ class Column(object):
                     continue
                 if len(value) != size:
                     reason = 'too long or too short'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
         elif self.type == 'Date':
@@ -378,7 +387,7 @@ class Column(object):
                     continue    
                 if not re_date.match(value):
                     reason = 'not a recognised date'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
@@ -388,7 +397,7 @@ class Column(object):
                     continue           
                 if not re_time.match(value):
                     reason = 'not a recognised time'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
@@ -398,7 +407,7 @@ class Column(object):
                     continue       
                 if not re_char.match(value):
                     reason = 'not a recognised character'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
@@ -406,7 +415,7 @@ class Column(object):
             for x, value in enumerate(self.values):           
                 if not re_day.match(value):
                     reason = 'not a recognised day'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
@@ -416,7 +425,7 @@ class Column(object):
                     continue      
                 if not re_hyperlink.match(value):
                     reason = 'not a recognised hyperlink'
-                    tup = (x + invalid_rows_pos[x], columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                 
@@ -714,11 +723,9 @@ class Data(object):
                     if( column.type == 'Integer' or column.type == 'Float' \
                         or column.type == 'Currency' or column.type == 'Sci_Notation' \
                         or column.type == 'Numeric'):
-                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val) 
-                        column.define_most_least_common() 
+                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val)  
                     else:
                         column.analysis = self.analysers[column.type](column.values)
-                        column.define_most_least_common()
         
     def find_errors(self):
         """Iterates through each column and finds any errors according to pre-determined
@@ -740,6 +747,7 @@ class Data(object):
                 if self.template != None and colNo in self.template.columns:
                     column.set_type(self.template.columns[colNo])
                 else:
+                    column.define_most_least_common()
                     column.define_type()
                 if column.type == 'Identifier' and self.data_size != None and \
                     colNo in self.data_size:
