@@ -180,11 +180,12 @@ class Report(object):
                         #same type
                 self.chart_data = ''.join([self.chart_data, "['Row ','Value'],"])
                 valueRowNo = 0
+                print("here")
                 for value in column.values:
                     try:
                         x = float(value)  
                         valueRowNo+=1
-                        self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
+                        self.chart_data.join(["['Row ",str(valueRowNo),"',",str(value),"],"])
                         #self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
                     except:
                         pass
@@ -192,6 +193,7 @@ class Report(object):
                 self.chart_data = ''.join([self.chart_data, "],"])
                 rowNo+=1;
                 rows += self.row_creator(row,rowNo,'N')
+                print("here")
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
