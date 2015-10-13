@@ -16,12 +16,14 @@ body {
 .titleRow:hover{
     color:blue;
     cursor: pointer;
+    cursor: hand;
 }
 .hidden{
     display: none;
 }
 .showMore{
     color:blue;
+    cursor: hand;
     cursor: pointer;
 }
 .showMore:hover{

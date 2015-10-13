@@ -10,20 +10,20 @@ base_template = \
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="/static/report/main.css">
+<link rel="stylesheet" href="http://uwadataanalysis.cloudapp.net/static/report/main.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="/static/report/main.js"></script>
-<script src="../main.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="http://uwadataanalysis.cloudapp.net/static/report/main.js"></script>
 <script>
+init();
 {chart_data}
 </script>
 <title>Analysis Report on {header}</title>
 
 </head>
-<body onload="init()">
+<body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav id="initialNavBar" class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -39,11 +39,16 @@ base_template = \
             <li><a href="#invalid">Invalid/Empty</a></li>
             <li><a href="#numerical">Numerical</a></li>
             <li><a href="#string">String</a></li>
-            <li><a href="#identifier">String</a></li>
-            <li><a href="#enum">Enum</a></li>
-            <li><a href="#email">Email</a></li>
-            <li><a href="#currency">Currency</a></li>
             <li><a href="#boolean">Boolean</a></li>
+            <li><a href="#enum">Enum</a></li>
+            <li><a href="#identifier">String</a></li>
+            <li><a href="#date">Date</a></li>
+            <li><a href="#time">Time</a></li>
+            <li><a href="#day">Day</a></li>
+            <li><a href="#email">Email</a></li>
+            <li><a href="#char">Character</a></li>
+            <li><a href="#hyper">Hyperlink</a></li>
+            <li><a hred="#currency">Currency</a></li>
           </ul>
         </div>
       </div>
@@ -87,7 +92,8 @@ base_template = \
         <div class="col-md-12">
             <h2 class="titleRow" id="col_analysis">Column Analysis (Based on {len_columns} rows)</h2>
             <h2 class="titleRow" id="charts_header">Charts</h2>
-            <p>Click 'Show Data' at the end of the table to view a chart</p>
+            <p>Click 'Show Data' at the end of the table to view a chart.</p>
+            <p>Note: If numerical/currency data contains more than 10,000 values only the top 10,000 will be displayed in the chart.</p>
             <h4>Showing chart for column:</h4>
             <div id="Stats_Chart_data" class='hidden'>datda here</div>
             <div id="Stats_Chart" class='hidden' style="width: 900px; height: 500px;"></div>
@@ -129,8 +135,8 @@ base_template = \
                 {string_analysis}
             </table>
             
-            <hr id="identifier"/>
-            <h2 class="titleRow">Identifier</h2>
+            <hr id="boolean"/>
+            <h2 class="titleRow">Boolean</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -138,9 +144,14 @@ base_template = \
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>Total "True"</th>
+                    <th>Total "False"</th>
+                    <th>Total "Yes"</th>
+                    <th>Total "No"</th>
+                    <th>Total Boolean Values</th>
                     <th>View Chart</th>
                 </tr>
-                {identifier_analysis}
+                {boolean_analysis}
             </table>
             
             <hr id="enum"/>
@@ -157,6 +168,62 @@ base_template = \
                 {enum_analysis}
             </table>
             
+            <hr id="identifier"/>
+            <h2 class="titleRow">Identifier</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {identifier_analysis}
+            </table>
+            
+            <hr id="date"/>
+            <h2 class="titleRow">Date</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {date_analysis}
+            </table>
+            
+            <hr id="time"/>
+            <h2 class="titleRow">Time</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {time_analysis}
+            </table>
+            
+            <hr id="day"/>
+            <h2 class="titleRow">Day</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {day_analysis}
+            </table>
+            
             <hr id="email"/>
             <h2 class="titleRow">Email</h2>
             <table class="table table-bordered table-hover">
@@ -169,6 +236,34 @@ base_template = \
                     <th>View Chart</th>
                 </tr>
                 {email_analysis}
+            </table>
+
+            <hr id="char"/>
+            <h2 class="titleRow">Character</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {char_analysis}
+            </table>
+
+            <hr id="hyper"/>
+            <h2 class="titleRow">Hyperlink</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {hyper_analysis}
             </table>
             
             <hr id="currency"/>
@@ -194,24 +289,7 @@ base_template = \
                 {currency_analysis}
             </table>
             
-            <hr id="boolean"/>
-            <h2 class="titleRow">Boolean</h2>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Column</th>
-                    <th>Mode</th>
-                    <th>Most Common (Top 5)</th>
-                    <th>Least Common (Top 5)</th>
-                    <th>Unique Items</th>
-                    <th>Total "True"</th>
-                    <th>Total "False"</th>
-                    <th>Total "Yes"</th>
-                    <th>Total "No"</th>
-                    <th>Total Boolean Values</th>
-                    <th>View Chart</th>
-                </tr>
-                {boolean_analysis}
-            </table>
+            
             
         </div>
     </div>
