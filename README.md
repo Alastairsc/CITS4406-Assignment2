@@ -38,7 +38,7 @@ You can use templates using the -t flag:
 	'python application.py *csv_filaname* -t *template_name*'
 
 
-Files can either be csv files or excel files. If using csv files the program will create a csv file for each sheet in your excel file. Each sheet is analysed indenpendently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
+Files can either be csv files or excel files. If using csv files the program will create a csv file for each sheet in your excel file. Each sheet is analysed independently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
 
 If multiple files are given with only one template all files will be processed using the template. The same will occur given a excel file with multiple sheets and a single template. For using multiple templates with multiple files there must be an equal number of files and templates.
 
