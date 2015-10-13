@@ -9,7 +9,6 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Leighton Lilford
 * Jan Villanueva
 * Alastair Mory
-
 * Csv spliiter by scorpion :http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html
 
 Instructions
