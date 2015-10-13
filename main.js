@@ -6,7 +6,7 @@ function init(){
         callback: function() {}
     } )
     }
-    window.addEventListener("load",initDocLoad);    //Google must load in the head, ~before~ the document, however the initDocLoad must load ~after~ the document.
+    window.addEventListener("load",initDocLoad(),false);    //Google must load in the head, ~before~ the document, however the initDocLoad must load ~after~ the document.
 }
 function initDocLoad(){
     //Setup H2 groups
