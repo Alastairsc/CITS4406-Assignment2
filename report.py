@@ -38,6 +38,8 @@ class Report(object):
         date_analysis -- Return date based statistics on input.
     
     Variables:
+        GRAPH_LIMIT -- How many rows before the graphs will stop displaying every value, but just show a summary
+
         data -- Reference to Data object.
         
         file -- Reference to CSV file.
@@ -54,6 +56,7 @@ class Report(object):
         
         file -- The filename of the report.
         """
+        self.GRAPH_LIMIT = 10000
         self.data = data
         self.file_name = file
         self.chart_data = ''
@@ -180,14 +183,24 @@ class Report(object):
                         #same type
                 self.chart_data = ''.join([self.chart_data, "['Row ','Value'],"])
                 valueRowNo = 0
-                for value in column.values:
-                    try:
-                        x = float(value)  
-                        valueRowNo+=1
-                        self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
-                        #self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
-                    except:
-                        pass
+                if len(column.values)>self.GRAPH_LIMIT:
+                    for value in column.values[:self.GRAPH_LIMIT]:
+                        try:
+                            x = float(value)  
+                            valueRowNo+=1
+                            self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
+                            #self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
+                        except:
+                            pass
+                else:
+                    for value in column.values:
+                        try:
+                            x = float(value)  
+                            valueRowNo+=1
+                            self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
+                            #self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
+                        except:
+                            pass
                 self.chart_data = self.chart_data[:-1]
                 self.chart_data = ''.join([self.chart_data, "],"])
                 rowNo+=1;
@@ -336,14 +349,23 @@ class Report(object):
                        column.analysis.unique]
                 self.chart_data = ''.join([self.chart_data , "['Row ','Value'],"])
                 valueRowNo = 0
-                for value in column.values:
-                    try:
-                        x = float(value)  
-                        valueRowNo+=1
-                        self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
-                        #self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
-                    except:
-                        pass
+                if len(column.values)>self.GRAPH_LIMIT:
+                    for value in column.values[:self.GRAPH_LIMIT]:
+                        try:
+                            x = float(value)  
+                            valueRowNo+=1
+                            self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
+                        except:
+                            pass
+                else:
+                    for value in column.values:
+                        try:
+                            x = float(value)  
+                            valueRowNo+=1
+                            self.chart_data = ''.join([self.chart_data,"['Row ",str(valueRowNo),"',",str(value),"],"])
+                            #self.chart_data += "['Row "+str(valueRowNo)+"',"+str(value)+"],"
+                        except:
+                            pass
                 self.chart_data = self.chart_data[:-1]
                 self.chart_data = ''.join([self.chart_data , "],"])
                 rowNo+=1;

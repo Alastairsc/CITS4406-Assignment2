@@ -10,12 +10,10 @@ base_template = \
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="/static/report/main.css">
-<link rel="stylesheet" href="../main.css">
+<link rel="stylesheet" href="http://uwadataanalysis.cloudapp.net/static/report/main.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script src="/static/report/main.js"></script>
-<script src="../main.js"></script>
+<script src="http://uwadataanalysis.cloudapp.net/static/report/main.js"></script>
 <script>
 init();
 {chart_data}
@@ -25,7 +23,7 @@ init();
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav id="initialNavBar" class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -94,7 +92,8 @@ init();
         <div class="col-md-12">
             <h2 class="titleRow" id="col_analysis">Column Analysis (Based on {len_columns} rows)</h2>
             <h2 class="titleRow" id="charts_header">Charts</h2>
-            <p>Click 'Show Data' at the end of the table to view a chart</p>
+            <p>Click 'Show Data' at the end of the table to view a chart.</p>
+            <p>Note: If numerical/currency data contains more than 10,000 values only the top 10,000 will be displayed in the chart.</p>
             <h4>Showing chart for column:</h4>
             <div id="Stats_Chart_data" class='hidden'>datda here</div>
             <div id="Stats_Chart" class='hidden' style="width: 900px; height: 500px;"></div>
