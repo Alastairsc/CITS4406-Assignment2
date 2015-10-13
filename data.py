@@ -114,10 +114,10 @@ class Column(object):
         self.unique = self.uniqueCount(self.values)
         temp_list = Counter(self.values).most_common()
         for i, e in list(enumerate(temp_list)):
-            if i < 15:
+            if i < enum_threshold + 5:
                 self.most_common.append(e)
         for i, e in reversed(list(enumerate(temp_list))):
-            if i < 15:
+            if i < enum_threshold + 5:
                 self.least_common.append(e)
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
@@ -211,8 +211,7 @@ class Column(object):
             self.type = 'Day'
         elif hyper_count / len(self.values) >= threshold:
             self.type = 'Hyperlink'
-        elif len(self.most_common) < enum_threshold:
-            #print("Column:  ", self.header, "LEn: ", len(self.most_common))
+        elif len(self.most_common) < enum_threshold and len(self.most_common) != 0:
             self.type = 'Enum'
         else:
             self.type = 'String'
