@@ -342,7 +342,7 @@ class Column(object):
                     freq = 0
                     for cell in self.values:
                         if cell == value[0]:
-                            reason = 'not in enumerable set'
+                            reason = 'Frequency of item below set enumerable threshold (%s)' % self.least_common[x][1]
                             tup = (x + invalid_rows_pos[x] + 1, columnNumber, value[0], reason)
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
