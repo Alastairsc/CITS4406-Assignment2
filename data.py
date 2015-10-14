@@ -549,6 +549,17 @@ class Data(object):
         
         valid_rows -- List of valid rows (i.e., same number of columns as headers).
         
+        can_edit_rows -- is a boolean value true after remove_invalid() and before
+        create_columns() have been run only. It defines whether rebuild_raw_data()
+        and delete_invalid_row() may be called.
+        
+        data_in_columns -- is a boolean true after create_columns() is completed,
+        it defines whether the Data object is in a form gen_file() expects.
+        
+        datatypes_are_defined -- is a boolean true after pre_analysis() has been
+        run and each column's type is defined. It defines whether export_datatypes()
+        may be run.
+        
     """
     analysers = {
         'String': StringAnalyser,
@@ -599,7 +610,8 @@ class Data(object):
         self.formatted_errors = []
         self.raw_data = []
         self.can_edit_rows = False
-        self.raw_copy = []
+        self.data_in_columns = False
+        self.datatypes_are_defined = False
         self.valid_rows = []
 
         
@@ -730,6 +742,7 @@ class Data(object):
         self.invalid_rows = []
         self.invalid_rows_indexes = []
         self.can_edit_rows = False
+	self.data_in_columns = True
 
     def clean(self):
         """Calls cleaning methods on all columns.
@@ -778,7 +791,8 @@ class Data(object):
                     column.set_Identifier_size(self.data_size[colNo])
                 if self.ignore_empty:
                     column.ignore_empty = True
-                    
+        self.datatypes_are_defined = True
+        
     def get_row(self, row_num):
         """Returns the values of a row in list"""
         row = []
@@ -878,7 +892,9 @@ class Data(object):
             self.invalid_rows_indexes.pop(invalid_row_index)
             self.formatted_invalid_rows.pop(invalid_row_index)
             self.invalid_rows.pop(invalid_row_index)
-            
+        else:
+            raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
+
     def remove_currency_symbol(self):
         for col in self.columns:
             if col.type == "Currency":
