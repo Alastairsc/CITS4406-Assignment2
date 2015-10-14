@@ -289,12 +289,18 @@ class Column(object):
                     tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
-                    reason = 'too large or too small'
+                try:
+                    if float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                        reason = 'too large or too small'
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                        self.updateCell(x, '')
+                except:
+                    reason = 'not a number'
                     tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                    self.updateCell(x, '')
                     
                 if len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
@@ -371,12 +377,18 @@ class Column(object):
                     tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
-                    reason = 'too large or too small'
+                try:
+                    if float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                        reason = 'too large or too small'
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                        self.updateCell(x, '')
+                except:
+                    reason = 'not a number'
                     tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                    self.updateCell(x, '')
                     
         elif self.type == 'Identifier':
             if self.data_size != -1:
