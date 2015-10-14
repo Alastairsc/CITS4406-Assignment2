@@ -56,7 +56,7 @@ init();
 
 <br>&nbsp<br>
 <div class="container">
-    <h1>Analysis Report on {header}</h1>
+    <h1>Analysis Report</h1>
 </div>
 
 <div class="container">
