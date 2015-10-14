@@ -818,7 +818,8 @@ class Data(object):
     def gen_file(self, filePath=""):
         """Generates a csv file based on the data for after
         data has been corrected"""
-        new_file = open(os.path.join( filePath, os.path.splitext(self.filename)[0]) + "_corrected.csv", "w")
+        fileLocation = os.path.join( filePath, os.path.splitext(self.filename)[0]) + "_corrected.csv"
+        new_file = open(fileLocation, "w")
         #Write header rows
         for rowNo in range(0, self.data_start):
             row_len = len(self.raw_data[rowNo])
@@ -837,7 +838,9 @@ class Data(object):
                     new_file.write("\n")
                 else:
                     new_file.write(",")
-                    
+        new_file.close()
+        return fileLocation
+        
     def getCellErrors(self):
         """Returns list of all cells containing invalid data, contains
             row number,. column number and its value."""
