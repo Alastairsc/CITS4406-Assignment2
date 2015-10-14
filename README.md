@@ -22,7 +22,7 @@ Instructions
 
 ###Ubuntu
 
-Open windows powershell, navigate to the directory containing the application.py file and run using 
+Open the terminal, navigate to the directory containing the application.py file and run using 
 	'python3 application.py *csv filename here*'.
 Where *csv filename here* is replaced with the path to the file you want to run.
 For example: to run the email.csv file found in csv_files in the program folder type
