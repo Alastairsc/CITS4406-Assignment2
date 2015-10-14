@@ -559,8 +559,10 @@ class Data(object):
         to each valid row (i.e. the nth element contains number of invalid rows
         prior to the nth valid row)
         
-        errors -- list of errors in file; error[n][0] is row of error, error[n][1]
-        is column of error, and error[n][2] is the value of in that location.
+        errors -- list of errors in file; errors[n][0] is row of error, errors[n][1]
+        is column of error, errors[n][2] is the value of in that location, 
+        errors[n][3] is the reason for the error & error[4] is the index for the
+        value in columns[n1].values.
         
         formatted_errors -- List of errors in file, each error contains: row, column 
         and value of the error.
