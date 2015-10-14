@@ -582,20 +582,22 @@ class Data(object):
         'Numeric': NumericalAnalyser
         }
     types = (
-            ('Ignored', 'Ignored / not detected'),
-            ('Numeric', 'Real numbers'),
-            ('Integer', 'Integers only'),
-            ('Float', 'Decimals only'),
-            ('Sci_Notation', 'Scientific notation'),
             ('Boolean', 'Boolean'),
-            ('String', 'String'),
-            ('Enum', 'Enumerable Set'),
-            ('Identifier', 'Identification code'),
-            ('Email', 'Email Address'),
+            ('Char', 'Character'),
             ('Currency', 'Currency'),
-            ('Time', 'Time'),
             ('Date', 'Date'),
-            ('Char', 'Character')
+            ('Day', 'Day of the Week'),
+            ('Email', 'Email Address'),
+            ('Enum', 'Enumerable Set'),
+            ('Float', 'Decimals only'),
+            ('Hyperlink', 'Hyperlink'),
+            ('Identifier', 'Identification code'),
+            ('Integer', 'Integers only'),
+            ('Numeric', 'Real numbers'),
+            ('Sci_Notation', 'Scientific notation'),
+            ('String', 'String'),
+            ('Time', 'Time'),
+            ('Ignored', 'Ignored / not detected')
         )
     
     def __init__(self, *args):
