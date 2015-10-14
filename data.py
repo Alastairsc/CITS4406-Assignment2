@@ -739,11 +739,9 @@ class Data(object):
                 i = i + 1
                 self.columns.append(Column(header=s))
         length = len(self.valid_rows)
-        print("start ", self.data_start)
         for row_num in range(0, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
-                print("row: ", row_num, "value: ", value)
             self.valid_rows[row_num] = []
         self.valid_rows = []
         self.invalid_rows = []
