@@ -48,7 +48,7 @@ init();
             <li><a href="#email">Email</a></li>
             <li><a href="#char">Character</a></li>
             <li><a href="#hyper">Hyperlink</a></li>
-            <li><a hred="#currency">Currency</a></li>
+            <li><a href="#currency">Currency</a></li>
           </ul>
         </div>
       </div>
