@@ -18,6 +18,11 @@ except ImportError:
 
 max_Outliers = 100
 standardDeviations = 3
+re_dateDF = re.compile('^\d{1,2}(\/|-)((0?[12])|(12))')
+re_dateMM = re.compile('^\d{1,2}(\/|-)(0?[3-5])')
+re_dateJA = re.compile('^\d{1,2}(\/|-)(0?[6-8])')
+re_dateSN = re.compile('^\d{1,2}(\/|-)((0?9)|(1[01]))')
+
 
 class Analyser(object):
     """
@@ -273,7 +278,26 @@ class DateAnalyser(Analyser):
     """
     def __init__(self, values):
         super().__init__(values)
-        # TODO Implement some date unique stats, eg seasonal groupings, month/year/decade frequency etc
+
+        DFcount = 0
+        MMcount = 0
+        JAcount = 0
+        SNcount = 0
+
+        for value in values:
+            if re_dateDF.search(value):
+                DFcount += 1
+            if re_dateMM.search(value):
+                MMcount += 1
+            if re_dateJA.search(value):
+                JAcount += 1
+            if re_dateSN.search(value):
+                SNcount += 1
+        self.dateDF = DFcount
+        self.dateMM = MMcount
+        self.dateJA = JAcount
+        self.dateSN = SNcount
+
         
 class TimeAnalyser(Analyser):
     """Run time analysis, currently only using Analyser super class methods.

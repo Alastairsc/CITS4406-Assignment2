@@ -387,7 +387,12 @@ class Report(object):
                        column.analysis.mode,
                        column.most_common[:5],
                        column.least_common[:5],
-                       column.analysis.unique]
+                       column.analysis.unique,
+                       column.analysis.dateDF,
+                       column.analysis.dateMM,
+                       column.analysis.dateJA,
+                       column.analysis.dateSN]
+                
                 rowNo+=1;
                 self.chart_data = ''.join([self.chart_data,"["])
                 self.chart_data = ''.join([self.chart_data,"['Row ','Value'],"])

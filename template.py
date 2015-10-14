@@ -191,6 +191,10 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>Dec - Feb Tally</th>
+                    <th>Mar - May Tally</th>
+                    <th>Jun - Aug Tally</th>
+                    <th>Sep - Nov Tally</th>
                     <th>View Chart</th>
                 </tr>
                 {date_analysis}
