@@ -194,6 +194,8 @@ class Column(object):
             self.type = 'Integer'
         elif float_count / num_values >= threshold:
             self.type = 'Float'
+        elif sci_not_count / num_values >= threshold:
+            self.type = 'Sci_Notation'
         elif (float_count + int_count + sci_not_count) / num_values >= threshold:
             self.type = 'Numeric'
         elif email_count / num_values >= threshold:
@@ -202,8 +204,6 @@ class Column(object):
             self.type = 'Currency'
         elif boolean_count / num_values >= threshold:
             self.type = 'Boolean'
-        elif sci_not_count / num_values >= threshold:
-            self.type = 'Sci_Notation'
         elif date_count / num_values >= threshold:
             self.type = 'Date'
         elif time_count / num_values >= threshold:
@@ -283,12 +283,18 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_int.match(value) and not re_float.match(value) and not value == '0'\
+                if not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(value) and not value == '0'\
                 and not  self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore):
                     reason = 'not a number'
                     tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                    reason = 'too large or too small'
+                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                    self.updateCell(x, '')
                     
                 if len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
@@ -766,6 +772,7 @@ class Data(object):
                     if( column.type == 'Integer' or column.type == 'Float' \
                         or column.type == 'Currency' or column.type == 'Sci_Notation' \
                         or column.type == 'Numeric'):
+                        print("Colno: ",colNo, "type ", column.type )
                         column.analysis = self.analysers[column.type](column.values, self.std_devs_val)  
                     else:
                         column.analysis = self.analysers[column.type](column.values)
