@@ -283,14 +283,14 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(value) and not value == '0'\
-                and not  self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore):
-                    reason = 'not a number'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
-                    errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                 try:
-                    if float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                    if not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(value) and not value == '0'\
+                    and not  self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                        reason = 'not a number'
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                    elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
                         reason = 'too large or too small'
                         tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                         errors.append(tup)
@@ -371,14 +371,14 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_sci_notation.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
-                    reason = 'not scientific notation'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
-                    errors.append(tup)
-                    formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                 try:
-                    if float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                    if not re_sci_notation.match(value) and not  self.check_empty(x, value, columnNumber, \
+                    errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                        reason = 'not scientific notation'
+                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        errors.append(tup)
+                        formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                    elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
                         reason = 'too large or too small'
                         tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
                         errors.append(tup)
