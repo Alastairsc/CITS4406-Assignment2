@@ -337,13 +337,13 @@ class Column(object):
             for x, value in enumerate(self.least_common):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue  
-                if self.least_common[x][1] <= enum_threshold and not  self.check_empty(x, value, columnNumber,\
+                if self.least_common[x][1] <= 1 and not  self.check_empty(x, value, columnNumber,\
                 errors, formatted_errors, invalid_rows_pos, set_to_ignore):
                     i = 0 
                     freq = 0
                     for cell in self.values:
                         if cell == value[0]:
-                            reason = 'Frequency of item below set enumerable threshold (%s)' % self.least_common[x][1]
+                            reason = 'Low frequency of enum value: (%s)' % self.least_common[x][1]
                             tup = (x + invalid_rows_pos[x] + 1, columnNumber, value[0], reason)
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
@@ -442,7 +442,8 @@ class Column(object):
             x -- postion of cell in column
             
             value -- value in cell"""
-        if ((value == '' or value == ' ') and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
+        if ((value == '' or value == ' ') and self.ignore_empty) or \
+            ((value == '' or value == ' ') and columnNumber in set_to_ignore):
             return True
         elif value == '' or value == ' ':
             reason = 'empty cell'
@@ -579,7 +580,8 @@ class Data(object):
             ('Email', 'Email Address'),
             ('Currency', 'Currency'),
             ('Time', 'Time'),
-            ('Date', 'Date')
+            ('Date', 'Date'),
+            ('Char', 'Character')
         )
     
     def __init__(self, *args):

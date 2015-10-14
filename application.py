@@ -100,7 +100,8 @@ if __name__ == '__main__':
                     #makes new directory to store new csv files
                 for sheet in sheet_names:
                     df = xls.parse(sheet, index_col=None, na_values=['NA'])
-                    new_name = os.path.join(file_dir, "csv_copies" , os.path.split(file)[1] + "_" + sheet + ".csv")
+                    new_name = os.path.join(file_dir, "csv_copies" , \
+                        os.path.splitext(os.path.split(file)[1])[0] + "_" + sheet + ".csv")
                     df.to_csv(new_name, index=False)
                     filenames.append(new_name)
         elif os.path.isdir(file):

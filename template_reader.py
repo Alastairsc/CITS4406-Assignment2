@@ -83,7 +83,7 @@ class Template(object):
                         self.range_vals.append(float(row[2]))
                     elif row[0].lower() == 'ignore_empty_column':
                         for x, value in enumerate(row):
-                            if value != 'ignore_empty_column':
-                                self.ignore_set.add(int(value))
+                            if x != 0:
+                                self.ignore_set.add(int(value) - 1)
                     else:
                         print("Not an option: ", row)
