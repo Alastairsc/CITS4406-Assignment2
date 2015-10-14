@@ -41,7 +41,7 @@ init();
             <li><a href="#string">String</a></li>
             <li><a href="#boolean">Boolean</a></li>
             <li><a href="#enum">Enum</a></li>
-            <li><a href="#identifier">String</a></li>
+            <li><a href="#identifier">Identifier</a></li>
             <li><a href="#date">Date</a></li>
             <li><a href="#time">Time</a></li>
             <li><a href="#day">Day</a></li>
