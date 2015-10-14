@@ -194,7 +194,7 @@ class Column(object):
             self.type = 'Integer'
         elif float_count / num_values >= threshold:
             self.type = 'Float'
-        elif (float_count + int_count) / num_values >= threshold:
+        elif (float_count + int_count + sci_not_count) / num_values >= threshold:
             self.type = 'Numeric'
         elif email_count / num_values >= threshold:
             self.type = 'Email'
