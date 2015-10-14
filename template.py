@@ -209,6 +209,8 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>Most Common Hours (Top 5) (hour,count)</th>
+                    <th>Least Common Hours (Top 5) (hour,count)</th>
                     <th>View Chart</th>
                 </tr>
                 {time_analysis}

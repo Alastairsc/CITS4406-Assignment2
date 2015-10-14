@@ -419,7 +419,9 @@ class Report(object):
                        column.analysis.mode,
                        column.most_common[:5],
                        column.least_common[:5],
-                       column.analysis.unique]
+                       column.analysis.unique,
+                       column.analysis.hourCS[:5],
+                       column.analysis.hourCS[-5:]]
                 rowNo+=1;
                 self.chart_data = ''.join([self.chart_data,"["])
                 self.chart_data = ''.join([self.chart_data,"['Row ','Value'],"])

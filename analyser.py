@@ -22,6 +22,9 @@ re_dateDF = re.compile('^\d{1,2}(\/|-)((0?[12])|(12))')
 re_dateMM = re.compile('^\d{1,2}(\/|-)(0?[3-5])')
 re_dateJA = re.compile('^\d{1,2}(\/|-)(0?[6-8])')
 re_dateSN = re.compile('^\d{1,2}(\/|-)((0?9)|(1[01]))')
+re_timePM = re.compile('[pP][mM]$')
+re_timeAM = re.compile('[aA][mM]$')
+re_timehr = re.compile('^\d{1,2}')
 
 
 class Analyser(object):
@@ -306,8 +309,26 @@ class TimeAnalyser(Analyser):
         Analyser -- An analyser object.
     """
     def __init__(self, values):
+
+        hourcount = []
+
+        for x in range(0,24):
+            hourcount.append([])
+            hourcount[x].append(x)
+            hourcount[x].append(0)
+        
         super().__init__(values)
-        # TODO Implement some time unique stats. eg. hourly frequencies, day/night etc.
+        for value in values:
+            temp=int(re_timehr.search(value).group(0))
+            if re_timePM.search(value) and temp != 12:
+                temp += 12
+            elif re_timeAM.search(value) and temp == 12:
+                temp = 0
+            hourcount[temp][1]+= 1
+
+        hoursort= sorted(hourcount,key=lambda l:l[1], reverse=True)
+        self.hourCS = hoursort
+        
 
 class CharAnalyser(Analyser):
     """Run char analysis, currently only using Analyser super class methods.
@@ -326,7 +347,6 @@ class DayAnalyser(Analyser):
     """
     def __init__(self, values):
         super().__init__(values)
-        # TODO Implement some day unique stats. eg. weekday versus weekend
 
 class HyperAnalyser(Analyser):
     """Run hyperlink analysis, currently only using Analyser super class methods.
