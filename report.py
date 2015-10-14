@@ -76,7 +76,6 @@ class Report(object):
             Returns string of html report
         """
         html = base_template.format(
-            header= path.basename(self.file_name), 
             len_invalid_rows=len(self.data.formatted_invalid_rows),
             invalid_rows=self.list_creator(self.data.formatted_invalid_rows), 
             empty_columns=self.list_creator(self.empty_columns()),
