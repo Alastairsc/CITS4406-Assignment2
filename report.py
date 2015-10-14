@@ -436,7 +436,7 @@ class Report(object):
         rowNo = 0;
         self.chart_data += "var charData = [ "
         for column in self.data.columns:
-            if column.type == 'Character':           
+            if column.type == 'Char':           
                 row = [column.header,
                        column.analysis.mode,
                        column.most_common[:5],

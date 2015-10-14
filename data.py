@@ -143,7 +143,7 @@ class Column(object):
         day_count = 0
         hyper_count = 0
         
-        for x, value in enumerate(self.values):         
+        for x, value in enumerate(self.values):
             if re_float.match(value):                
                 if abs(float(value)) < 0.000001:
                     sci_not_count +=1
@@ -172,6 +172,9 @@ class Column(object):
                     self.total_yes += 1
                 if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
                     self.total_no += 1
+                #These are also chars
+                if temp_value == 'T' or temp_value == 'F' or temp_value == 'Y' or temp_value == 'N':
+                    char_count +=1
             elif re_sci_notation.fullmatch(value):
                 sci_not_count += 1
             elif re_date.search(value) :
@@ -203,13 +206,13 @@ class Column(object):
             self.type = 'Sci_Notation'
         elif date_count / num_values >= threshold:
             self.type = 'Date'
-        elif time_count / len(self.values) >= threshold:
+        elif time_count / num_values >= threshold:
             self.type = 'Time'
-        elif char_count / len(self.values) >= threshold:
+        elif char_count / num_values >= threshold:
             self.type = 'Char'
-        elif day_count / len(self.values) >= threshold:
+        elif day_count / num_values >= threshold:
             self.type = 'Day'
-        elif hyper_count / len(self.values) >= threshold:
+        elif hyper_count / num_values >= threshold:
             self.type = 'Hyperlink'
         elif len(self.most_common) < 10 and len(self.most_common) != 0:
             self.type = 'Enum'
@@ -742,7 +745,7 @@ class Data(object):
         self.invalid_rows = []
         self.invalid_rows_indexes = []
         self.can_edit_rows = False
-	self.data_in_columns = True
+	#self.data_in_columns = True
 
     def clean(self):
         """Calls cleaning methods on all columns.
