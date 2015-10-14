@@ -742,7 +742,7 @@ class Data(object):
         self.invalid_rows = []
         self.invalid_rows_indexes = []
         self.can_edit_rows = False
-	self.data_in_columns = True
+        self.data_in_columns = True
 
     def clean(self):
         """Calls cleaning methods on all columns.
