@@ -47,7 +47,7 @@ def main(*args):
     #tr.create_snapshot()
     report = Report(data, filename)
     str_report = report.html_report()
-    print("Step[6/7] Generating report")
+    print("[Step 6/7] Generating report")
     report.gen_html(str_report)
     #returns string of html, also generates html report for debugging purposes
     print("[Step 7/7] Report Successfully Generated")
