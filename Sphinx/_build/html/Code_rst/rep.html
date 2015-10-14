@@ -58,11 +58,13 @@ Report &#8211; Contains methods to generate and output appropriate HTML for the 
 <p>string_analysis &#8211; Return string based statistics on input.</p>
 <p>enum_analysis &#8211; Return enumeration based statistics on input.</p>
 <p>bool_analysis &#8211; Return boolean based statistics on input.</p>
-<p class="last">email_analysis &#8211; Return email based statistics on input.</p>
+<p>email_analysis &#8211; Return email based statistics on input.</p>
+<p class="last">date_analysis &#8211; Return date based statistics on input.</p>
 </dd>
 <dt>Variables:</dt>
 <dd><p class="first">data &#8211; Reference to Data object.</p>
-<p class="last">file &#8211; Reference to CSV file.</p>
+<p>file &#8211; Reference to CSV file.</p>
+<p class="last">chart_data &#8211; The javascript strings that need to be added to the template for the charts to display.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -74,6 +76,14 @@ columns.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="report.Report.char_analysis">
+<code class="descname">char_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.char_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return HTML string of char analysis on columns of type char 
+in the data object by accessing the various class variables of the
+columns.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="report.Report.currency_analysis">
 <code class="descname">currency_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.currency_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
@@ -81,6 +91,22 @@ columns.</p>
 <dd>in the data object by accessing the various class variables of the</dd>
 </dl>
 <p>columns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="report.Report.date_analysis">
+<code class="descname">date_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.date_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return HTML string of date analysis on columns of type date 
+in the data object by accessing the various class variables of the
+columns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="report.Report.day_analysis">
+<code class="descname">day_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.day_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return HTML string of day analysis on columns of type day 
+in the data object by accessing the various class variables of the
+columns.</p>
 </dd></dl>
 
 <dl class="method">
@@ -121,12 +147,26 @@ type analyses.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="report.Report.hyper_analysis">
+<code class="descname">hyper_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.hyper_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return HTML string of hyperlink analysis on columns of type hyper 
+in the data object by accessing the various class variables of the
+columns.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="report.Report.identifier_analysis">
 <code class="descname">identifier_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.identifier_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of identifier analysis on columns of type identifier
 in the data objectby accessing the various class variables of the
 columns by accessing the various class variables of the
 columns.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="report.Report.initial_show_items">
+<em class="property">static </em><code class="descname">initial_show_items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.initial_show_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of items to show initially, where clicking &#8216;show more&#8217; will expand.</p>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -147,7 +187,7 @@ columns.</p>
 
 <dl class="staticmethod">
 <dt id="report.Report.row_creator">
-<em class="property">static </em><code class="descname">row_creator</code><span class="sig-paren">(</span><em>row_items</em><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.row_creator" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">row_creator</code><span class="sig-paren">(</span><em>row_items</em>, <em>rowNumber=0</em>, <em>type='none'</em><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.row_creator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return provided list as HTML rows.</p>
 <p>Arguments:
 row_items &#8211; List of items to be turned into HTML.</p>
@@ -157,6 +197,14 @@ row_items &#8211; List of items to be turned into HTML.</p>
 <dt id="report.Report.string_analysis">
 <code class="descname">string_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.string_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return HTML string of string analysis on columns of type string 
+in the data object by accessing the various class variables of the
+columns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="report.Report.time_analysis">
+<code class="descname">time_analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#report.Report.time_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return HTML string of time analysis on columns of type time 
 in the data object by accessing the various class variables of the
 columns.</p>
 </dd></dl>

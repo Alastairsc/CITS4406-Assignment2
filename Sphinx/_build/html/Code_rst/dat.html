@@ -77,7 +77,7 @@ Enumerated.</p>
 
 <dl class="method">
 <dt id="data.Column.define_errors">
-<code class="descname">define_errors</code><span class="sig-paren">(</span><em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.define_errors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">define_errors</code><span class="sig-paren">(</span><em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em>, <em>range_list2</em>, <em>set_to_ignore</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.define_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define all the rows/columns with invalid values and append to errors, and
 formatted_errors once formatted properly. invalid_rows_pos holds the amount of
 rows that have been skipped by the time the current row x is being considered.</p>
@@ -118,6 +118,12 @@ as appropriate.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="data.Column.set_Identifier_size">
+<code class="descname">set_Identifier_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_Identifier_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the size of the data for identifier type</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="data.Column.set_empty">
 <code class="descname">set_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set Column to be empty</p>
@@ -134,12 +140,21 @@ as appropriate.</p>
 <code class="descname">set_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the size of the data for use when checking for errors.
 For use with the &#8216;Identifier&#8217; data type</p>
+<p>size &#8211; length of identifier</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="data.Column.set_type">
 <code class="descname">set_type</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.set_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets type of column for use with templates</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Column.updateCell">
+<code class="descname">updateCell</code><span class="sig-paren">(</span><em>pos</em>, <em>new_value</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.updateCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the value of a cell given</p>
+<p>pos &#8211; position of cell in column to change</p>
+<p>new_value &#8211; value to set cell too</p>
 </dd></dl>
 
 </dd></dl>
@@ -163,20 +178,33 @@ valid_rows or invalid_rows according to their length.</p>
 <p>create_columns &#8211; Creates column object according to valid_rows, assigning
 column header and column values.</p>
 <p>clean &#8211; Calls column cleaning methods to run &#8216;cleaning&#8217; on all columns.</p>
-<p class="last">analyse &#8211; Calls column analysis methods to run &#8216;analysis&#8217; on all columns.</p>
-</dd>
-<dt>Variables:</dt>
-<dd><p class="first">columns &#8211; List of column objects.</p>
-<p>headers &#8211; List of column headers.</p>
-<p>invalid_rows &#8211; List of invalid rows (i.e., more or less columns than
-number of headers).</p>
-<p>formatted_errors &#8211; List of errors in file, each error contains: row, column 
-and value of the error.</p>
-<p>raw_data &#8211; List of raw CSV data as rows.</p>
-<p>valid_rows &#8211; List of valid rows (i.e., same number of columns as headers).</p>
-<p class="last">errors &#8211; List of rows and columns of possibly incorrect values.</p>
+<p class="last">analysis &#8211; Calls column analysis methods to run &#8216;analysis&#8217; on all columns.</p>
 </dd>
 </dl>
+<p>Variables:</p>
+<blockquote>
+<div><p>analysers &#8211; Dictionary conataining types as keys and their respective
+analysers as values (i.e. analysers[&#8216;type&#8217;] == TypeAnalyser</p>
+<p>types &#8211; Tuple containing all valid types as ordered pairs of form 
+(&#8216;Type&#8217;, &#8216;Human readable type&#8217;). Used to map types on web site
+to their correct progammatic name.</p>
+<p>Filename &#8211; String of path to file containing data</p>
+<p>columns &#8211; List of column objects.</p>
+<p>invalid_rows &#8211; List of invalid rows (i.e., more or less columns than
+number of headers). Copied from raw_data</p>
+<p>invalid_rows_indexes &#8211; List of indexes corresponding to invalid rows.</p>
+<p>formatted_invalid_rows &#8211; List of invalid rows for report.</p>
+<p>invalid_rows_pos &#8211; List of the amount of invalid rows in the raw data prior
+to each valid row (i.e. the nth element contains number of invalid rows
+prior to the nth valid row)</p>
+<p>errors &#8211; list of errors in file; error[n][0] is row of error, error[n][1]
+is column of error, and error[n][2] is the value of in that location.</p>
+<p>formatted_errors &#8211; List of errors in file, each error contains: row, column 
+and value of the error.</p>
+<p>raw_data &#8211; List of raw CSV data as rows. After remove_invalid() has run
+this only contains rows from the CSV file prior to the start of the data.</p>
+<p>valid_rows &#8211; List of valid rows (i.e., same number of columns as headers).</p>
+</div></blockquote>
 <dl class="method">
 <dt id="data.Data.analysis">
 <code class="descname">analysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.analysis" title="Permalink to this definition">¶</a></dt>
@@ -196,6 +224,12 @@ new_values - list of values row is to be changed to</p>
 <dt id="data.Data.clean">
 <code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls cleaning methods on all columns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.clear_errors">
+<code class="descname">clear_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.clear_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wipes recorded errors to allow find_errors() to be rerun</p>
 </dd></dl>
 
 <dl class="method">
@@ -219,6 +253,25 @@ conditions.</p>
 <code class="descname">gen_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.gen_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a csv file based on the data for after
 data has been corrected</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.getCellErrors">
+<code class="descname">getCellErrors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.getCellErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of all cells containing invalid data, contains
+row number,. column number and its value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.getColumns">
+<code class="descname">getColumns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.getColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.Data.getRowErrors">
+<code class="descname">getRowErrors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.getRowErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all row errors</p>
 </dd></dl>
 
 <dl class="method">
@@ -263,7 +316,7 @@ size to me no more than data_size.</p>
 <code class="descname">remove_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.remove_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each row in raw_data variable, checks row length and appends to 
 valid_rows variable if same length as headers, else appends to 
-invalid_rows variable. invalid_rows_pos holds the amount of rows that have been
+invalid_rows variable. invalid_rows_indexes holds the amount of rows that have been
 skipped by the point the xth row has been accessed from valid_rows.</p>
 </dd></dl>
 

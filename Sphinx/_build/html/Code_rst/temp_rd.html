@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. Analyser &mdash; Online Data Analysis 1.0.0 documentation</title>
+    <title>6. Template Reader &mdash; Online Data Analysis 1.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -24,8 +24,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Online Data Analysis 1.0.0 documentation" href="../index.html" />
-    <link rel="next" title="6. Template Reader" href="temp_rd.html" />
-    <link rel="prev" title="4. Template" href="templ.html" />
+    <link rel="prev" title="5. Analyser" href="analy.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -38,8 +37,33 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="analyser">
-<h1>5. Analyser<a class="headerlink" href="#analyser" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-template_reader">
+<span id="template-reader"></span><h1>6. Template Reader<a class="headerlink" href="#module-template_reader" title="Permalink to this headline">¶</a></h1>
+<p>Class for reading templates to pass on information about how
+to process the data for the data class</p>
+<dl class="class">
+<dt id="template_reader.Template">
+<em class="property">class </em><code class="descclassname">template_reader.</code><code class="descname">Template</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#template_reader.Template" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Object storing user input that describes data given. Able to specify:</dt>
+<dd><p class="first">Columns - state column number and data type.</p>
+<p>Delimiter - state delimiter character (for comma and space use the word not &#8216;,&#8217; or &#8216; &#8216;).</p>
+<p>Header row - row of header (0 for no header).</p>
+<p>Start row - row that data starts on</p>
+<p class="last">Threshold value - minimum proportion of column that has the correct data type</p>
+</dd>
+</dl>
+<p>Columns and rows start at 1 not 0</p>
+<dl class="method">
+<dt id="template_reader.Template.read">
+<code class="descname">read</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#template_reader.Template.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads template file, assumes correct formatting, if user editing
+is permitted will need to be improved with more checks</p>
+<p>See documentation</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -66,16 +90,15 @@
 <li class="toctree-l1"><a class="reference internal" href="dat.html">2. Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rep.html">3. Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="templ.html">4. Template</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">5. Analyser</a></li>
-<li class="toctree-l1"><a class="reference internal" href="temp_rd.html">6. Template Reader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analy.html">5. Analyser</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">6. Template Reader</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="templ.html" title="previous chapter">4. Template</a></li>
-      <li>Next: <a href="temp_rd.html" title="next chapter">6. Template Reader</a></li>
+      <li>Previous: <a href="analy.html" title="previous chapter">5. Analyser</a></li>
   </ul></li>
 </ul>
 </div>
@@ -104,7 +127,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
       
       |
-      <a href="../_sources/Code_rst/analy.txt"
+      <a href="../_sources/Code_rst/temp_rd.txt"
           rel="nofollow">Page source</a>
     </div>
 

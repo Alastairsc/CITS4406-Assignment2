@@ -28,7 +28,7 @@ class Template(object):
         self.data_size = {}
         self.ignore_empty = False
         self.threshold_val = 0.90
-        self.enum_threshold_val = 10
+        self.enum_threshold_val = 1
         self.std_devs = 3
         self.range_vals = []
         self.ignore_set = set()

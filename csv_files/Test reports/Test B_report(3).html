@@ -1,0 +1,295 @@
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://uwadataanalysis.cloudapp.net/static/report/main.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="http://uwadataanalysis.cloudapp.net/static/report/main.js"></script>
+<script>
+init();
+var numbData = [ [['Row ','Value'],['Row 1',1],['Row 2',2],['Row 3',3],['Row 4',4],['Row 5',5],['Row 6',6],['Row 7',7],['Row 8',8],['Row 9',9],['Row 10',10],['Row 11',11],['Row 12',12],['Row 13',13],['Row 14',14],['Row 15',15],['Row 16',16],['Row 17',17],['Row 18',18],['Row 19',19],['Row 20',20],['Row 21',21],['Row 22',22],['Row 23',23],['Row 24',24]],[['Row ','Value'],['Row 1',2],['Row 2',5],['Row 3',6],['Row 4',8],['Row 5',4],['Row 6',2],['Row 7',3],['Row 8',9],['Row 9',5],['Row 10',4],['Row 11',1],['Row 12',26],['Row 13',5],['Row 14',20],['Row 15',1],['Row 16',5],['Row 17',8],['Row 18',5],['Row 19',2],['Row 20',6],['Row 21',0],['Row 22',5],['Row 23',56],['Row 24',3.2]],[['Row ','Value'],['Row 1',0.2],['Row 2',1.1],['Row 3',0.7],['Row 4',1.5],['Row 5',1.8],['Row 6',1.2],['Row 7',0.6],['Row 8',0.35],['Row 9',1.1],['Row 10',1.52],['Row 11',0.98],['Row 12',0.78],['Row 13',0.6],['Row 14',0.64],['Row 15',0.35],['Row 16',0.98],['Row 17',1.01],['Row 18',1.2],['Row 19',1.35],['Row 20',1.44],['Row 21',1.5],['Row 22',1.7],['Row 23',1.66],['Row 24',1.98]],[['Row ','Value'],['Row 1',-31.9522],['Row 2',-31.9465],['Row 3',-30.9666],['Row 4',-30.8822],['Row 5',-31.6642],['Row 6',-31.0163],['Row 7',-31.6981],['Row 8',-31.0001],['Row 9',-31.3223],['Row 10',-31.6253],['Row 11',-31.2566],['Row 12',-30.9442],['Row 13',-30.8651],['Row 14',-30.7541],['Row 15',-31.0645],['Row 16',-31.0894],['Row 17',-31.6051],['Row 18',-31.6052],['Row 19',-31.0331],['Row 20',-31.6522],['Row 21',-31.8546],['Row 22',-31.8649],['Row 23',-31.8677],['Row 24',-31.8723]],[['Row ','Value'],['Row 1',115.8589],['Row 2',115.6231],['Row 3',115.3026],['Row 4',115.3012],['Row 5',115.8995],['Row 6',115.6465],['Row 7',115.3233],['Row 8',115.4642],['Row 9',114.9982],['Row 10',114.8522],['Row 11',115.6235],['Row 12',115.8985],['Row 13',115.6332],['Row 14',115.6465],['Row 15',115.9665],['Row 16',115.3325],['Row 17',115.3266],['Row 18',115.8985],['Row 19',115.6445],['Row 20',115.8756],['Row 21',114.9815],['Row 22',116.5431],['Row 23',118.5343],['Row 24',115.6434]],[['Row ','Value'],['Row 1',3.46E+15],['Row 2',4.69E+14],['Row 3',2.47E+15],['Row 4',5.66E+14],['Row 5',5.65E+14],['Row 6',2.66E+17],['Row 7',5.66E+12],['Row 8',6.22E+16],['Row 9',5.65E+16],['Row 10',4.65E+15],['Row 11',5.65E+17],['Row 12',5.67E+14],['Row 13',6.52E+15],['Row 14',6.55E+15],['Row 15',5.65E+14],['Row 16',5.61E+13],['Row 17',5.20E+12],['Row 18',5.62E+12],['Row 19',1.62E+13],['Row 20',6.49E+14],['Row 21',8.50E+13],['Row 22',2.50E+11],['Row 23',5.60E+18],['Row 24',5.80E+12]],[['Row ','Value'],['Row 1',5.60E+06],['Row 2',5.10E+06],['Row 3',4.80E+06],['Row 4',8.00E-07],['Row 5',-8.50E+08],['Row 6',1.00E+00],['Row 7',-5.60E+02],['Row 8',5.00E+02],['Row 9',3.80E+06],['Row 10',5.09E-06],['Row 11',-8.50E+05],['Row 12',5.30E-06],['Row 13',5.99E+05],['Row 14',5.00E+06],['Row 15',6.00E+59],['Row 16',6.50E+02],['Row 17',6.30E+05],['Row 18',8.50E+06],['Row 19',-1.00E-65],['Row 20',5.20E+07],['Row 21',8.00E-06],['Row 22',7.80E-06],['Row 23',8.00E+05],['Row 24',4.00E+06]],[['Row ','Value'],['Row 1',5.1],['Row 2',2],['Row 3',32],['Row 4',8.5],['Row 5',25.6],['Row 6',3],['Row 7',1],['Row 8',0],['Row 9',6.5],['Row 10',45],['Row 11',-0.8],['Row 12',-100],['Row 13',52],['Row 14',68],['Row 15',9.8],['Row 16',87],['Row 17',5.00E+03],['Row 18',74],['Row 19',54.8883],['Row 20',1.0022],['Row 21',0.000005],['Row 22',65.32],['Row 23',9.5],['Row 24',1]]];var stringData = [ [['Row ','Value'],['Red', 6],['White', 3],['Blue', 3],['Purple', 2],['Gold', 2],['Black', 2],['Pink', 2],['Silver', 1],['Yellow', 1],['Violet', 1]],[['Row ','Value'],['Poland', 2],['Whyy', 1],['Direction', 1],['white car', 1],['places', 1],['Jon Snow', 1],['things', 1],['Clean your room', 1],['Works well', 1],['Australia', 1]],[['Row ','Value'],['25%', 2],['36%', 2],['10%', 2],['52%', 2],['32.30%', 1],['15%', 1],['46%', 1],['21%', 1],['43.78%', 1],['99%', 1]]];var identData = [ [['Row ','Value']]];var enumData = [ [['Row ','Value'],['Up', 8],['Down', 7],['Right', 5],['Left', 4]]];var emailData = [ [['Row ','Value'],['Hello@gmail.com', 4],['movie@hotmail.com', 3],['Pony@hotmail.com', 3],['George.Cluney@gmail.com', 3],['newlogo@gmail.com', 2],['World@gmail.com', 2],['Exodus@apple.com', 1],['Horrific@apple.com', 1],['walking@gmail.com', 1],['Left@hotmail.com', 1]]];var currencyData = [ [['Row ','Value'],['Row 1',54.96 ],['Row 2',95.60 ],['Row 3',65.32 ],['Row 4',85.20 ],['Row 5',95.00 ],['Row 6',36.50 ],['Row 7',20.00 ],['Row 8',50.00 ],['Row 9',36.58 ],['Row 10',95.63 ],['Row 11',58.20 ],['Row 12',44.00 ],['Row 13',6.00 ],['Row 14',32.89 ],['Row 15',22.00 ],['Row 16',36.54 ],['Row 17',42.42 ],['Row 18',66.66 ],['Row 19',33.15 ],['Row 20',11.20 ],['Row 21',45 ],['Row 22',42 ],['Row 23',58.62 ]]];var boolData = [ [['Row ','Value'],['FALSE', 13],['TRUE', 11]]];var dateData = [ [['Row ','Value'],['12-Aug', 3],['06-Sep', 2],['09-Oct', 2],['03-Sep', 1],['04-Jul', 1],['04-Sep', 1],['09-Nov', 1],['30-Sep', 1],['30-Jul', 1],['02-Oct', 1]],[['Row ','Value']],[['Row ','Value'],['06-Sep-12', 2],['02-Apr-15', 1],['06-Feb-23', 1],['06-May-96', 1],['02-Jun-45', 1],['03-Aug-05', 1],['23-May-44', 1],['05-Sep-99', 1],['09-Oct-95', 1],['05-Oct-08', 1]],[['Row ','Value']]];var timeData = [ [['Row ','Value'],['15:45', 2],['12:04', 1],['9:45', 1],['22:20', 1],['6:50', 1],['8:20', 1],['17:14', 1],['19:45', 1],['19:04', 1],['4:14', 1]]];var charData = [];var dayData = [ [['Row ','Value'],['Wednesday', 7],['Sunday', 6],['Friday', 4],['Thursday', 2],['Saturday', 2],['Monday', 2],['Tuesday', 1]]];var hyperData = [ [['Row ','Value'],['http://www.facebook.com', 3],['http://www.google.com', 3],['http://www.youtube.com', 3],['http://www.4chan.com', 2],['http://www.Howard.com', 1],['http://www.hotmail.com', 1],['http://www.bing.com', 1],['http://www.askjeeves.com', 1],['http://www.yahoo.com.au', 1],['http://www.America.com', 1]]];
+</script>
+<title>Analysis Report on Test B.csv</title>
+
+</head>
+<body>
+
+<nav id="initialNavBar" class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Contents</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#invalid">Invalid/Empty</a></li>
+            <li><a href="#numerical">Numerical</a></li>
+            <li><a href="#string">String</a></li>
+            <li><a href="#boolean">Boolean</a></li>
+            <li><a href="#enum">Enum</a></li>
+            <li><a href="#identifier">String</a></li>
+            <li><a href="#date">Date</a></li>
+            <li><a href="#time">Time</a></li>
+            <li><a href="#day">Day</a></li>
+            <li><a href="#email">Email</a></li>
+            <li><a href="#char">Character</a></li>
+            <li><a href="#hyper">Hyperlink</a></li>
+            <li><a hred="#currency">Currency</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+<br>&nbsp<br>
+<div class="container">
+    <h1>Analysis Report on Test B.csv</h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <hr id="invalid"/>
+        <div class="col-md-6">
+            <h2 class="titleRow">Invalid Rows (0)</h2>
+            <p>These rows contain either too many or too few columns.</p>
+            <ul><li>Empty</li></ul>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="titleRow">Empty Columns (0)</h2>
+            <p>These columns contain >= 90% empty values.</p>
+            <ul><li>Empty</li></ul>
+        </div>
+        <div class="col-md-6">
+            <h2 class="titleRow">Error Cells (102)</h2>
+            <p>These cells contain invalid values.</p>
+            <ul><li>Row: 25 Column: 2 Value: 3.2 - not an integer</li><li>Row: 2 Column: 11 Value: 03-09-15 - not a recognised date</li><li>Row: 3 Column: 11 Value: 04-Sep - not a recognised date</li><li>Row: 4 Column: 11 Value: 03-Sep - not a recognised date</li><li class="hidden">Row: 5 Column: 11 Value: 02-Aug - not a recognised date</li><li class="hidden">Row: 6 Column: 11 Value: 04-Jul - not a recognised date</li><li class="hidden">Row: 7 Column: 11 Value: 06-May - not a recognised date</li><li class="hidden">Row: 8 Column: 11 Value: 03-Aug - not a recognised date</li><li class="hidden">Row: 9 Column: 11 Value: 12-Aug - not a recognised date</li><li class="hidden">Row: 10 Column: 11 Value: 09-Oct - not a recognised date</li><li class="hidden">Row: 11 Column: 11 Value: 02-Oct - not a recognised date</li><li class="hidden">Row: 12 Column: 11 Value: 21-Aug - not a recognised date</li><li class="hidden">Row: 13 Column: 11 Value: 06-Sep - not a recognised date</li><li class="hidden">Row: 14 Column: 11 Value: 02-Sep - not a recognised date</li><li class="hidden">Row: 15 Column: 11 Value: 30-Jul - not a recognised date</li><li class="hidden">Row: 16 Column: 11 Value: 05-Aug - not a recognised date</li><li class="hidden">Row: 17 Column: 11 Value: 12-Aug - not a recognised date</li><li class="hidden">Row: 18 Column: 11 Value: 06-Sep - not a recognised date</li><li class="hidden">Row: 19 Column: 11 Value: 15-Aug - not a recognised date</li><li class="hidden">Row: 20 Column: 11 Value: 23-Aug - not a recognised date</li><li class="hidden">Row: 21 Column: 11 Value: 16-Sep - not a recognised date</li><li class="hidden">Row: 22 Column: 11 Value: 30-Sep - not a recognised date</li><li class="hidden">Row: 23 Column: 11 Value: 12-Aug - not a recognised date</li><li class="hidden">Row: 24 Column: 11 Value: 09-Nov - not a recognised date</li><li class="hidden">Row: 25 Column: 11 Value: 09-Oct - not a recognised date</li><li class="hidden">Row: 8 Column: 18 Value: fssefefe0 - too long or too short</li><li class="hidden">Row: 19 Column: 18 Value: rt56t6r2f - too long or too short</li><li class="hidden">Row: 24 Column: 18 Value: fg6f65f6f - too long or too short</li><li class="hidden">Row: 25 Column: 18 Value: f4g45f45f - too long or too short</li><li class="hidden">Row: 18 Column: 19 Value: 5.00E+03 - not a number</li><li class="hidden">Row: 2 Column: 21 Value: 12-06-15 - not a recognised date</li><li class="hidden">Row: 3 Column: 21 Value: 23-08-15 - not a recognised date</li><li class="hidden">Row: 4 Column: 21 Value: 06-09-15 - not a recognised date</li><li class="hidden">Row: 5 Column: 21 Value: 04-09-99 - not a recognised date</li><li class="hidden">Row: 6 Column: 21 Value: 06-08-12 - not a recognised date</li><li class="hidden">Row: 7 Column: 21 Value: 08-05-06 - not a recognised date</li><li class="hidden">Row: 8 Column: 21 Value: 03-05-07 - not a recognised date</li><li class="hidden">Row: 9 Column: 21 Value: 06-12-98 - not a recognised date</li><li class="hidden">Row: 10 Column: 21 Value: 03-12-65 - not a recognised date</li><li class="hidden">Row: 11 Column: 21 Value: 28-06-94 - not a recognised date</li><li class="hidden">Row: 12 Column: 21 Value: 13-02-16 - not a recognised date</li><li class="hidden">Row: 13 Column: 21 Value: 30-05-46 - not a recognised date</li><li class="hidden">Row: 14 Column: 21 Value: 08-06-99 - not a recognised date</li><li class="hidden">Row: 15 Column: 21 Value: 04-12-95 - not a recognised date</li><li class="hidden">Row: 16 Column: 21 Value: 02-06-09 - not a recognised date</li><li class="hidden">Row: 17 Column: 21 Value: 06-02-03 - not a recognised date</li><li class="hidden">Row: 18 Column: 21 Value: 02-06-95 - not a recognised date</li><li class="hidden">Row: 19 Column: 21 Value: 12-09-16 - not a recognised date</li><li class="hidden">Row: 20 Column: 21 Value: 06-08-05 - not a recognised date</li><li class="hidden">Row: 21 Column: 21 Value: 12-05-13 - not a recognised date</li><li class="hidden">Row: 22 Column: 21 Value: 28-02-15 - not a recognised date</li><li class="hidden">Row: 23 Column: 21 Value: 29-02-16 - not a recognised date</li><li class="hidden">Row: 24 Column: 21 Value: 30-09-01 - not a recognised date</li><li class="hidden">Row: 25 Column: 21 Value: 06-07-07 - not a recognised date</li><li class="hidden">Row: 2 Column: 22 Value: 22-Aug-15 - not a recognised date</li><li class="hidden">Row: 3 Column: 22 Value: 28-Aug-15 - not a recognised date</li><li class="hidden">Row: 4 Column: 22 Value: 10-Nov-15 - not a recognised date</li><li class="hidden">Row: 5 Column: 22 Value: 05-Sep-99 - not a recognised date</li><li class="hidden">Row: 6 Column: 22 Value: 06-Sep-12 - not a recognised date</li><li class="hidden">Row: 7 Column: 22 Value: 03-Mar-01 - not a recognised date</li><li class="hidden">Row: 8 Column: 22 Value: 04-May-15 - not a recognised date</li><li class="hidden">Row: 9 Column: 22 Value: 21-Aug-03 - not a recognised date</li><li class="hidden">Row: 10 Column: 22 Value: 06-May-96 - not a recognised date</li><li class="hidden">Row: 11 Column: 22 Value: 03-Aug-05 - not a recognised date</li><li class="hidden">Row: 12 Column: 22 Value: 06-Feb-23 - not a recognised date</li><li class="hidden">Row: 13 Column: 22 Value: 02-Sep-78 - not a recognised date</li><li class="hidden">Row: 14 Column: 22 Value: 06-Sep-12 - not a recognised date</li><li class="hidden">Row: 15 Column: 22 Value: 01-Aug-98 - not a recognised date</li><li class="hidden">Row: 16 Column: 22 Value: 08-Mar-13 - not a recognised date</li><li class="hidden">Row: 17 Column: 22 Value: 02-Mar-16 - not a recognised date</li><li class="hidden">Row: 18 Column: 22 Value: 05-Oct-08 - not a recognised date</li><li class="hidden">Row: 19 Column: 22 Value: 09-Oct-95 - not a recognised date</li><li class="hidden">Row: 20 Column: 22 Value: 21-Mar-06 - not a recognised date</li><li class="hidden">Row: 21 Column: 22 Value: 14-May-12 - not a recognised date</li><li class="hidden">Row: 22 Column: 22 Value: 23-May-44 - not a recognised date</li><li class="hidden">Row: 23 Column: 22 Value: 01-Jan-01 - not a recognised date</li><li class="hidden">Row: 24 Column: 22 Value: 02-Jun-45 - not a recognised date</li><li class="hidden">Row: 25 Column: 22 Value: 02-Apr-15 - not a recognised date</li><li class="hidden">Row: 2 Column: 23 Value: 6/21/56 - not a recognised date</li><li class="hidden">Row: 3 Column: 23 Value: 5/14/23 - not a recognised date</li><li class="hidden">Row: 4 Column: 23 Value: 8/21/96 - not a recognised date</li><li class="hidden">Row: 5 Column: 23 Value: 06-04-89 - not a recognised date</li><li class="hidden">Row: 6 Column: 23 Value: 09-03-55 - not a recognised date</li><li class="hidden">Row: 7 Column: 23 Value: 12-12-50 - not a recognised date</li><li class="hidden">Row: 8 Column: 23 Value: 9/18/65 - not a recognised date</li><li class="hidden">Row: 9 Column: 23 Value: 05-03-15 - not a recognised date</li><li class="hidden">Row: 10 Column: 23 Value: 08-06-15 - not a recognised date</li><li class="hidden">Row: 11 Column: 23 Value: 09-04-23 - not a recognised date</li><li class="hidden">Row: 12 Column: 23 Value: 04-06-18 - not a recognised date</li><li class="hidden">Row: 13 Column: 23 Value: 12-02-36 - not a recognised date</li><li class="hidden">Row: 14 Column: 23 Value: 5/14/78 - not a recognised date</li><li class="hidden">Row: 15 Column: 23 Value: 9/25/65 - not a recognised date</li><li class="hidden">Row: 16 Column: 23 Value: 10/25/79 - not a recognised date</li><li class="hidden">Row: 17 Column: 23 Value: 11/30/99 - not a recognised date</li><li class="hidden">Row: 18 Column: 23 Value: 9/21/64 - not a recognised date</li><li class="hidden">Row: 19 Column: 23 Value: 3/31/65 - not a recognised date</li><li class="hidden">Row: 20 Column: 23 Value: 01-02-04 - not a recognised date</li><li class="hidden">Row: 21 Column: 23 Value: 12/25/95 - not a recognised date</li><li class="hidden">Row: 22 Column: 23 Value: 12/31/95 - not a recognised date</li><li class="hidden">Row: 23 Column: 23 Value: 2/28/15 - not a recognised date</li><li class="hidden">Row: 24 Column: 23 Value: 2/27/98 - not a recognised date</li><li class="hidden">Row: 25 Column: 23 Value: 05-04-13 - not a recognised date</li><li class='showMore'>Show More</li></ul>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="titleRow">Delimiter</h2>
+            <p>This file contains the delimiter type:</p>
+            <h4><b>,</b></h4>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="titleRow" id="col_analysis">Column Analysis (Based on 0 rows)</h2>
+            <h2 class="titleRow" id="charts_header">Charts</h2>
+            <p>Click 'Show Data' at the end of the table to view a chart.</p>
+            <p>Note: If numerical/currency data contains more than 10,000 values only the top 10,000 will be displayed in the chart.</p>
+            <h4>Showing chart for column:</h4>
+            <div id="Stats_Chart_data" class='hidden'>datda here</div>
+            <div id="Stats_Chart" class='hidden' style="width: 900px; height: 500px;"></div>
+            <hr id="numerical"/>
+            <h2 class="titleRow">Numerical</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Mode</th>
+                    <th>Mean</th>                   
+                    <th>Median Low</th>
+                    <th>Median</th>
+                    <th>Median High</th>
+                    <th>Normally Distributed</th>
+                    <th>Standard Deviation</th>
+                    <th>Outliers</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>02Item (column 1)</td><td>1</td><td>24</td><td>N/A</td><td>12.50000</td><td>12</td><td>12.5</td><td>13</td><td>No</td><td>7.07</td><td>[]</td><td>[]</td><td>[]</td><td>24</td><td><a onclick="showChart('N',1,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>Mass (column 2)</td><td>0</td><td>56</td><td>5</td><td>7.96667</td><td>5</td><td>5.0</td><td>5</td><td>Yes</td><td>11.77</td><td>['Row: 22 Value: 56']</td><td>[('5', 6), ('2', 3), ('8', 2), ('6', 2), ('4', 2)]</td><td>[('20', 1), ('3.2', 1), ('0', 1), ('3', 1), ('26', 1)]</td><td>13</td><td><a onclick="showChart('N',2,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>Height (column 6)</td><td>0.2</td><td>1.98</td><td>N/A</td><td>1.09333</td><td>1.1</td><td>1.1</td><td>1.1</td><td>No</td><td>0.49</td><td>[]</td><td>[('1.1', 2), ('0.6', 2), ('1.5', 2), ('1.2', 2), ('0.98', 2)]</td><td>[('0.7', 1), ('0.64', 1), ('1.35', 1), ('1.7', 1), ('0.2', 1)]</td><td>18</td><td><a onclick="showChart('N',3,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>Latitude (column 13)</td><td>-31.9522</td><td>-30.7541</td><td>N/A</td><td>-31.39178</td><td>-31.6051</td><td>-31.4637</td><td>-31.3223</td><td>Yes</td><td>0.41</td><td>[]</td><td>[]</td><td>[]</td><td>24</td><td><a onclick="showChart('N',4,this)" href="#col_analysis">Show Data</a></td></tr><tr><td colspan="100%" class="info showMoreTable">Show More</td></tr><tr class="hidden"><td>Longitude (column 14)</td><td>114.8522</td><td>118.5343</td><td>N/A</td><td>115.70075</td><td>115.6332</td><td>115.6383</td><td>115.6434</td><td>Yes</td><td>0.71</td><td>['Row: 22 Value: 118.5343']</td><td>[('115.6465', 2), ('115.8985', 2), ('115.4642', 1), ('118.5343', 1), ('115.6445', 1)]</td><td>[('115.6235', 1), ('115.3325', 1), ('115.6332', 1), ('115.3266', 1), ('115.3233', 1)]</td><td>22</td><td><a onclick="showChart('N',5,this)" href="#col_analysis">Show Data</a></td></tr><tr class="hidden"><td>Large Numbers (column 16)</td><td>2.5E+11</td><td>5.6E+18</td><td>565000000000000.0</td><td>2.7404E+17</td><td>5.66E+14</td><td>5.665E+14</td><td>5.67E+14</td><td>Yes</td><td>1.1412E+18</td><td>['5.6E+18']</td><td>[('5.65E+14', 2), ('6.49E+14', 1), ('6.22E+16', 1), ('5.66E+12', 1), ('2.47E+15', 1)]</td><td>[('5.67E+14', 1), ('5.60E+18', 1), ('6.55E+15', 1), ('5.66E+14', 1), ('5.20E+12', 1)]</td><td>23</td><td><a onclick="showChart('N',6,this)" href="#col_analysis">Show Data</a></td></tr><tr class="hidden"><td>Sci (column 17)</td><td>-8.5E+8</td><td>6.0E+59</td><td>N/A</td><td>2.5E+58</td><td>6.5E+2</td><td>2.9983E+5</td><td>5.99E+5</td><td>Yes</td><td>1.2247E+59</td><td>['6.0E+59']</td><td>[]</td><td>[]</td><td>24</td><td><a onclick="showChart('N',7,this)" href="#col_analysis">Show Data</a></td></tr><tr class="hidden"><td>Numeric (column 19)</td><td>-100</td><td>5000.0</td><td>1</td><td>227.10044</td><td>8.5</td><td>9.0</td><td>9.5</td><td>Yes</td><td>1017.33</td><td>['Row: 16 Value: 5000.0']</td><td>[('1', 2), ('9.5', 1), ('8.5', 1), ('2', 1), ('65.32', 1)]</td><td>[('87', 1), ('52', 1), ('25.6', 1), ('0.000005', 1), ('6.5', 1)]</td><td>23</td><td><a onclick="showChart('N',8,this)" href="#col_analysis">Show Data</a></td></tr>
+                
+            </table>
+            
+            <hr id="string"/>
+            <h2 class="titleRow">String</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Colour (column 3)</td><td>Red</td><td>[('Red', 6), ('White', 3), ('Blue', 3), ('Purple', 2), ('Gold', 2)]</td><td>[('Green', 1), ('Violet', 1), ('Yellow', 1), ('Silver', 1), ('Pink', 2)]</td><td>11</td><td><a onclick="showChart('S',1,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>Description (column 9)</td><td>Poland</td><td>[('Poland', 2), ('Whyy', 1), ('Direction', 1), ('white car', 1), ('places', 1)]</td><td>[('robot', 1), ('italy', 1), ('Too red', 1), ('Decryption', 1), ('words', 1)]</td><td>23</td><td><a onclick="showChart('S',2,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>Capacity (column 15)</td><td>N/A</td><td>[('25%', 2), ('36%', 2), ('10%', 2), ('52%', 2), ('32.30%', 1)]</td><td>[('31%', 1), ('32%', 1), ('65%', 1), ('0%', 1), ('87%', 1)]</td><td>20</td><td><a onclick="showChart('S',3,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="boolean"/>
+            <h2 class="titleRow">Boolean</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>Total "True"</th>
+                    <th>Total "False"</th>
+                    <th>Total "Yes"</th>
+                    <th>Total "No"</th>
+                    <th>Total Boolean Values</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Brittle (column 5)</td><td>FALSE</td><td>[('FALSE', 13), ('TRUE', 11)]</td><td>[('TRUE', 11), ('FALSE', 13)]</td><td>2</td><td>11</td><td>13</td><td>0</td><td>0</td><td>24</td><td><a onclick="showChart('B',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="enum"/>
+            <h2 class="titleRow">Enumerated</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Direction (column 4)</td><td>Up</td><td>[('Up', 8), ('Down', 7), ('Right', 5), ('Left', 4)]</td><td>[('Left', 4), ('Right', 5), ('Down', 7), ('Up', 8)]</td><td>4</td><td><a onclick="showChart('E',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="identifier"/>
+            <h2 class="titleRow">Identifier</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Identifier (column 18)</td><td>N/A</td><td>[]</td><td>[]</td><td>24</td><td><a onclick="showChart('I',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="date"/>
+            <h2 class="titleRow">Date</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Test Date (column 11)</td><td>12-Aug</td><td>[('12-Aug', 3), ('06-Sep', 2), ('09-Oct', 2), ('03-Sep', 1), ('04-Jul', 1)]</td><td>[('05-Aug', 1), ('23-Aug', 1), ('06-May', 1), ('02-Sep', 1), ('02-Aug', 1)]</td><td>20</td><td><a onclick="showChart('D',1,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>Start Date (column 21)</td><td>N/A</td><td>[]</td><td>[]</td><td>24</td><td><a onclick="showChart('D',2,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>End Date (column 22)</td><td>06-Sep-12</td><td>[('06-Sep-12', 2), ('02-Apr-15', 1), ('06-Feb-23', 1), ('06-May-96', 1), ('02-Jun-45', 1)]</td><td>[('03-Mar-01', 1), ('14-May-12', 1), ('01-Jan-01', 1), ('02-Sep-78', 1), ('01-Aug-98', 1)]</td><td>23</td><td><a onclick="showChart('D',3,this)" href="#col_analysis">Show Data</a></td></tr><tr><td>Delivery Date (column 23)</td><td>N/A</td><td>[]</td><td>[]</td><td>24</td><td><a onclick="showChart('D',4,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="time"/>
+            <h2 class="titleRow">Time</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Test time (column 10)</td><td>15:45</td><td>[('15:45', 2), ('12:04', 1), ('9:45', 1), ('22:20', 1), ('6:50', 1)]</td><td>[('13:38', 1), ('6:30', 1), ('13:00', 1), ('11:15', 1), ('1:00', 1)]</td><td>23</td><td><a onclick="showChart('T',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="day"/>
+            <h2 class="titleRow">Day</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Day (column 12)</td><td>Wednesday</td><td>[('Wednesday', 7), ('Sunday', 6), ('Friday', 4), ('Thursday', 2), ('Saturday', 2)]</td><td>[('Tuesday', 1), ('Monday', 2), ('Saturday', 2), ('Thursday', 2), ('Friday', 4)]</td><td>7</td><td><a onclick="showChart('Dy',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="email"/>
+            <h2 class="titleRow">Email</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Address (column 7)</td><td>Hello@gmail.com</td><td>[('Hello@gmail.com', 4), ('movie@hotmail.com', 3), ('Pony@hotmail.com', 3), ('George.Cluney@gmail.com', 3), ('newlogo@gmail.com', 2)]</td><td>[('Good@apple.com', 1), ('yesterday@hotmail.com', 1), ('People@gmail.com', 1), ('Left@hotmail.com', 1), ('walking@gmail.com', 1)]</td><td>13</td><td><a onclick="showChart('Em',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+
+            <hr id="char"/>
+            <h2 class="titleRow">Character</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                
+            </table>
+
+            <hr id="hyper"/>
+            <h2 class="titleRow">Hyperlink</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>HyperLink (column 24)</td><td>N/A</td><td>[('http://www.facebook.com', 3), ('http://www.google.com', 3), ('http://www.youtube.com', 3), ('http://www.4chan.com', 2), ('http://www.Howard.com', 1)]</td><td>[('http://www.tumblr.com', 1), ('http://www.twittercom', 1), ('http://www.myspace.com', 1), ('http://www.Australia.com', 1), ('http://www.West.com', 1)]</td><td>17</td><td><a onclick="showChart('H',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            <hr id="currency"/>
+            <h2 class="titleRow">Currency</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Mode</th>
+                    <th>Mean</th>
+                    <th>Median Low</th>
+                    <th>Median</th>
+                    <th>Median High</th>
+                    <th>Normally Distributed</th>
+                    <th>Standard Deviation</th>
+                    <th>Outliers</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                <tr><td>Cost (column 8)</td><td>6.0</td><td>95.63</td><td>N/A</td><td>49.28130</td><td>44.0</td><td>44.0</td><td>44.0</td><td>No</td><td>25.69</td><td>[]</td><td>[]</td><td>[]</td><td>23</td><td><a onclick="showChart('C',1,this)" href="#col_analysis">Show Data</a></td></tr>
+            </table>
+            
+            
+            
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
