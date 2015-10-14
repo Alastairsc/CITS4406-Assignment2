@@ -893,9 +893,9 @@ class Data(object):
     def delete_invalid_row(self, invalid_row_index):
         if self.can_edit_rows == True:
             row_index = self.invalid_rows_indexes[invalid_row_index]
-            for i in range(0,len(self.invalid_rows_pos)):
-                if self.invalid_rows_pos[i] > row_index:
-                    self.invalid_rows_pos[i] = self.invalid_rows_pos[i] - 1
+            next_valid = row_index - invalid_row_index #Index of first valid row after removed invalid row in invalid_rows_pos
+            for i in range(next_valid,len(self.invalid_rows_pos)):
+                self.invalid_rows_pos[i] = self.invalid_rows_pos[i] - 1
 
             self.invalid_rows_indexes.pop(invalid_row_index)
             self.formatted_invalid_rows.pop(invalid_row_index)
