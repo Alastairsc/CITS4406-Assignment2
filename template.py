@@ -18,7 +18,7 @@ base_template = \
 init();
 {chart_data}
 </script>
-<title>Analysis Report on {header}</title>
+<title>Analysis Report</title>
 
 </head>
 <body>
