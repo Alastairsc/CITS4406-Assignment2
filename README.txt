@@ -23,8 +23,11 @@ Instructions
 ###Ubuntu
 
 Open windows powershell, navigate to the directory containing the application.py file and run using 
-	'python application.py *csv filename here*'.
+	'python3 application.py *csv filename here*'.
 Where *csv filename here* is replaced with the path to the file you want to run.
+For example: to run the email.csv file found in csv_files in the program folder type
+    'python3 application.py csv_files/email.csv'
+
 If you don't want to list out the path to the file through typing you can drag and drop the file onto the terminal to paste its path in.
 
 ###Windows
@@ -32,6 +35,9 @@ If you don't want to list out the path to the file through typing you can drag a
 Open windows powershell, navigate to the directory containing the application.py file and run using 
 	'python application.py *csv filename here*'.
 Where *csv filename here* is replaced with the path to the file you want to run.
+For example: to run the email.csv file found in csv_files in the program folder type
+    'python application.py csv_files\email.csv'
+
 If you don't want to list out the path to the file through typing you can drag and drop the file onto the terminal to paste its path in.
 
 ###Usage
