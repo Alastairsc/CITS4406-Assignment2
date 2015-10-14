@@ -745,7 +745,11 @@ class Data(object):
         self.invalid_rows = []
         self.invalid_rows_indexes = []
         self.can_edit_rows = False
+<<<<<<< HEAD
 	#self.data_in_columns = True
+=======
+        self.data_in_columns = True
+>>>>>>> origin/master
 
     def clean(self):
         """Calls cleaning methods on all columns.
@@ -775,7 +779,8 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list, self.set_ignore)
-
+        self.remove_currency_symbol()
+        
     def pre_analysis(self):
         """First defines their least and most common elements, then if 
         template is supplied, sets the type of the column to match the template, if not if 
