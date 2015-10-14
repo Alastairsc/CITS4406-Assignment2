@@ -9,7 +9,6 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 * Leighton Lilford
 * Jan Villanueva
 * Alastair Mory
-
 * Csv spliiter by scorpion :http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html
 
 Instructions
@@ -19,17 +18,21 @@ Instructions
 
 2. Install the Anaconda package from:
 	http://continuum.io/downloads
+3. If you haven't navigated using the terminal/command line before we reccomend reading the following tutorial found at: http://linuxcommand.org/lts0020.php
 
 ###Ubuntu
 
-Run the terminal, navigate to the directory containing the applicaiton.py and run using
-	'python3 application.py *csv filename here*'. 
+Open windows powershell, navigate to the directory containing the application.py file and run using 
+	'python application.py *csv filename here*'.
+Where *csv filename here* is replaced with the path to the file you want to run.
+If you don't want to list out the path to the file through typing you can drag and drop the file onto the terminal to paste its path in.
 
 ###Windows
 
 Open windows powershell, navigate to the directory containing the application.py file and run using 
 	'python application.py *csv filename here*'.
-
+Where *csv filename here* is replaced with the path to the file you want to run.
+If you don't want to list out the path to the file through typing you can drag and drop the file onto the terminal to paste its path in.
 
 ###Usage
 
