@@ -793,10 +793,10 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
             column.values[row_num] = new_values[colNo - 1]
         
-    def gen_file(self):
+    def gen_file(self, filePath=""):
         """Generates a csv file based on the data for after
         data has been corrected"""
-        new_file = open(os.path.splitext(self.filename)[0] + "_corrected.csv", "w")
+        new_file = open(os.path.join( filePath, os.path.splitext(self.filename)[0]) + "_corrected.csv", "w")
         #Write header rows
         for rowNo in range(0, self.data_start):
             row_len = len(self.raw_data[rowNo])
