@@ -1,5 +1,0 @@
-Template
-======================
-
-.. automodule:: template
-	:members:

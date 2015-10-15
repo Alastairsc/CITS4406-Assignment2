@@ -1,5 +1,0 @@
-Analyser
-======================
-
-.. automodule:: analyser
-	:members:

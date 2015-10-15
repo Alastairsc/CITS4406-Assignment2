@@ -194,7 +194,6 @@ class Column(object):
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
-            self.empty = True
         if self.unique == len(self.values) or self.unique == 1:
             self.least_common = []
             self.most_common = []

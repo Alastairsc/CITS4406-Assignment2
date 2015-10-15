@@ -1,5 +1,0 @@
-Application
-=======================
-
-.. automodule:: application
-	:members:

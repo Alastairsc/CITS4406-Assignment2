@@ -1,4 +1,4 @@
-"""Analyser class for running analysis on columns"""
+"""Analyser class for running analysis on columns depending on the column type"""
 
 import sys
 import os
@@ -147,15 +147,13 @@ class NumericalAnalyser(Analyser):
                 except:
                     pass #already picked up by error checks
         values = new_values
-       # values = [eval(i) for i in values]
         super().__init__(values)
         self.stDevOutliers = []
-        standardDeviations = stdDevs
+        standardDeviations = Decimal(stdDevs)
         if len(values) >= 8:
             self.pval = mstats.normaltest(array(values))[1]
         else:
             self.pval = 100
-        #print(values)
         self.min = min(values)
         self.max = max(values)
         self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
@@ -249,7 +247,6 @@ class SciNotationAnalyser(Analyser):
                 except:
                     pass #already picked up in error checks
         values = new_values
-       # values = [eval(i) for i in values]
         super().__init__(values)
         self.stDevOutliers = []
         if len(values) >= 8:

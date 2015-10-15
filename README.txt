@@ -108,6 +108,8 @@ Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
 
 
 ###Directory Structure
-* The source code is all in the main directory.
-* csv_files contains test files used to evaluate the program.
-* Sphinx contains documentation of classes and methods of the program, to view the completed documentation open 'index.html' in the directory Sphinx/_build/html/index.html.
+* The source code is all in the main directory
+* csv_files contains test files used to evaluate the program
+* Sphinx contains documentation of classes and methods of the         	program
+* templates folder contains templates used with the test files in csv_files
+* Detailed documentation is a shortcut to the sphinx documentation detailing the methods and classes in the code. to view the completed documentation open 'index.html' in the directory Sphinx/_build/html/index.html.
