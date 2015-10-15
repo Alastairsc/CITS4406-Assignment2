@@ -122,6 +122,7 @@ class Column(object):
         if self.most_common[0][0] == '' \
                 and self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
+            self.empty = True
         if self.unique == len(self.values) or self.unique == 1:
             self.least_common = []
             self.most_common = []
@@ -823,6 +824,7 @@ class Data(object):
             column.define_most_least_common()   
             if self.template != None and colNo in self.template.columns:
                 column.set_type(self.template.columns[colNo])
+                column.set_not_empty()
             else:
                 column.define_type()
             if column.type == 'Identifier' and self.data_size != None and \
