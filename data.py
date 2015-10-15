@@ -468,7 +468,7 @@ class Column(object):
             return True
         elif value == '' or value == ' ':
             reason = 'empty cell'
-            tup = (x + invalid_rows_pos[x] + self.data_start, columnNumber, "", reason)
+            tup = (x + invalid_rows_pos[x] + self.data_start, columnNumber, value, reason)
             errors.append(tup)
             formatted_errors.append("Row: %d Column: %d  - %s" % (tup[0] + 1, tup[1] + 1, reason))
             return True
