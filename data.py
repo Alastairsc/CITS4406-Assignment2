@@ -348,7 +348,7 @@ class Column(object):
                     
         elif self.type == 'String':
             for x, value in enumerate(self.values):
-                self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore)
+                self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start)
                     
         elif self.type == 'Enum':
             for x, value in enumerate(self.least_common):
