@@ -188,7 +188,9 @@ class Column(object):
             elif re_hyper.search(value) :
                 hyper_count +=1
         num_values = len(self.values)
-        if float_count / len(self.values) >= threshold:
+        if self.empty:
+            self.type = 'Ignore'
+        elif float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
             self.type = 'Integer'
