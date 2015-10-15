@@ -236,6 +236,7 @@ class SciNotationAnalyser(Analyser):
             self.pval = 100
         self.min = self.int_to_sci(min(values))
         self.max = self.int_to_sci(max(values))
+        self.mode = self.int_to_sci(mode(values))
         self.mean = self.int_to_sci(mean(values))
         self.median_low = self.int_to_sci(median_low(values))
         self.median = self.int_to_sci(median(values))
@@ -248,13 +249,13 @@ class SciNotationAnalyser(Analyser):
             self.normDist = 'N/A'
         if self.normDist == 'Yes':
             outlier_count = 0
-            for value in values:
+            for x, value in values:
                 if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
                 value > (float(self.mean) + standardDeviations * float(self.stdev)):               
                     if outlier_count > max_Outliers:
                         self.stDevOutliers = ">%d outliers" % max_Outliers
                         break
-                    self.stDevOutliers.append(self.int_to_sci(value))
+                    self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
                     outlier_count += 1
 
     def int_to_sci(self, value):
