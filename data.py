@@ -361,7 +361,7 @@ class Column(object):
                     for cell in self.values:
                         if cell == value[0]:
                             reason = 'Low frequency of enum value: (%s)' % self.least_common[x][1]
-                            tup = (x + invalid_rows_pos[x] + self.data_start, columnNumber, value[0], reason)
+                            tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value[0], reason)
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                             freq += 1
