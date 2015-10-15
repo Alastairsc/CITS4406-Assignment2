@@ -234,9 +234,10 @@ class SciNotationAnalyser(Analyser):
             self.pval = mstats.normaltest(array(values))[1]
         else:
             self.pval = 100
+        if self.mode != 'N/A':
+            self.mode = self.int_to_sci(self.mode)
         self.min = self.int_to_sci(min(values))
         self.max = self.int_to_sci(max(values))
-        self.mode = self.int_to_sci(mode(values))
         self.mean = self.int_to_sci(mean(values))
         self.median_low = self.int_to_sci(median_low(values))
         self.median = self.int_to_sci(median(values))
@@ -249,7 +250,7 @@ class SciNotationAnalyser(Analyser):
             self.normDist = 'N/A'
         if self.normDist == 'Yes':
             outlier_count = 0
-            for x, value in values:
+            for x, value in enumerate(values):
                 if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
                 value > (float(self.mean) + standardDeviations * float(self.stdev)):               
                     if outlier_count > max_Outliers:
