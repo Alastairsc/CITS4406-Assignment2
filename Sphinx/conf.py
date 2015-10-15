@@ -17,6 +17,7 @@ import sys
 import os
 import shlex
 import alabaster
+#import rst2pdf
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -33,8 +34,21 @@ sys.path.insert(0, os.path.abspath('..'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'alabaster'
+    'alabaster',
+    'rst2pdf.pdfbuilder'
 ]
+
+pdf_documents = [('index', u'UWA Data Analysis Doc', u'UWA Data Analysis Documentation', u'Group I'),]
+
+   
+
+   # index - master document
+
+   # rst2pdf - name of the generated pdf
+
+   # Sample rst2pdf doc - title of the pdf
+
+   # Your Name - author name in the pdf
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -297,3 +311,9 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+pdf_documents = [
+    ('index.rst', u'Documentation', u'UWA Data Analysis Documentation', u'Group I'),
+]
+
+

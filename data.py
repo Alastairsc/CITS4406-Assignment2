@@ -1,7 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 """Reads CSV file for information, provides basic cleaning of data and then
-runs analysis on said data."""
+runs analysis on said data.
+
+Global Variables:
+    threshold -- A float representing a percentage of which a columns values must be of a type
+    before the column is declared to be of that type i.e. if 95% of the columns values are
+    integers it will be of type Integer. Can be set via template, default 0.9 (90%).
+    
+    enum_threshold -- An integer representing the amount of times which a value in an Enumerable
+    type column must appear for it to not be taken as an error. Can be set via template, default
+    1.
+    
+    invalid_values -- Values which are pre-agreed not to appear in valid data and should be
+    stripped. Currently not used.
+    
+    re_float -- Regular expression for float type.
+    
+    re_int -- Regular expression for integer type.
+    
+    re_email -- Regular expression for email type.
+    
+    re_currency -- Regular expression for currency type. Currently only supports ($,€,£) symbols.
+    
+    re_boolean -- Regular expression for boolean type.
+    
+    re_sci_notation -- Regular expression for scientific notation type.
+    
+    re_separation -- Regular expression for the different types of delimiters in files.
+    
+    re_date -- Regular expression for date type.
+    
+    re_time -- Regular expression for time type.
+    
+    re_char -- Regular expression for character type.
+    
+    re_day -- Regular expression for day type.
+    
+    re_hyper -- Regular expression for hyperlink type.
+    
+"""
 
 import sys
 import os
@@ -36,9 +74,10 @@ class Column(object):
     """Object to hold data from each column within the provided CSV file.
     
     Methods:
-        change_misc_values -- Removes misc/unclear values from column values.
+        change_misc_values -- Removes misc/unclear values from column values. Used in 
+        Data.clean() but this function is unused.
         
-        drop_greater_than -- Removes '<', '>' from column values.
+        drop_greater_than -- Removes '<', '>' from column values. Defined but unused.
         
         define_most_least_common -- Sets object variable to hold 15 most common values
         and least common values for that column.
@@ -48,22 +87,55 @@ class Column(object):
         
         define_errors -- Defines a list that contains the row and column of possibly
         incorrect values.
+        
+        check_empty -- Checks whether a provided cell in a column is empty or not.
+        
+        set_type -- Sets type of column for use with templates
+        
+        set_size -- Sets the size of the data for use when checking for errors, for use with
+        the 'Identifier' data type.
+
+        set_empty -- Sets a columns empty attribute to True.
+        
+        set_not_empty -- Sets a columns empty attribute to False.
+        
+        is_Empty -- Returns whether or not a columns empty attribute is True or False.
+        
+        set_Identifier_size -- Sets the size of the data for identifier type.
+        
+        updateCell -- Changes the value of a given cell with one provided.
+    
     
     Variables:
-        most_common -- <= 15 most common results within the column values.
+        most_common -- List with the <= 15 most common results within the column values.
         
-        least_common -- <= 15 least common results within the column values.
+        least_common -- List with the <= 15 least common results within the column values.
         
         empty -- Boolean value of whether the column holds values or not.
         
-        header -- Column header/title.
+        header -- String containing column header/title.
         
         type -- The type of data in column, e.g., String, Float, Integer,
-        Enumerated.
+        Enumerated, represented as a String.
         
         values -- List of CSV values for the column.
         
         analysis -- Analysis object associated with this column.
+        
+        unique -- Integer representing the amount of unique values in this column.
+        
+        total_true -- The amount of 'true' booleans in this column.
+        
+        total_false -- The amount of 'false' booleans in this column.
+        
+        total_yes -- The amount of 'yes' booleans in this column.
+        
+        total_no -- The amount of 'no' booleans in this column.
+        
+        data_size -- The length which all correct strings in this column should be.
+        
+        ignore_empty -- A boolean representing whether empty cells in this column should
+        be ignored.
 
     """
     def __init__(self, header=''):
@@ -225,8 +297,7 @@ class Column(object):
 
     def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos, range_list2, set_to_ignore, data_start):
         """Define all the rows/columns with invalid values and append to errors, and
-        formatted_errors once formatted properly. invalid_rows_pos holds the amount of
-        rows that have been skipped by the time the current row x is being considered.
+        formatted_errors once formatted properly.
         
         Keyword arguments:
             columnNumber -- The number of the current column being iterated over, numbered
@@ -242,10 +313,21 @@ class Column(object):
             rows that have been removed from analysis by the time that row is accessed. i.e.
             invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
             been removed from analysis.
+            
+            range_list2 -- A list with two values (min, max) respectively, if supplied in a
+            template all values numeric values must fall between these two values or are an
+            error.
+            
+            set_to_ignore -- A set containing integers representing columns set to ignore
+            empty values in.
+            
+            data_start -- Integer representing the row actual data (not headers) starts on.
         """
-        tup = ()   
+        tup = ()
+        #Column previously set to ignore, pass   
         if self.type == 'Ignored':
-            pass  
+            pass
+        #What follows is each individual type with their error checking  
         elif self.type == 'Float':
             for x, value in enumerate(self.values): 
                 if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
@@ -449,11 +531,36 @@ class Column(object):
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
     def check_empty(self, x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
-        """Checks whether the value in a cell is empty
+        """Checks an individual cell of a column to see if it is empty. If it is set to ignore
+        empty cells for this column returns True. If it is not set to ignore, return True and add
+        cell to the list of errors. If it is not empty, return False.
+        
         Keyword arguments:
-            x -- postion of cell in column
+            x -- Integer postion of cell in column.
             
-            value -- value in cell"""
+            value -- value in cell.
+            
+            columnNumber -- Number of column that cell is in.
+            
+            errors -- List of errors. Numbered from 0. Contains row number (formatted for data
+            with incorrect columns removed), column number, cell value, reason for error (empty
+            cell) and row number (formatted for data with incorrect columns still present).
+            
+            formatted_errors -- List of formatted errors, a human readable version of errors.
+            Contains a string listing the row and column in human readable form of the empty cell
+            and it's reason for being an error (empty cell).
+            
+            invalid_rows_pos -- An array containing a number matching the amount of invalid
+            rows that have been removed from analysis by the time that row is accessed. i.e.
+            invalid_rows_pos[1] = 2 says that by the time values[1] is evaluated two rows have
+            been removed from analysis.
+            
+            set_to_ignore -- A set containing integers representing columns set to ignore
+            empty values in.
+            
+            data_start -- Integer representing the row actual data (not headers) starts on.
+        """
+            
         if ((value == '' or value == ' ') and self.ignore_empty) or \
             ((value == '' or value == ' ') and columnNumber in set_to_ignore):
             return True
@@ -496,22 +603,19 @@ class Column(object):
     def updateCell(self, pos, new_value):
         """Changes the value of a cell given
         
-            pos -- position of cell in column to change
+            Keyword Arguments:
             
-            new_value -- value to set cell too"""
+                pos -- position of cell in column to change
+            
+                new_value -- value to set cell too
+        """
+                
         self.values[pos] = new_value
     
         
 class Data(object):
     """Main store for CSV data, reading the data from the CSV file and then 
     assigning out to relevant variables.
-    
-    Global variables:
-        threshold -- The percentage threshold which the column must have of a type before
-        it is declared that type.
-        
-        enum_threshold -- The integer threshold which if the count of occurence of a value is
-        less than the value is declared an error.
     
     Methods:
         read -- Reads the CSV file and outputs to raw_data variable.
@@ -525,16 +629,51 @@ class Data(object):
         clean -- Calls column cleaning methods to run 'cleaning' on all columns.
         
         analysis -- Calls column analysis methods to run 'analysis' on all columns.
+        
+        find_errors -- Iterates through all columns in the Data object and calls these columns
+        define_errors function.
+        
+        pre_analysis -- Iterates through a Data objects columns and first defines their least
+        and most common elements, then if template is supplied, sets the type of the column to
+        match the template, if not if column is not empty defines its type, and if it's a
+        Identifier data type sets the columns size to me no more than data_size.
+        
+        gen_file -- Generates a csv file based on the data for after data has been corrected.
     
+        get_row -- Returns the value of a given row in a list.
+        
+        change_row -- Edits a row of the data to a given value.
+        
+        getCellErrors -- Returns list of all cells containing invalid data, contains
+        row number,. column number and its value.
+        
+        getRowErrors -- Returns a list of all row errors
+        
+        getColumns -- Returns a list of all columns
+        
+        get_column -- Returns a column of the Data given a column number.
+        
+        get_headers -- Returns the header row of the data.
+    
+        set_headers -- Given a map of column numbers to header names, maps the column headers
+        to the correct value.
+    
+        clear_errors -- Clears Data.errors and Data.formatted_errors to allow find_errors()
+        to be rerun.
+    
+        rebuild_raw_data -- Recreates raw_data from Data's columns and row.
+        
+        delete_invalid_row -- Deletes given invalid row at the index from the data.
+
     Variables:
     
     	analysers -- Dictionary conataining types as keys and their respective
-	analysers as values (i.e. analysers['type'] == TypeAnalyser
-	
-	types -- Tuple containing all valid types as ordered pairs of form 
-	('Type', 'Human readable type'). Used to map types on web site
-	to their correct progammatic name.
-	
+    	analysers as values (i.e. analysers['type'] == TypeAnalyser
+
+        types -- Tuple containing all valid types as ordered pairs of form
+        ('Type', 'Human readable type'). Used to map types on web site to their 
+        correct progammatic name.
+
     	Filename -- String of path to file containing data
     	
         columns -- List of column objects.
@@ -573,8 +712,27 @@ class Data(object):
         datatypes_are_defined -- is a boolean true after pre_analysis() has been
         run and each column's type is defined. It defines whether export_datatypes()
         may be run.
+                
+        template -- The template containing various settings.
         
-    """
+        delimiter_type -- The delimiter used in the csv file (space, comma, tab, colon etc)
+        
+        header_row -- The row the headers (non-used data) is on.
+        
+        self.data_start -- The row the used data starts on.
+        
+        data_size -- The length all Identifier types Strings should be.
+        
+        ignore_empty -- A boolean stating whether empty columns should be skipped.
+        
+        std_devs_val -- The amount of standard deviations from the mean a value should be
+        before it is counted as an error i.e. (mean +- std_devs_val * std_dev)
+        
+        range_list -- A list representing the minimum and maximum allowed values for any
+        numeric data, outside of which it is an error. Formatted (min, max).
+        
+        set_ignore -- A set of integers representing columns to ignore empty values in.        
+        """
     analysers = {
         'String': StringAnalyser,
         'Integer': NumericalAnalyser,
@@ -811,22 +969,38 @@ class Data(object):
         self.datatypes_are_defined = True
         
     def get_row(self, row_num):
-        """Returns the values of a row in list"""
+        """
+        Returns the values of a row in list
+        
+           Keyword Arguments:
+               
+               row_num -- The row number to be fetched       
+        """
         row = []
         for colNo, column in enumerate(self.columns):
             row.append(column.values[row_num])
         return row
         
     def change_row(self, row_num, new_values):
-        """Edits a row of the data given:
-            row_num - number of row being changed
-            new_values - list of values row is to be changed to"""
+        """
+        Edits a row of the data to a given value.
+            Keyword Arguments:
+                
+                row_num - number of row being changed
+                
+                new_values - list of values row is to be changed to
+        """
         for colNo, column in enumerate(self.columns):
             column.values[row_num] = new_values[colNo - 1]
         
     def gen_file(self, filePath=""):
-        """Generates a csv file based on the data for after
-        data has been corrected"""
+        """
+        Generates a csv file based on the data for after data has been corrected
+        
+            Keyword Arguments:
+            
+                filePath -- Name of file to be generated.   
+        """
         fileLocation = os.path.join( filePath, os.path.splitext(self.filename)[0]) + "_corrected.csv"
         new_file = open(fileLocation, "w")
         #Write header rows
@@ -851,39 +1025,59 @@ class Data(object):
         return fileLocation
         
     def getCellErrors(self):
-        """Returns list of all cells containing invalid data, contains
-            row number,. column number and its value."""
+        """
+            Returns list of all cells containing invalid data, contains
+            row number,. column number and its value.
+        """
         return self.errors
         
     def getRowErrors(self):
-        """Returns a list of all row errors"""
+        """
+            Returns a list of all row errors
+        """
         return self.invalid_rows
         
     def getColumns(self):
-        """Returns a list of all columns"""
+        """
+            Returns a list of all columns
+        """
         return self.columns
         
     def get_column(self, colNo):
-        """Returns a column of the data given a column number"""
+        """
+            Returns a column of the data given a column number
+        """
         return self.columns[colNo]
     
     def get_headers(self):
-        """Returns the headers of data"""
+        """
+            Returns the headers of data
+        """
         return self.raw_data[self.header_row]
     
     def set_headers(self, header_map):
-        """Sets headers of columns taking a dictionary 
-        mapping column numbers to headers"""
+        """
+            Sets headers of columns taking a dictionary 
+            mapping column numbers to headers.
+            
+                Keyword Arguments:
+                    header_map -- A map of column numbers to headers.
+        """
         for colNo, header in header_map:
             self.raw_data[self.header_row][colNo] = header
     
     def clear_errors(self):
-    	"""Wipes recorded errors to allow find_errors() to be rerun"""
+    	"""
+    	    Wipes recorded errors to allow find_errors() to be rerun
+    	"""
     	self.errors = []
     	self.formatted_errors = []
     	#self.invalid_rows = []              
         
     def rebuild_raw_data(self):
+        """
+            Re creates raw_data from Data's columns and row.
+        """
         if self.can_edit_rows == True:
             invalid_pos = 0
             valid_pos = 0
@@ -903,6 +1097,13 @@ class Data(object):
             raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
 
     def delete_invalid_row(self, invalid_row_index):
+        """
+            Deletes given invalid row at the index from the data.
+            
+                Keyword Arguments:
+                    
+                    invalid_row_index -- Index of invalid row to be deleted.
+        """
         if self.can_edit_rows == True:
             row_index = self.invalid_rows_indexes[invalid_row_index]
             next_valid = row_index - invalid_row_index #Index of first valid row after removed invalid row in invalid_rows_pos

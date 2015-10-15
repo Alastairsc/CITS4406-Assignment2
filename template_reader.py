@@ -7,18 +7,40 @@ import csv
 
 class Template(object):
     """Object storing user input that describes data given. Able to specify:
-            Columns - state column number and data type.
+    
+            Class Variables:
+                columns -- state column number and data type.
             
-            Delimiter - state delimiter character (for comma and space use the word not ',' or ' ').
+                delimiter_type -- state delimiter character (for comma and space use the word not 
+                ',' or ' ').
             
-            Header row - row of header (0 for no header).
+                header_row -- row of header (0 for no header).
             
-            Start row - row that data starts on
+                data_start -- row that data starts on
             
-            Threshold value - minimum proportion of column that has the correct data type
+                data_size -- Length that all strings of identifer type must be.
             
+                ignore_empty -- Boolean representing whether to ignore empty cells or not.
+            
+                threshold_val -- minimum proportion of column that has the correct data type
+            
+                enum_threshold_val -- Minimum amount of times an enumerated value must appear
+                in a column to not be an error.
+            
+                std_devs -- How many standard deviations away from the mean numeric values are
+                allowed to be.
+            
+                range_vals -- A list of two items [min, max] representing the minimum and maximum
+                values numeric values can take.
+            
+                ignore_set -- A set listing all the columns that empty cells are to be ignored in.
         
-        Columns and rows start at 1 not 0"""
+            Columns and rows start at 1 not 0
+        
+            Class Methods:
+                read -- Reads the template csv file and inputs data into corresponding variables
+                if it's found in the file.
+        """
         
     def __init__(self, filename):
         self.columns = {}
@@ -37,7 +59,10 @@ class Template(object):
         
     def read(self, filename):
         """Reads template file, assumes correct formatting, if user editing
-        is permitted will need to be improved with more checks
+        is permitted will need to be improved with more checks.
+        
+            Keyword Arguments:
+                filename -- filename of csv template file to be read for options.
         
         See documentation"""
         with open(filename, newline='') as csvfile:
@@ -76,7 +101,7 @@ class Template(object):
                         self.threshold_val = float(row[1])
                     elif row[0].lower() == 'enum_threshold_val':
                         self.enum_threshold_val = int(row[1])    
-                    elif row[0].lower() == 'std_devs': 
+                    elif row[0].lower() == 'std_dev': 
                         self.std_devs = float(row[1])
                     elif row[0].lower() == 'range':
                         self.range_vals.append(float(row[1]))

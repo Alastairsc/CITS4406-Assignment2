@@ -44,21 +44,43 @@ to process the data for the data class</p>
 <dl class="class">
 <dt id="template_reader.Template">
 <em class="property">class </em><code class="descclassname">template_reader.</code><code class="descname">Template</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#template_reader.Template" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Object storing user input that describes data given. Able to specify:</dt>
-<dd><p class="first">Columns - state column number and data type.</p>
-<p>Delimiter - state delimiter character (for comma and space use the word not &#8216;,&#8217; or &#8216; &#8216;).</p>
-<p>Header row - row of header (0 for no header).</p>
-<p>Start row - row that data starts on</p>
-<p class="last">Threshold value - minimum proportion of column that has the correct data type</p>
+<dd><p>Object storing user input that describes data given. Able to specify:</p>
+<dl class="docutils">
+<dt>Class Variables:</dt>
+<dd><p class="first">columns &#8211; state column number and data type.</p>
+<p>delimiter_type &#8211; state delimiter character (for comma and space use the word not 
+&#8216;,&#8217; or &#8216; &#8216;).</p>
+<p>header_row &#8211; row of header (0 for no header).</p>
+<p>data_start &#8211; row that data starts on</p>
+<p>data_size &#8211; Length that all strings of identifer type must be.</p>
+<p>ignore_empty &#8211; Boolean representing whether to ignore empty cells or not.</p>
+<p>threshold_val &#8211; minimum proportion of column that has the correct data type</p>
+<p>enum_threshold_val &#8211; Minimum amount of times an enumerated value must appear
+in a column to not be an error.</p>
+<p>std_devs &#8211; How many standard deviations away from the mean numeric values are
+allowed to be.</p>
+<p>range_vals &#8211; A list of two items [min, max] representing the minimum and maximum
+values numeric values can take.</p>
+<p class="last">ignore_set &#8211; A set listing all the columns that empty cells are to be ignored in.</p>
 </dd>
 </dl>
 <p>Columns and rows start at 1 not 0</p>
+<dl class="docutils">
+<dt>Class Methods:</dt>
+<dd>read &#8211; Reads the template csv file and inputs data into corresponding variables
+if it&#8217;s found in the file.</dd>
+</dl>
 <dl class="method">
 <dt id="template_reader.Template.read">
 <code class="descname">read</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#template_reader.Template.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads template file, assumes correct formatting, if user editing
-is permitted will need to be improved with more checks</p>
+is permitted will need to be improved with more checks.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Keyword Arguments:</dt>
+<dd>filename &#8211; filename of csv template file to be read for options.</dd>
+</dl>
+</div></blockquote>
 <p>See documentation</p>
 </dd></dl>
 

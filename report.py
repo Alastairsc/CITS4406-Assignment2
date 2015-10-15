@@ -1,7 +1,8 @@
 """Generate reports based on data provided via a Data object.
 
 Classes:
-Report -- Contains methods to generate and output appropriate HTML for the report.
+    Report -- Contains methods to generate and output appropriate HTML for the report.
+    
 """
 try:
 	from .template import *
@@ -36,15 +37,31 @@ class Report(object):
         email_analysis -- Return email based statistics on input.
 
         date_analysis -- Return date based statistics on input.
+        
+        time_anaysis -- Return time based statistics on input.
+        
+        day_analysis -- Return day based statistics on input.
+        
+        hyper_analysis -- Return hyperlink based analyis on input.
+        
+        list_creator -- Provided a list, returns an unordered html list of values in the list.
+        
+    Static Methods:
+        list_creator -- Provided a list, returns an unordered html list of values in the list.
+        
+        row_creator -- Provided a list, returns a HTML row of values in the list.
+        
+        initial_show_items -- Returns the number of items to show initially for each type in the 
+        report before hiding them under a 'show more' button.
     
     Variables:
         GRAPH_LIMIT -- How many rows before the graphs will stop displaying every value, but just show a summary
 
-        data -- Reference to Data object.
+        data -- Reference to Data object, the output from analysis of file_name.
         
-        file -- Reference to CSV file.
+        file_name -- Reference to a CSV file containing the data being worked on.
 
-        chart_data -- The javascript strings that need to be added to the template for the charts to display.
+        chart_data -- A String of data that is formatted correctly to be input to a graph API.
     """
 
 
@@ -67,13 +84,12 @@ class Report(object):
         return 4
 
     def empty_columns(self):
-        """Return a list of empty rows in the data object."""
+        """Return a list of empty columns in the data object."""
         return [column.header for column in self.data.columns if column.empty]
     
     def html_report(self):
         """Write a HTML file based on analysis of CSV file by calling the various
-        type analyses.
-            Returns string of html report
+        type analyses. Returns a string of html.
         """
         html = base_template.format(
             len_invalid_rows=len(self.data.formatted_invalid_rows),
@@ -323,7 +339,7 @@ class Report(object):
         
     def currency_analysis(self):
         """Return HTML string of numerical analysis on columns of type Currency
-         in the data object by accessing the various class variables of the
+        in the data object by accessing the various class variables of the
         columns.
         """
         rowNo = 0;

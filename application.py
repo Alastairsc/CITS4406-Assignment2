@@ -18,8 +18,12 @@ except SystemError:
 	from template_reader import *
 
 def main(*args):
-    """Create Data and Report objects, providing necessary information for them 
+    """
+    Create Data and Report objects, providing necessary information for them 
     to run analysis and create desired outputs (i.e. HTML report).
+    
+        Keyword Arguments:
+            args -- Arguments provided to the program at runtime.
     """
     #tr = classtracker.ClassTracker()
     #tr.track_class(Data)
@@ -63,7 +67,11 @@ def get_file_dir(location):
     """
     return location.rpartition('\\')
     
-if __name__ == '__main__':             
+if __name__ == '__main__':
+    """If the program is run with application.py as the argument to the command line
+    execution begins here. This will process all the command line arguments before 
+    proceeding.
+    """             
     pathname = os.path.dirname(sys.argv[0])        
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,\
         description=textwrap.dedent('''\

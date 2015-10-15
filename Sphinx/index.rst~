@@ -13,10 +13,11 @@ This contains the documentation for the online data analysis project
 Requirements
 ------------
 
-This requires Python 3, scipy, numpy and pandas
+This requires Python 3, scipy, numpy and pandas which can be installed
+by using the Anaconda package which contains all necessary files.
 
 
-The program currently consists of 4 files
+The program currently consists of 6 files
 
 Contents:
 
@@ -28,6 +29,7 @@ Contents:
    /Code_rst/rep
    /Code_rst/templ
    /Code_rst/analy
+   /Code_rst/temp_rd
 
 
 Indices and tables

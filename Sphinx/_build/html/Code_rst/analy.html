@@ -38,8 +38,219 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="analyser">
-<h1>5. Analyser<a class="headerlink" href="#analyser" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-analyser">
+<span id="analyser"></span><h1>5. Analyser<a class="headerlink" href="#module-analyser" title="Permalink to this headline">¶</a></h1>
+<p>Analyser class for running analysis on columns</p>
+<dl class="class">
+<dt id="analyser.Analyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">Analyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.Analyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base analysis class object. Initiate the object, and assigns the statistical mode, if any.</p>
+<dl class="docutils">
+<dt>Global variables:        </dt>
+<dd><p class="first">max_Outliers &#8211; the maximum amount of outliers that will be found.</p>
+<p>standardDeviations &#8211; The number of standard deviations away from the mean a value is
+allowed to be before it is an error, default 3.</p>
+<p>re_date &#8211;  A regular expression for dates.</p>
+<p>re_dateDF &#8211; A regular expression for months December-February.</p>
+<p>re_dateMM &#8211; A regular expression for months March-May</p>
+<p>re_dateJA &#8211; A regular expression for months June-August.</p>
+<p>re_dateSN &#8211; A regular expression for months September-November.</p>
+<p>re_time &#8211; A regular expression for time.</p>
+<p>re_timePM &#8211; A regular expression for PM times.</p>
+<p>re_timeAM &#8211; A regular expression for AM times</p>
+<p class="last">re_timehr &#8211; A regular expression for the hour.</p>
+</dd>
+<dt>Class variables:</dt>
+<dd><p class="first">mode &#8211; Returns the mode of the column analysed.</p>
+<p class="last">unique &#8211; The count of unique values in the column.</p>
+</dd>
+<dt>Child classes and associated variables:</dt>
+<dd><p class="first">StringAnalyser &#8211; String column analysis.</p>
+<p>EmailAnalyser &#8211; Email column analysis.</p>
+<p>EnumAnalyser &#8211; Enumerated column analysis.</p>
+<dl class="docutils">
+<dt>NumericalAnalyser &#8211; String/Float column analysis.</dt>
+<dd><p class="first">min &#8211; Minimum value in column values.</p>
+<p>max &#8211; Maximum value in column values.</p>
+<p>mean &#8211; Mean value in column values.</p>
+<p>median_low &#8211; Low median for column values.</p>
+<p>median &#8211; Median value for column values.</p>
+<p>median_high &#8211; High median for column values.</p>
+<p>normDist &#8211; String Yes/No if columns value is normally distributed.</p>
+<p>stdev &#8211; Standard deviation for column values, N/A if not normally distributed to
+within 95.5% confidence.</p>
+<p class="last">stDevOutliers &#8211; List of values outside a certain number of standard deviations
+from the mean.</p>
+</dd>
+</dl>
+<p>CurrencyAnalyser &#8211; Child class of NumericalAnalyser</p>
+<p>BooleanAnalyser &#8211; Boolean column analysis</p>
+<p>DateAnalyser &#8211; Date column analysis</p>
+<p>TimeAnalyser &#8211; Time column analysis</p>
+<p>CharAnalyser &#8211; Character column Analysis</p>
+<p>DayAnalyser &#8211; Day column Analysis</p>
+<p>HyperAnalyser &#8211; Hyperlink column Analysis</p>
+<dl class="last docutils">
+<dt>Class Methods:</dt>
+<dd>uniqueCount &#8211; Returns the count of unique values in a list.</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="analyser.Analyser.uniqueCount">
+<code class="descname">uniqueCount</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.Analyser.uniqueCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the amount of unique values in the values list.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>values &#8211; A list of values.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.BooleanAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">BooleanAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.BooleanAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run boolean analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.CharAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">CharAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.CharAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run char analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.CurrencyAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">CurrencyAnalyser</code><span class="sig-paren">(</span><em>values</em>, <em>stdDevs</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.CurrencyAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run currency analysis, using NumericalAnalyser as a super class. Removes
+currency symbols in values.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>NumericalAnalyser &#8211; A NumericalAnalyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.DateAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">DateAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.DateAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run date analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword Arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.DayAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">DayAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.DayAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run day analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.EmailAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">EmailAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.EmailAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run email analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.EnumAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">EnumAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.EnumAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run enumerated analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.HyperAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">HyperAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.HyperAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run hyperlink analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.IdentifierAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">IdentifierAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.IdentifierAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run identifier analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.NumericalAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">NumericalAnalyser</code><span class="sig-paren">(</span><em>values</em>, <em>stdDevs</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.NumericalAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs numeric analysis.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.SciNotationAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">SciNotationAnalyser</code><span class="sig-paren">(</span><em>values</em>, <em>stdDevs</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.SciNotationAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run scientific notation analysis.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+<dt>Class Methods:</dt>
+<dd>int_to_sci &#8211; Converts a a given number into a string in scientific notation form.</dd>
+</dl>
+<dl class="method">
+<dt id="analyser.SciNotationAnalyser.int_to_sci">
+<code class="descname">int_to_sci</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.SciNotationAnalyser.int_to_sci" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts numbers into a string in scientific notation form</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>value &#8211; The value to be converted to scientific notation.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.StringAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">StringAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.StringAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run string analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="analyser.TimeAnalyser">
+<em class="property">class </em><code class="descclassname">analyser.</code><code class="descname">TimeAnalyser</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#analyser.TimeAnalyser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run time analysis, currently only using Analyser super class methods.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>Analyser &#8211; An analyser object.</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 

@@ -10,12 +10,6 @@ from numpy import array
 from email.utils import parseaddr
 from math import floor, log10, pow
 
-try:
-    import data
-except ImportError:
-    from .data import *
-
-
 max_Outliers = 100
 standardDeviations = 3
 re_date = re.compile('^((31(\/|-)(0?[13578]|1[02]))(\/|-)|((29|30)(\/|-)(0?[1,3-9]|1[0-2])(\/|-)))((1[6-9]|[2-9]\d)?\d{2})$|^(29(\/|-)0?2(\/|-)(((1[6-9]|[2-9]\d)?(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$|^(0?[1-9]|1\d|2[0-8])(\/|-)((0?[1-9])|(1[0-2]))(\/|-)((1[6-9]|[2-9]\d)?\d{2})$')
@@ -34,8 +28,29 @@ class Analyser(object):
     Base analysis class object. Initiate the object, and assigns the statistical mode, if any.
     
     Global variables:        
-        max_Outliers -- the maximum amount of outliers that will be found.    
+        max_Outliers -- the maximum amount of outliers that will be found.
+        
+        standardDeviations -- The number of standard deviations away from the mean a value is
+        allowed to be before it is an error, default 3.  
+        
+        re_date --  A regular expression for dates.
     
+        re_dateDF -- A regular expression for months December-February.
+        
+        re_dateMM -- A regular expression for months March-May
+        
+        re_dateJA -- A regular expression for months June-August.
+        
+        re_dateSN -- A regular expression for months September-November.
+        
+        re_time -- A regular expression for time.
+        
+        re_timePM -- A regular expression for PM times.
+        
+        re_timeAM -- A regular expression for AM times
+        
+        re_timehr -- A regular expression for the hour.
+        
     Class variables:
         mode -- Returns the mode of the column analysed.
         
@@ -64,10 +79,10 @@ class Analyser(object):
             normDist -- String Yes/No if columns value is normally distributed.
             
             stdev -- Standard deviation for column values, N/A if not normally distributed to
-                    to within 95.5% confidence.
+            within 95.5% confidence.
                     
             stDevOutliers -- List of values outside a certain number of standard deviations
-                        from the mean.
+            from the mean.
                         
         CurrencyAnalyser -- Child class of NumericalAnalyser
     
@@ -82,6 +97,9 @@ class Analyser(object):
         DayAnalyser -- Day column Analysis
 
         HyperAnalyser -- Hyperlink column Analysis
+        
+        Class Methods:
+            uniqueCount -- Returns the count of unique values in a list.
     """
     def uniqueCount(self, values):
         """Return the amount of unique values in the values list.
@@ -112,7 +130,7 @@ class EmailAnalyser(Analyser):
         # TODO Something actually useful for emails.
         
 class NumericalAnalyser(Analyser):
-    """Runs numeric analysis with unique fields
+    """Runs numeric analysis.
     
     Keyword arguments:
         Analyser -- An analyser object.    
@@ -162,7 +180,8 @@ class NumericalAnalyser(Analyser):
                     outlier_count += 1
         
 class CurrencyAnalyser(NumericalAnalyser):
-    """Run currency analysis, using NumericalAnalyser as a super class
+    """Run currency analysis, using NumericalAnalyser as a super class. Removes
+    currency symbols in values. 
     
     Keyword arguments:
         NumericalAnalyser -- A NumericalAnalyser object.
@@ -212,10 +231,13 @@ class BooleanAnalyser(Analyser):
         super().__init__(values)
 
 class SciNotationAnalyser(Analyser):
-    """Run scientific notation analysis, using unique fields.
+    """Run scientific notation analysis.
     
     Keyword arguments:
         Analyser -- An analyser object.
+        
+    Class Methods:
+        int_to_sci -- Converts a a given number into a string in scientific notation form. 
     """
     def __init__(self, values, stdDevs):
         standardDeviations = stdDevs 
@@ -278,8 +300,10 @@ class SciNotationAnalyser(Analyser):
 class DateAnalyser(Analyser):
     """Run date analysis, currently only using Analyser super class methods.
     
-    Keyword arguments:
+    Keyword Arguments:
         Analyser -- An analyser object.
+        
+
     """
     def __init__(self, values):
         super().__init__(values)
