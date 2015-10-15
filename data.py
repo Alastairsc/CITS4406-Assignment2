@@ -793,6 +793,9 @@ class Data(object):
                     if( column.type == 'Integer' or column.type == 'Float' \
                         or column.type == 'Currency' or column.type == 'Sci_Notation' \
                         or column.type == 'Numeric'):
+                        if(column.type == 'Currency'):
+                            for value in column.values:
+                                print(value)
                         column.analysis = self.analysers[column.type](column.values, self.std_devs_val)  
                     else:
                         column.analysis = self.analysers[column.type](column.values)
@@ -804,7 +807,6 @@ class Data(object):
         for colNo, column in enumerate(self.columns):
              if not column.empty:
                 column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list, self.set_ignore)
-        self.remove_currency_symbol()
         
     def pre_analysis(self):
         """First defines their least and most common elements, then if 
@@ -931,8 +933,4 @@ class Data(object):
         else:
             raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
 
-    def remove_currency_symbol(self):
-        for col in self.columns:
-            if col.type == "Currency":
-                for x, values in enumerate(col.values):
-                    col.values[x] = re.sub('(\$)|(€)|(£)', '', values)
+

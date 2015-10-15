@@ -168,10 +168,8 @@ class CurrencyAnalyser(NumericalAnalyser):
         NumericalAnalyser -- A NumericalAnalyser object.
     """
     def __init__(self, values, stdDevs):
-        """for x, value in enumerate(self.values):
-            try:
-                value[x] = eval(self.values[x])
-            except SyntaxError:"""
+        for x, value in enumerate(values):
+                    values[x] = re.sub('(\$)|(€)|(£)', '', value)
         super().__init__(values, stdDevs)
 
 class StringAnalyser(Analyser):
