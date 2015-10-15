@@ -248,9 +248,10 @@ class Column(object):
         elif self.type == 'Float':
             for x, value in enumerate(self.values): 
                 if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber in set_to_ignore):
-                    continue          
-                if not re_float.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_float.match(value):
                     reason = 'not a decimal number'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -267,8 +268,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber in set_to_ignore):
                     continue
-                if not re_int.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_int.match(value):
                     reason = 'not an integer'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -285,8 +287,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(value) and not value == '0'\
-                and not  self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(value) and not value == '0':
                     reason = 'not a number'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -315,8 +318,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_email.search(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_email.search(value):
                     if parseaddr(value)[1] == '':
                         reason = 'not an email'
                         tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
@@ -327,8 +331,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
-                if not re_boolean.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_boolean.match(value):
                     reason = 'not a recognised yes/no type'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -338,8 +343,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_currency.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_currency.match(value):
                     reason = 'not a recognised currency'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -353,9 +359,10 @@ class Column(object):
         elif self.type == 'Enum':
             for x, value in enumerate(self.least_common):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
-                    continue  
-                if self.least_common[x][1] <= 1 and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue 
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if self.least_common[x][1] <= 1:
                     i = 0 
                     freq = 0
                     for cell in self.values:
@@ -373,8 +380,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_sci_notation.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_sci_notation.match(value):
                     reason = 'not scientific notation'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -400,8 +408,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if len(value) != size and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if len(value) != size:
                     reason = 'too long or too short'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -410,8 +419,9 @@ class Column(object):
             for x, value in enumerate(self.values):       
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue    
-                if not re_date.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_date.match(value):
                     reason = 'not a recognised date'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -421,8 +431,9 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue           
-                if not re_time.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_time.match(value):
                     reason = 'not a recognised time'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -432,17 +443,19 @@ class Column(object):
             for x, value in enumerate(self.values):    
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue       
-                if not re_char.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_char.match(value):
                     reason = 'not a recognised character'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
         elif self.type == 'Day':
-            for x, value in enumerate(self.values):           
-                if not re_day.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+            for x, value in enumerate(self.values):     
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue      
+                if not re_day.match(value):
                     reason = 'not a recognised day'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -452,8 +465,9 @@ class Column(object):
             for x, value in enumerate(self.values):     
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue      
-                if not re_hyper.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_hyper.match(value):
                     reason = 'not a recognised hyperlink'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
