@@ -81,7 +81,7 @@ class Column(object):
         self.total_no = 0
         self.data_size = -1
         self.ignore_empty = False
-        #  Todo: Does initialising as None even make sense?
+
 
     def change_misc_values(self):
         """
@@ -188,7 +188,9 @@ class Column(object):
             elif re_hyper.search(value) :
                 hyper_count +=1
         num_values = len(self.values)
-        if float_count / len(self.values) >= threshold:
+        if self.empty:
+            self.type = 'Ignored'
+        elif float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
             self.type = 'Integer'
@@ -220,7 +222,7 @@ class Column(object):
             self.type = 'String'
 
 
-    def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos, range_list2, set_to_ignore):
+    def define_errors(self, columnNumber, errors, formatted_errors, invalid_rows_pos, range_list2, set_to_ignore, data_start):
         """Define all the rows/columns with invalid values and append to errors, and
         formatted_errors once formatted properly. invalid_rows_pos holds the amount of
         rows that have been skipped by the time the current row x is being considered.
@@ -241,23 +243,24 @@ class Column(object):
             been removed from analysis.
         """
         tup = ()   
-        if self.type == 'Ignore':
+        if self.type == 'Ignored':
             pass  
         elif self.type == 'Float':
             for x, value in enumerate(self.values): 
                 if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber in set_to_ignore):
-                    continue          
-                if not re_float.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                    continue
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_float.match(value):
                     reason = 'not a decimal number'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
                 elif len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         reason = 'out of template range'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -265,17 +268,18 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == "" and self.ignore_empty) or (len(value) == 0 and columnNumber in set_to_ignore):
                     continue
-                if not re_int.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_int.match(value):
                     reason = 'not an integer'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
                 if len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         reason = 'out of template range'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -283,29 +287,30 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(value) and not value == '0':
+                    reason = 'not a number'
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                 try:
-                    if not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(value) and not value == '0'\
-                    and not  self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore):
-                        reason = 'not a number'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
-                        errors.append(tup)
-                        formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                    elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                    if float(value) < -6.00E+58 or 6.00E+58 < float(value):
                         reason = 'too large or too small'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                         self.updateCell(x, '')
                 except:
                     reason = 'not a number'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
                 if len(range_list2) > 0:
                     if float(value) < range_list2[0] or float(value) > range_list2[1]:
                         reason = 'out of template range'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                         
@@ -313,11 +318,12 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_email.search(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_email.search(value):
                     if parseaddr(value)[1] == '':
                         reason = 'not an email'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                         
@@ -325,10 +331,11 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and ColumnNumber in set_to_ignore):
                     continue
-                if not re_boolean.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_boolean.match(value):
                     reason = 'not a recognised yes/no type'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -336,57 +343,58 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if not re_currency.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_currency.match(value):
                     reason = 'not a recognised currency'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))                  
 
                     
         elif self.type == 'String':
             for x, value in enumerate(self.values):
-                self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore)
+                self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start)
                     
         elif self.type == 'Enum':
             for x, value in enumerate(self.least_common):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
-                    continue  
-                if self.least_common[x][1] <= 1 and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                    continue 
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if self.least_common[x][1] <= 1:
                     i = 0 
                     freq = 0
                     for cell in self.values:
                         if cell == value[0]:
                             reason = 'Low frequency of enum value: (%s)' % self.least_common[x][1]
-                            tup = (x + invalid_rows_pos[x] + 1, columnNumber, value[0], reason)
+                            tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                             freq += 1
                         i+=1
-                    if freq == 0:
-                         raise Exception('Least common value not found')
+                    #if freq == 0:
+                        #raise Exception('Least common value not found')
                          
         elif self.type == 'Sci_Notation':
             for x, value in enumerate(self.values):
-                if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
                     continue
+                if not re_sci_notation.match(value):
+                    reason = 'not scientific notation'
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                    errors.append(tup)
+                    formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                 try:
-                    if not re_sci_notation.match(value) and not  self.check_empty(x, value, columnNumber, \
-                    errors, formatted_errors, invalid_rows_pos, set_to_ignore):
-                        reason = 'not scientific notation'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
-                        errors.append(tup)
-                        formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                    elif float(value) < -6.00E+76 or 6.00E+76 < float(value):
+                    if float(value) < -6.00E+76 or 6.00E+76 < float(value):
                         reason = 'too large or too small'
-                        tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                         errors.append(tup)
                         formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                         self.updateCell(x, '')
                 except:
                     reason = 'not a number'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     
@@ -398,20 +406,22 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue
-                if len(value) != size and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if len(value) != size:
                     reason = 'too long or too short'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
         elif self.type == 'Date':
             for x, value in enumerate(self.values):       
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue    
-                if not re_date.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_date.match(value):
                     reason = 'not a recognised date'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
@@ -419,10 +429,11 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue           
-                if not re_time.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_time.match(value):
                     reason = 'not a recognised time'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
@@ -430,19 +441,21 @@ class Column(object):
             for x, value in enumerate(self.values):    
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue       
-                if not re_char.match(value) and not  self.check_empty(x, value, columnNumber, \
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_char.match(value):
                     reason = 'not a recognised character'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
         elif self.type == 'Day':
-            for x, value in enumerate(self.values):           
-                if not re_day.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+            for x, value in enumerate(self.values):     
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue      
+                if not re_day.match(value):
                     reason = 'not a recognised day'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
@@ -450,14 +463,15 @@ class Column(object):
             for x, value in enumerate(self.values):     
                 if (value == '' and self.ignore_empty) or (value == '' and columnNumber in set_to_ignore):
                     continue      
-                if not re_hyper.match(value) and not  self.check_empty(x, value, columnNumber,\
-                errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
+                    continue
+                if not re_hyper.match(value):
                     reason = 'not a recognised hyperlink'
-                    tup = (x + invalid_rows_pos[x] + 1, columnNumber, value, reason)
+                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
-    def check_empty(self, x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore):
+    def check_empty(self, x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
         """Checks whether the value in a cell is empty
         Keyword arguments:
             x -- postion of cell in column
@@ -468,7 +482,7 @@ class Column(object):
             return True
         elif value == '' or value == ' ':
             reason = 'empty cell'
-            tup = (x + invalid_rows_pos[x] + 1, columnNumber, reason)
+            tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
             errors.append(tup)
             formatted_errors.append("Row: %d Column: %d  - %s" % (tup[0] + 1, tup[1] + 1, reason))
             return True
@@ -559,8 +573,10 @@ class Data(object):
         to each valid row (i.e. the nth element contains number of invalid rows
         prior to the nth valid row)
         
-        errors -- list of errors in file; error[n][0] is row of error, error[n][1]
-        is column of error, and error[n][2] is the value of in that location.
+        errors -- list of errors in file; errors[n][0] is row of error, errors[n][1]
+        is column of error, errors[n][2] is the value of in that location, 
+        errors[n][3] is the reason for the error & error[4] is the index for the
+        value in columns[n1].values.
         
         formatted_errors -- List of errors in file, each error contains: row, column 
         and value of the error.
@@ -767,6 +783,7 @@ class Data(object):
         self.can_edit_rows = False
         self.data_in_columns = True
         
+        
     def clean(self):
         """Calls cleaning methods on all columns.
         """
@@ -794,8 +811,7 @@ class Data(object):
         """
         for colNo, column in enumerate(self.columns):
              if not column.empty:
-                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list, self.set_ignore)
-        self.remove_currency_symbol()
+                column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list, self.set_ignore, self.data_start)
         
     def pre_analysis(self):
         """First defines their least and most common elements, then if 
@@ -805,16 +821,15 @@ class Data(object):
         """             
         for colNo, column in enumerate(self.columns):
             column.define_most_least_common()   
-            if not column.empty:
-                if self.template != None and colNo in self.template.columns:
-                    column.set_type(self.template.columns[colNo])
-                else:
-                    column.define_type()
-                if column.type == 'Identifier' and self.data_size != None and \
-                    colNo in self.data_size:
-                    column.set_Identifier_size(self.data_size[colNo])
-                if self.ignore_empty:
-                    column.ignore_empty = True
+            if self.template != None and colNo in self.template.columns:
+                column.set_type(self.template.columns[colNo])
+            else:
+                column.define_type()
+            if column.type == 'Identifier' and self.data_size != None and \
+                colNo in self.data_size:
+                column.set_Identifier_size(self.data_size[colNo])
+            if self.ignore_empty:
+                column.ignore_empty = True
         self.datatypes_are_defined = True
         
     def get_row(self, row_num):
@@ -922,8 +937,4 @@ class Data(object):
         else:
             raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
 
-    def remove_currency_symbol(self):
-        for col in self.columns:
-            if col.type == "Currency":
-                for x, values in enumerate(col.values):
-                    col.values[x] = re.sub('(\$)|(€)|(£)', '', values)
+

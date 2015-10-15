@@ -32,7 +32,7 @@ init();
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Contents</a>
+      <a class="navbar-brand" href="http://uwadataanalysis.cloudapp.net/upload/list/">Back</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -48,7 +48,7 @@ init();
             <li><a href="#email">Email</a></li>
             <li><a href="#char">Character</a></li>
             <li><a href="#hyper">Hyperlink</a></li>
-            <li><a hred="#currency">Currency</a></li>
+            <li><a href="#currency">Currency</a></li>
           </ul>
         </div>
       </div>
@@ -191,6 +191,10 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>Dec - Feb Tally</th>
+                    <th>Mar - May Tally</th>
+                    <th>Jun - Aug Tally</th>
+                    <th>Sep - Nov Tally</th>
                     <th>View Chart</th>
                 </tr>
                 {date_analysis}
@@ -205,6 +209,8 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
+                    <th>Most Common Hours (Top 5) (hour,count)</th>
+                    <th>Least Common Hours (Top 5) (hour,count)</th>
                     <th>View Chart</th>
                 </tr>
                 {time_analysis}
