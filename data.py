@@ -373,8 +373,8 @@ class Column(object):
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                             freq += 1
                         i+=1
-                    if freq == 0:
-                         raise Exception('Least common value not found')
+                    #if freq == 0:
+                        #raise Exception('Least common value not found')
                          
         elif self.type == 'Sci_Notation':
             for x, value in enumerate(self.values):
