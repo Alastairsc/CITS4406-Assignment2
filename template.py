@@ -32,7 +32,7 @@ init();
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Contents</a>
+      <a class="navbar-brand" href="http://uwadataanalysis.cloudapp.net/upload/list/">Back</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
