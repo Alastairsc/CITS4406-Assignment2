@@ -809,16 +809,15 @@ class Data(object):
         """             
         for colNo, column in enumerate(self.columns):
             column.define_most_least_common()   
-            if not column.empty:
-                if self.template != None and colNo in self.template.columns:
-                    column.set_type(self.template.columns[colNo])
-                else:
-                    column.define_type()
-                if column.type == 'Identifier' and self.data_size != None and \
-                    colNo in self.data_size:
-                    column.set_Identifier_size(self.data_size[colNo])
-                if self.ignore_empty:
-                    column.ignore_empty = True
+            if self.template != None and colNo in self.template.columns:
+                column.set_type(self.template.columns[colNo])
+            else:
+                column.define_type()
+            if column.type == 'Identifier' and self.data_size != None and \
+                colNo in self.data_size:
+                column.set_Identifier_size(self.data_size[colNo])
+            if self.ignore_empty:
+                column.ignore_empty = True
         self.datatypes_are_defined = True
         
     def get_row(self, row_num):
