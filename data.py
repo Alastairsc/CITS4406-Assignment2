@@ -189,7 +189,7 @@ class Column(object):
                 hyper_count +=1
         num_values = len(self.values)
         if self.empty:
-            self.type = 'Ignore'
+            self.type = 'Ignored'
         elif float_count / len(self.values) >= threshold:
             self.type = 'Float'
         elif int_count / len(self.values) >= threshold:
@@ -243,7 +243,7 @@ class Column(object):
             been removed from analysis.
         """
         tup = ()   
-        if self.type == 'Ignore':
+        if self.type == 'Ignored':
             pass  
         elif self.type == 'Float':
             for x, value in enumerate(self.values): 
