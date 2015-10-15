@@ -793,9 +793,6 @@ class Data(object):
                     if( column.type == 'Integer' or column.type == 'Float' \
                         or column.type == 'Currency' or column.type == 'Sci_Notation' \
                         or column.type == 'Numeric'):
-                        if(column.type == 'Currency'):
-                            for value in column.values:
-                                print(value)
                         column.analysis = self.analysers[column.type](column.values, self.std_devs_val)  
                     else:
                         column.analysis = self.analysers[column.type](column.values)
