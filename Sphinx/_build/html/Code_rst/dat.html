@@ -76,8 +76,19 @@ Enumerated.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="data.Column.check_empty">
+<code class="descname">check_empty</code><span class="sig-paren">(</span><em>x</em>, <em>value</em>, <em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em>, <em>set_to_ignore</em>, <em>data_start</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.check_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the value in a cell is empty
+Keyword arguments:</p>
+<blockquote>
+<div><p>x &#8211; postion of cell in column</p>
+<p>value &#8211; value in cell</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
 <dt id="data.Column.define_errors">
-<code class="descname">define_errors</code><span class="sig-paren">(</span><em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em>, <em>range_list2</em>, <em>set_to_ignore</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.define_errors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">define_errors</code><span class="sig-paren">(</span><em>columnNumber</em>, <em>errors</em>, <em>formatted_errors</em>, <em>invalid_rows_pos</em>, <em>range_list2</em>, <em>set_to_ignore</em>, <em>data_start</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.define_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define all the rows/columns with invalid values and append to errors, and
 formatted_errors once formatted properly. invalid_rows_pos holds the amount of
 rows that have been skipped by the time the current row x is being considered.</p>
@@ -150,6 +161,16 @@ For use with the &#8216;Identifier&#8217; data type</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="data.Column.uniqueCount">
+<code class="descname">uniqueCount</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.uniqueCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the amount of unique values in the values list.</p>
+<dl class="docutils">
+<dt>Keyword arguments:</dt>
+<dd>values &#8211; A list of values.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="data.Column.updateCell">
 <code class="descname">updateCell</code><span class="sig-paren">(</span><em>pos</em>, <em>new_value</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Column.updateCell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Changes the value of a cell given</p>
@@ -197,13 +218,23 @@ number of headers). Copied from raw_data</p>
 <p>invalid_rows_pos &#8211; List of the amount of invalid rows in the raw data prior
 to each valid row (i.e. the nth element contains number of invalid rows
 prior to the nth valid row)</p>
-<p>errors &#8211; list of errors in file; error[n][0] is row of error, error[n][1]
-is column of error, and error[n][2] is the value of in that location.</p>
+<p>errors &#8211; list of errors in file; errors[n][0] is row of error, errors[n][1]
+is column of error, errors[n][2] is the value of in that location, 
+errors[n][3] is the reason for the error &amp; error[4] is the index for the
+value in columns[n1].values.</p>
 <p>formatted_errors &#8211; List of errors in file, each error contains: row, column 
 and value of the error.</p>
 <p>raw_data &#8211; List of raw CSV data as rows. After remove_invalid() has run
 this only contains rows from the CSV file prior to the start of the data.</p>
 <p>valid_rows &#8211; List of valid rows (i.e., same number of columns as headers).</p>
+<p>can_edit_rows &#8211; is a boolean value true after remove_invalid() and before
+create_columns() have been run only. It defines whether rebuild_raw_data()
+and delete_invalid_row() may be called.</p>
+<p>data_in_columns &#8211; is a boolean true after create_columns() is completed,
+it defines whether the Data object is in a form gen_file() expects.</p>
+<p>datatypes_are_defined &#8211; is a boolean true after pre_analysis() has been
+run and each column&#8217;s type is defined. It defines whether export_datatypes()
+may be run.</p>
 </div></blockquote>
 <dl class="method">
 <dt id="data.Data.analysis">
@@ -250,7 +281,7 @@ conditions.</p>
 
 <dl class="method">
 <dt id="data.Data.gen_file">
-<code class="descname">gen_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.gen_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gen_file</code><span class="sig-paren">(</span><em>filePath=''</em><span class="sig-paren">)</span><a class="headerlink" href="#data.Data.gen_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a csv file based on the data for after
 data has been corrected</p>
 </dd></dl>
@@ -356,6 +387,7 @@ mapping column numbers to headers</p>
 <li class="toctree-l1"><a class="reference internal" href="rep.html">3. Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="templ.html">4. Template</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analy.html">5. Analyser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="temp_rd.html">6. Template Reader</a></li>
 </ul>
 
 <div class="relations">
