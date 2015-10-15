@@ -146,7 +146,7 @@ class NumericalAnalyser(Analyser):
         self.median_high = median_high(values)
         self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
         self.normDist = 'No'
-        if(self.pval < 0.055):
+        if(self.pval > 0.055):
             self.normDist = 'Yes'
         elif self.pval == 100:
             self.normDist = 'N/A'
