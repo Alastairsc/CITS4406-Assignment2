@@ -76,7 +76,7 @@ class Template(object):
                         self.threshold_val = float(row[1])
                     elif row[0].lower() == 'enum_threshold_val':
                         self.enum_threshold_val = int(row[1])    
-                    elif row[0].lower() == 'std_devs': 
+                    elif row[0].lower() == 'std_dev': 
                         self.std_devs = float(row[1])
                     elif row[0].lower() == 'range':
                         self.range_vals.append(float(row[1]))
