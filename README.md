@@ -52,12 +52,12 @@ You can specify entire directories (sub directories are not recursed, only csv f
     or 'python application.py csv_files\'
 depending on operating system will run the program on all csv files in the csv_files directory.
 
-Files can either be csv files or excel files. We reccomend saving excel spreadsheets as csv files using the save as function in excel as there are errors in used modules that prevent some excel files being run. If using csv files the program will create a csv file for each sheet in your excel file. Each sheet is analysed independently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
+Files can either be csv files or excel files. We reccomend saving excel spreadsheets as csv files using the save as function in excel as there are errors in used modules that prevent some excel files being run. If using excel files the program will create a csv file for each sheet in your excel file. Each sheet is analysed independently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
 
 If multiple files are given with only one template all files will be processed using the template. The same will occur given a excel file with multiple sheets and a single template. For using multiple templates with multiple files there must be an equal number of files and templates.
 
 You must run the program from the directory containing the application.py file.
-csv_filanames can be specified by relative path or using its absolute path
+csv_filenames can be specified by relative path or using its absolute path
 
 ###Large files
 
@@ -108,6 +108,6 @@ Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
 
 
 ###Directory Structure
-* The source code is all in the main directory
-* csv_files contains test files used to evaluate the program
-* Sphinx contains documentation of classes and methods of the         	program
+* The source code is all in the main directory.
+* csv_files contains test files used to evaluate the program.
+* Sphinx contains documentation of classes and methods of the program, to view the completed documentation open 'index.html' in the directory Sphinx/_build/html/index.html.
