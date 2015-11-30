@@ -10,10 +10,10 @@ base_template = \
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="http://uwadataanalysis.cloudapp.net/static/report/main.css">
+<link rel="stylesheet" href="/static/report/main.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script src="http://uwadataanalysis.cloudapp.net/static/report/main.js"></script>
+<script src="/static/report/main.js"></script>
 <script>
 init();
 {chart_data}
@@ -32,7 +32,7 @@ init();
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-      <a class="navbar-brand" href="http://uwadataanalysis.cloudapp.net/upload/list/">Back</a>
+      <a class="navbar-brand" href="/upload/list/">Back</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
