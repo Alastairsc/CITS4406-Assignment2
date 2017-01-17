@@ -191,8 +191,8 @@ class Column(object):
         for i, e in reversed(list(enumerate(temp_list))):
             if i < 15:
                 self.least_common.append(e)
-        if self.most_common[0][0] == '' \
-                and self.most_common[0][1] / len(self.values) >= threshold:
+        if not self.most_common \
+                or self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
         if self.unique == len(self.values) or self.unique == 1:
             self.least_common = []
