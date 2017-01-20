@@ -137,6 +137,8 @@ class NumericalAnalyser(Analyser):
     """
     def __init__(self, values, stdDevs): 
         new_values = []
+        old_values = values
+        isNumeric = True
         for i in values:
             if i != '':
                 try:
@@ -145,38 +147,51 @@ class NumericalAnalyser(Analyser):
                     else:
                         new_values.append(int(i))
                 except:
-                    pass #already picked up by error checks
+                    #assuming error cells are not passed to here
+                    isNumeric = False
         values = new_values
         super().__init__(values)
-        self.stDevOutliers = []
-        standardDeviations = Decimal(stdDevs)
-        if len(values) >= 8:
-            self.pval = mstats.normaltest(array(values))[1]
+        if isNumeric:
+            self.stDevOutliers = []
+            standardDeviations = Decimal(stdDevs)
+            if len(values) >= 8:
+                self.pval = mstats.normaltest(array(values))[1]
+            else:
+                self.pval = 100
+            self.min = min(values)
+            self.max = max(values)
+            self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
+            self.median_low = median_low(values)
+            self.median = median(values)
+            self.median_high = median_high(values)
+            self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
+            self.normDist = 'No'
+            if(self.pval > 0.055):
+                self.normDist = 'Yes'
+            elif self.pval == 100:
+                self.normDist = 'N/A'
+            if self.normDist == 'Yes':
+                outlier_count = 0
+                for x, value in enumerate(values):
+                    if value < (self.mean - standardDeviations * self.stdev) or \
+                    value > (self.mean + standardDeviations * self.stdev):  
+                        if outlier_count > max_Outliers:
+                            self.stDevOutliers = ">%d outliers" % max_Outliers
+                            break
+                        self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
+                        outlier_count += 1
         else:
-            self.pval = 100
-        self.min = min(values)
-        self.max = max(values)
-        self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
-        self.median_low = median_low(values)
-        self.median = median(values)
-        self.median_high = median_high(values)
-        self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
-        self.normDist = 'No'
-        if(self.pval > 0.055):
-            self.normDist = 'Yes'
-        elif self.pval == 100:
+            print("WARNING: Type error, cannot convert column to numerical value")
+            self.min = 'N/A'
+            self.max = 'N/A'
+            self.mean = 'N/A'
+            self.median_low = 'N/A'
+            self.median = 'N/A'
+            self.median_high =  'N/A'
+            self.stdev = 'N/A'
             self.normDist = 'N/A'
-        if self.normDist == 'Yes':
-            outlier_count = 0
-            for x, value in enumerate(values):
-                if value < (self.mean - standardDeviations * self.stdev) or \
-                value > (self.mean + standardDeviations * self.stdev):  
-                    if outlier_count > max_Outliers:
-                        self.stDevOutliers = ">%d outliers" % max_Outliers
-                        break
-                    self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
-                    outlier_count += 1
-        
+            self.stDevOutliers = 'N/A'
+            
 class CurrencyAnalyser(NumericalAnalyser):
     """Run currency analysis, using NumericalAnalyser as a super class. Removes
     currency symbols in values. 
@@ -187,8 +202,16 @@ class CurrencyAnalyser(NumericalAnalyser):
     def __init__(self, values, stdDevs):
         for x, value in enumerate(values):
                     values[x] = re.sub('(\$)|(€)|(£)', '', value)
+                    values[x] = values[x].replace('(','-')#negatives
+                    values[x] = values[x].replace(')','')
+                    values[x] = values[x].replace(',','') #long numbers
         super().__init__(values, stdDevs)
-
+        for x, value in enumerate(values):
+                    values[x] = "{:,}".format(float(values[x]))#add back commas
+                    if '-' in values[x]: #add back brackets for negatives
+                        values[x] = values[x].replace('-','(')
+                        values[x] += ')'
+                        
 class StringAnalyser(Analyser):
     """Run string analysis, currently only using Analyser super class methods.
     
@@ -240,44 +263,57 @@ class SciNotationAnalyser(Analyser):
     def __init__(self, values, stdDevs):
         standardDeviations = stdDevs 
         new_values = []
+        isNumeric = True
         for i in values:
             if i != '':
                 try:
                     new_values.append(float(i))
                 except:
-                    pass #already picked up in error checks
+                    isNumeric = False
         values = new_values
         super().__init__(values)
-        self.stDevOutliers = []
-        if len(values) >= 8:
-            self.pval = mstats.normaltest(array(values))[1]
+        if isNumeric:
+            self.stDevOutliers = []
+            if len(values) >= 8:
+                self.pval = mstats.normaltest(array(values))[1]
+            else:
+                self.pval = 100
+            if self.mode != 'N/A':
+                self.mode = self.int_to_sci(self.mode)
+            self.min = self.int_to_sci(min(values))
+            self.max = self.int_to_sci(max(values))
+            self.mean = self.int_to_sci(mean(values))
+            self.median_low = self.int_to_sci(median_low(values))
+            self.median = self.int_to_sci(median(values))
+            self.median_high =  self.int_to_sci(median_high(values))
+            self.stdev = self.int_to_sci(stdev(values))
+            self.normDist = 'No'
+            if(self.pval < 0.055):
+                self.normDist = 'Yes'
+            elif(self.pval == 100):
+                self.normDist = 'N/A'
+            if self.normDist == 'Yes':
+                outlier_count = 0
+                for x, value in enumerate(values):
+                    if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
+                    value > (float(self.mean) + standardDeviations * float(self.stdev)):               
+                        if outlier_count > max_Outliers:
+                            self.stDevOutliers = ">%d outliers" % max_Outliers
+                            break
+                        self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
+                        outlier_count += 1
         else:
-            self.pval = 100
-        if self.mode != 'N/A':
-            self.mode = self.int_to_sci(self.mode)
-        self.min = self.int_to_sci(min(values))
-        self.max = self.int_to_sci(max(values))
-        self.mean = self.int_to_sci(mean(values))
-        self.median_low = self.int_to_sci(median_low(values))
-        self.median = self.int_to_sci(median(values))
-        self.median_high =  self.int_to_sci(median_high(values))
-        self.stdev = self.int_to_sci(stdev(values))
-        self.normDist = 'No'
-        if(self.pval < 0.055):
-            self.normDist = 'Yes'
-        elif(self.pval == 100):
+            print("WARNING Cannot convert to scientific notation")
+            self.min = 'N/A'
+            self.max = 'N/A'
+            self.mean = 'N/A'
+            self.median_low = 'N/A'
+            self.median = 'N/A'
+            self.median_high =  'N/A'
+            self.stdev = 'N/A'
             self.normDist = 'N/A'
-        if self.normDist == 'Yes':
-            outlier_count = 0
-            for x, value in enumerate(values):
-                if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
-                value > (float(self.mean) + standardDeviations * float(self.stdev)):               
-                    if outlier_count > max_Outliers:
-                        self.stDevOutliers = ">%d outliers" % max_Outliers
-                        break
-                    self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
-                    outlier_count += 1
-
+            self.stDevOutliers = 'N/A'
+            
     def int_to_sci(self, value):
         """Converts numbers into a string in scientific notation form
         
