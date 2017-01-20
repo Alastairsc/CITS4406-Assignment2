@@ -60,7 +60,7 @@ invalid_values = ['-', '*', '_', '$']
 re_float = re.compile('^-?\d*?\.\d+$')
 re_int = re.compile('^\s*-?\d+$')
 re_email = re.compile('@')
-re_currency = re.compile('^(\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))')
+re_currency = re.compile('^\(?(\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))\)?')
 re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
 re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 re_separation = re.compile('[\|\\\;\s\t-]+')
@@ -191,8 +191,8 @@ class Column(object):
         for i, e in reversed(list(enumerate(temp_list))):
             if i < 15:
                 self.least_common.append(e)
-        if self.most_common[0][0] == '' \
-                and self.most_common[0][1] / len(self.values) >= threshold:
+        if not self.most_common \
+                or self.most_common[0][1] / len(self.values) >= threshold:
             self.empty = True
         if self.unique == len(self.values) or self.unique == 1:
             self.least_common = []
@@ -433,10 +433,10 @@ class Column(object):
                 elif self.least_common[x][1] <= 1:
                     i = 0 
                     freq = 0
-                    for cell in self.values:
+                    for index, cell in enumerate(self.values):
                         if cell == value[0]:
                             reason = 'Low frequency of enum value: (%s)' % self.least_common[x][1]
-                            tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                            tup = (index + invalid_rows_pos[index] + data_start, columnNumber, value[0], reason, index)
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                             freq += 1
@@ -900,7 +900,7 @@ class Data(object):
             for value in self.raw_data[self.header_row]:
                 tmp_list = []
                 tmp_list.append(value)
-                tmp_list.append(" (column ")
+                tmp_list.append(" (Column ")
                 tmp_list.append(str(i))
                 tmp_list.append(")")
                 s = ''.join(tmp_list)
@@ -935,7 +935,7 @@ class Data(object):
                     if( column.type == 'Integer' or column.type == 'Float' \
                         or column.type == 'Currency' or column.type == 'Sci_Notation' \
                         or column.type == 'Numeric'):
-                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val)  
+                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val) 
                     else:
                         column.analysis = self.analysers[column.type](column.values)
         
