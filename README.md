@@ -14,10 +14,8 @@ Provide a Python file to perform basic cleansing and statistical analysis on dat
 Instructions
 ===============
 
-1. Install python 3 from 	https://www.python.org/downloads/release/python-343/
-
-2. Install the Anaconda package from:	http://continuum.io/downloads
-3. If you haven't navigated using the terminal/command line before we reccomend reading the following tutorial found at:     http://linuxcommand.org/lts0020.php
+1. Install the Anaconda package for Python 3 from:	http://continuum.io/downloads and follow the installation intructions
+2. If you haven't navigated using the terminal/command line before we reccomend reading the following tutorial found at:     http://linuxcommand.org/lts0020.php
 
 ###Ubuntu
 
