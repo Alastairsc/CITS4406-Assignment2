@@ -139,6 +139,7 @@ class Column(object):
 
     """
     def __init__(self, header=''):
+        self.compatible = True
         self.most_common = []
         self.least_common = []
         self.empty = False
@@ -350,6 +351,8 @@ class Column(object):
                     continue
                 elif not re_int.match(value):
                     reason = 'not an integer'
+                    if not invalid_rows_pos:
+                        print('Invalid Rows Empty')
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
@@ -881,7 +884,7 @@ class Data(object):
                 self.formatted_invalid_rows.append(["%s: %d" % ("Line", index + 1)])
                 self.invalid_rows.append(row)
                 self.raw_data[index] = []
-                count = count + 1
+                count += 1
             else:
                 self.valid_rows.append(row)
                 self.invalid_rows_pos.append(count)
@@ -895,6 +898,8 @@ class Data(object):
         Then removes header row from valid_rows. Then for each row in valid_rows,
         populates relevant column object with row data.
         """
+        if self.columns:
+            self.columns = []
         if self.header_row >=0:
             i = 1
             for value in self.raw_data[self.header_row]:
@@ -904,7 +909,7 @@ class Data(object):
                 tmp_list.append(str(i))
                 tmp_list.append(")")
                 s = ''.join(tmp_list)
-                i = i + 1
+                i += 1
                 self.columns.append(Column(header=s))
         length = len(self.valid_rows)
         for row_num in range(0, length):
@@ -963,9 +968,25 @@ class Data(object):
             if column.type == 'Identifier' and self.data_size != None and \
                 colNo in self.data_size:
                 column.set_Identifier_size(self.data_size[colNo])
+            elif column.type == 'Integer' or column.type == 'Float' \
+                        or column.type == 'Currency' or column.type == 'Sci_Notation' \
+                        or column.type == 'Numeric':
+                column.compatible = self.analysers[column.type].is_compatable(column.values)
             if self.ignore_empty:
                 column.ignore_empty = True
         self.datatypes_are_defined = True
+
+    def check_compatible(self):
+        """Checks to see whether columns that are nummeric will be compatible with the numeric analyserss
+        using the static analyser methods
+        """
+        for colNo, column in enumerate(self.columns):
+            if column.type == 'Integer' or column.type == 'Float' \
+                    or column.type == 'Currency' or column.type == 'Sci_Notation' \
+                    or column.type == 'Numeric':
+                column.compatible = self.analysers[column.type].is_compatable(column.values)
+            else:
+                column.compatible = True
         
     def get_row(self, row_num):
         """
@@ -1075,26 +1096,38 @@ class Data(object):
         
     def rebuild_raw_data(self):
         """
-            Re creates raw_data from Data's columns and row.
+            Re creates raw_data from Data's rows.
         """
-        if self.can_edit_rows == True:
-            invalid_pos = 0
-            valid_pos = 0
-            total_rows = len(self.valid_rows) + len(self.invalid_rows)
-            for i in range(0, total_rows):
-                if invalid_pos == self.invalid_rows_pos[valid_pos]:
-                    self.raw_data.append(self.valid_rows.pop(0))
-                    valid_pos += 1
-                else:
-                    self.raw_data.append(self.invalid_rows.pop(0))
-                    invalid_pos += 1
-            self.invalid_rows_pos = []
-            self.invalid_rows_indexes = []
-            self.formatted_invalid_rows = []
-            self.can_edit_rows == False
-        else:
-            raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
-
+        #if self.can_edit_rows == True:
+        invalid_pos = 0
+        valid_pos = 0
+        total_rows = len(self.valid_rows) + len(self.invalid_rows)
+        for i in range(0, total_rows):
+            if invalid_pos == self.invalid_rows_pos[valid_pos]:
+                self.raw_data.append(self.valid_rows.pop(0))
+                valid_pos += 1
+            else:
+                self.raw_data.append(self.invalid_rows.pop(0))
+                invalid_pos += 1
+        self.invalid_rows_pos = []
+        self.invalid_rows_indexes = []
+        self.formatted_invalid_rows = []
+        self.can_edit_rows == False
+        #else:
+        #   raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
+    
+    def rebuild_rows(self):
+        """
+            Recreates raw data from the data's columns
+        """
+        total_rows = len(self.columns[0].values)
+        for i in range(0, total_rows):
+            row = []
+            for col in self.columns:
+                row.append(col.values[i])
+            self.raw_data.append(row)
+        self.columns = []
+        
     def delete_invalid_row(self, invalid_row_index):
         """
             Deletes given invalid row at the index from the data.

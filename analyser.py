@@ -10,6 +10,7 @@ from numpy import array
 from email.utils import parseaddr
 from math import floor, log10, pow
 
+threshold = 0.9
 max_Outliers = 100
 standardDeviations = 3
 re_date = re.compile('^((31(\/|-)(0?[13578]|1[02]))(\/|-)|((29|30)(\/|-)(0?[1,3-9]|1[0-2])(\/|-)))((1[6-9]|[2-9]\d)?\d{2})$|^(29(\/|-)0?2(\/|-)(((1[6-9]|[2-9]\d)?(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$|^(0?[1-9]|1\d|2[0-8])(\/|-)((0?[1-9])|(1[0-2]))(\/|-)((1[6-9]|[2-9]\d)?\d{2})$')
@@ -191,6 +192,22 @@ class NumericalAnalyser(Analyser):
             self.stdev = 'N/A'
             self.normDist = 'N/A'
             self.stDevOutliers = 'N/A'
+
+    @staticmethod
+    def is_compatable(values):
+        bad_values = 0
+        for i in values:
+            if i != '':
+                try:
+                    if "." in i:
+                        float(i)
+                    else:
+                        int(i)
+                except:
+                    bad_values += 1
+        if bad_values / len(values) >= threshold:
+            return False
+        return True
             
 class CurrencyAnalyser(NumericalAnalyser):
     """Run currency analysis, using NumericalAnalyser as a super class. Removes
@@ -200,18 +217,27 @@ class CurrencyAnalyser(NumericalAnalyser):
         NumericalAnalyser -- A NumericalAnalyser object.
     """
     def __init__(self, values, stdDevs):
-        for x, value in enumerate(values):
-                    values[x] = re.sub('(\$)|(€)|(£)', '', value)
-                    values[x] = values[x].replace('(','-')#negatives
-                    values[x] = values[x].replace(')','')
-                    values[x] = values[x].replace(',','') #long numbers
-        super().__init__(values, stdDevs)
-        for x, value in enumerate(values):
-                    values[x] = "{:,}".format(float(values[x]))#add back commas
-                    if '-' in values[x]: #add back brackets for negatives
-                        values[x] = values[x].replace('-','(')
-                        values[x] += ')'
-                        
+        temp_values = values
+        for x, value in enumerate(temp_values):
+                    temp_values[x] = re.sub('(\$)|(€)|(£)', '', value)
+                    temp_values[x] = temp_values[x].replace('(','-')#negatives
+                    temp_values[x] = temp_values[x].replace(')','')
+                    temp_values[x] = temp_values[x].replace(',','') #long numbers
+        super().__init__(temp_values, stdDevs)
+
+
+    @staticmethod
+    def is_compatable(values):
+        temp_values = values
+        for x, value in enumerate(temp_values):
+                    temp_values[x] = re.sub('(\$)|(€)|(£)', '', value)
+                    temp_values[x] = temp_values[x].replace('(','-')#negatives
+                    temp_values[x] = temp_values[x].replace(')','')
+                    temp_values[x] = temp_values[x].replace(',','') #long numbers
+        return super(CurrencyAnalyser, CurrencyAnalyser).is_compatable(temp_values)
+
+
+
 class StringAnalyser(Analyser):
     """Run string analysis, currently only using Analyser super class methods.
     
@@ -329,6 +355,19 @@ class SciNotationAnalyser(Analyser):
             return str(base) + "E+" + str(power)
         else:
             return str(base) + "E" + str(power)
+
+    @staticmethod
+    def is_compatable(values):
+        bad_values = 0
+        for i in values:
+            if i != '':
+                try:
+                    float(i)
+                except:
+                    bad_values += 1
+        if bad_values / len(values) >= threshold:
+            return False
+        return True
         
 class DateAnalyser(Analyser):
     """Run date analysis, currently only using Analyser super class methods.
