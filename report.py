@@ -87,7 +87,7 @@ class Report(object):
         """Return a list of empty columns in the data object."""
         return [column.header for column in self.data.columns if column.empty]
     
-    def html_report(self):
+    def html_report(self, previous_url=""):
         """Write a HTML file based on analysis of CSV file by calling the various
         type analyses. Returns a string of html.
         """
@@ -112,6 +112,7 @@ class Report(object):
             char_analysis = self.char_analysis(),
             day_analysis = self.day_analysis(),
             hyper_analysis = self.hyper_analysis(),
+            previous = previous_url,
             chart_data = self.chart_data
             )
         #gen report for debugging
