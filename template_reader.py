@@ -54,7 +54,8 @@ class Template(object):
         self.std_devs = 3
         self.range_vals = []
         self.ignore_set = set()
-        
+        self.delete_set = []
+
         self.read(filename)
         
     def read(self, filename):
@@ -110,5 +111,8 @@ class Template(object):
                         for x, value in enumerate(row):
                             if x != 0:
                                 self.ignore_set.add(int(value) - 1)
+                    elif row[0].lower() == 'delete_col':
+                        for col in row[1:]:
+                            self.delete_set.append(int(col))
                     else:
                         print("Not an option: ", row)
