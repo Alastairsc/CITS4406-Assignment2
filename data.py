@@ -154,7 +154,7 @@ class Column(object):
         self.total_no = 0
         self.data_size = -1
         self.ignore_empty = False
-
+        self.deleted = False
 
     def change_misc_values(self):
         """
@@ -184,6 +184,8 @@ class Column(object):
         """Set 15 most common results to class variable, and set object variable 
         empty if appropriate.
         """
+        self.most_common.clear()
+        self.least_common.clear()
         self.unique = self.uniqueCount(self.values)
         temp_list = Counter(self.values).most_common()
         for i, e in list(enumerate(temp_list)):
@@ -193,7 +195,7 @@ class Column(object):
             if i < 15:
                 self.least_common.append(e)
         if not self.most_common \
-                or self.most_common[0][1] / len(self.values) >= threshold:
+                or (self.most_common[0][0] == "" and self.most_common[0][1] / len(self.values) >= threshold):
             self.empty = True
         if self.unique == len(self.values) or self.unique == 1:
             self.least_common = []
@@ -430,11 +432,11 @@ class Column(object):
                 self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start)
                     
         elif self.type == 'Enum':
+            self.define_most_least_common()
             for x, value in enumerate(self.least_common):
                 if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
                     continue
                 elif self.least_common[x][1] <= 1:
-                    i = 0 
                     freq = 0
                     for index, cell in enumerate(self.values):
                         if cell == value[0]:
@@ -443,9 +445,6 @@ class Column(object):
                             errors.append(tup)
                             formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                             freq += 1
-                        i+=1
-                    #if freq == 0:
-                        #raise Exception('Least common value not found')
                          
         elif self.type == 'Sci_Notation':
             for x, value in enumerate(self.values):
@@ -477,8 +476,8 @@ class Column(object):
             for x, value in enumerate(self.values):
                 if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore, data_start):
                     continue
-                elif len(value) != size:
-                    reason = 'too long or too short'
+                elif len(value) != int(size):
+                    reason = 'Identifier has length ' + str(len(value)) + ' instead of ' + size
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append("Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
@@ -598,9 +597,13 @@ class Column(object):
         """Whether or not column is empty"""
         return self.empty == True
         
-    def set_Identifier_size(self, size):
+    def set_Identifier_size(self, size=-1):
         """Sets the size of the data for identifier type"""
-        self.data_size = size
+        if size == -1:
+            self.data_size = len(self.values[0])
+        else:
+            self.data_size = size
+        return self.data_size
     
     def updateCell(self, pos, new_value):
         """Changes the value of a cell given
@@ -733,7 +736,11 @@ class Data(object):
         range_list -- A list representing the minimum and maximum allowed values for any
         numeric data, outside of which it is an error. Formatted (min, max).
         
-        set_ignore -- A set of integers representing columns to ignore empty values in.        
+        set_ignore -- A set of integers representing columns to ignore empty values in.
+
+        delete_set -- List of columns to be deleted
+
+        deleted_col -- List of columns that have been deleted, for writing to template
         """
     analysers = {
         'String': StringAnalyser,
@@ -764,7 +771,7 @@ class Data(object):
             ('Hyperlink', 'Hyperlink'),
             ('Identifier', 'Identification code'),
             ('Integer', 'Integers only'),
-            ('Numeric', 'Real numbers'),
+            ('Numeric', 'Number'),
             ('Sci_Notation', 'Scientific notation'),
             ('String', 'String'),
             ('Time', 'Time'),
@@ -801,6 +808,8 @@ class Data(object):
         self.std_devs_val = 3
         self.range_list = []
         self.set_ignore = set()
+        self.delete_set = []
+        self.deleted_col = []
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter_type = self.template.delimiter_type
@@ -813,6 +822,7 @@ class Data(object):
             self.std_devs_val = self.template.std_devs
             self.range_list = self.template.range_vals
             self.set_ignore = self.template.ignore_set
+            self.delete_set = self.template.delete_set
         #Process data
         self.read(self.filename)
         
@@ -852,7 +862,7 @@ class Data(object):
                             self.delimiter_type = ','   #NEW
 
                 except:
-                    print("Delimiter Warning: could not determine delimiter, consider",\
+                    print("Delimiter Warning: could not determine delimiter, consider",
                     "specifying using template. Continuing using comma")
                     csvfile.seek(0)
                     f = csv.reader(csvfile, delimiter=',')
@@ -874,23 +884,58 @@ class Data(object):
         """
         count = 0
         preamble = []
+        self.invalid_rows.clear()
+        self.invalid_rows_pos.clear()
+        self.invalid_rows_indexes.clear()
+        self.formatted_invalid_rows.clear()
+        self.valid_rows.clear()
+        self.invalid_rows_pos.clear()
         if self.data_start != 0:
             for row in range(0, self.data_start):
                 preamble.append(self.raw_data.pop(0))
+        preamble[self.header_row], empty_col = self.trim_header(preamble[self.header_row])
         row_length = len(preamble[self.header_row])
         for index, row in enumerate(self.raw_data):
+            row = self.trim_row(row, empty_col)
             if len(row) != row_length:
                 self.invalid_rows_indexes.append( index)
                 self.formatted_invalid_rows.append(["%s: %d" % ("Line", index + 1)])
                 self.invalid_rows.append(row)
-                self.raw_data[index] = []
+                self.raw_data[index].clear()
                 count += 1
             else:
                 self.valid_rows.append(row)
                 self.invalid_rows_pos.append(count)
-                self.raw_data[index] = []
+                self.raw_data[index].clear()
         self.raw_data = preamble
         self.can_edit_rows = True
+
+    def trim_header(self, row):
+        """
+        Trims empty cells from both ends of the header row
+        :param row:
+        :return trimmed header row and list of empty columns:
+        """
+        new_row = []
+        empty_col = []
+        for i, cell in enumerate(row):
+            if cell != "":
+                new_row.append(cell)
+            else:
+                empty_col.append(i)
+        return new_row, empty_col
+
+    def trim_row(self, row, empty_col):
+        """
+        Trims empty cells from row
+        :param row:
+        :return trimmed row:
+        """
+        new_row = []
+        for i, cell in enumerate(row):
+            if cell != "" or i not in empty_col:
+                new_row.append(cell)
+        return new_row
 
     def create_columns(self):
         """For each row in raw_data variable, assigns the first value to the 
@@ -899,7 +944,7 @@ class Data(object):
         populates relevant column object with row data.
         """
         if self.columns:
-            self.columns = []
+            self.columns.clear()
         if self.header_row >=0:
             i = 1
             for value in self.raw_data[self.header_row]:
@@ -915,10 +960,16 @@ class Data(object):
         for row_num in range(0, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].values.append(value)
-            self.valid_rows[row_num] = []
+            self.valid_rows[row_num].clear()
         self.valid_rows = []
-        self.invalid_rows = []
-        self.invalid_rows_indexes = []
+        if self.delete_set:
+            for colNo in self.delete_set:
+                self.columns[colNo].values.clear()
+                self.columns[colNo].deleted = True
+                self.deleted_col.append(colNo)
+            self.delete_set.clear() #only do once
+        #self.invalid_rows = [] #dont for reversibility but uses more memory
+        #self.invalid_rows_indexes = []
         self.can_edit_rows = False
         self.data_in_columns = True
         
@@ -935,23 +986,24 @@ class Data(object):
         columns type analyser.
         """
         for colNo, column in enumerate(self.columns):          
-            if not column.empty:
-                if column.type in self.analysers:
-                    if( column.type == 'Integer' or column.type == 'Float' \
-                        or column.type == 'Currency' or column.type == 'Sci_Notation' \
-                        or column.type == 'Numeric'):
-                        column.analysis = self.analysers[column.type](column.values, self.std_devs_val) 
-                    else:
-                        column.analysis = self.analysers[column.type](column.values)
+            if not column.empty and column.type in self.analysers:
+                column.define_most_least_common()
+                if( column.type == 'Integer' or column.type == 'Float' \
+                    or column.type == 'Currency' or column.type == 'Sci_Notation' \
+                    or column.type == 'Numeric'):
+                    column.analysis = self.analysers[column.type](column.values, self.std_devs_val)
+                else:
+                    column.analysis = self.analysers[column.type](column.values)
         
     def find_errors(self):
         """Iterates through each column and finds any errors according to pre-determined
         conditions.
         """
         for colNo, column in enumerate(self.columns):
-             if not column.empty:
+             if not column.empty and not column.type == 'Ignored':
                 column.define_errors(colNo, self.errors, self.formatted_errors, self.invalid_rows_pos, self.range_list, self.set_ignore, self.data_start)
-        
+
+
     def pre_analysis(self):
         """First defines their least and most common elements, then if 
         template is supplied, sets the type of the column to match the template, if not if 
@@ -959,6 +1011,7 @@ class Data(object):
         size to me no more than data_size.
         """             
         for colNo, column in enumerate(self.columns):
+
             column.define_most_least_common()   
             if self.template != None and colNo in self.template.columns:
                 column.set_type(self.template.columns[colNo])
@@ -974,6 +1027,7 @@ class Data(object):
                 column.compatible = self.analysers[column.type].is_compatable(column.values)
             if self.ignore_empty:
                 column.ignore_empty = True
+            #print(column.values)
         self.datatypes_are_defined = True
 
     def check_compatible(self):
@@ -1027,20 +1081,30 @@ class Data(object):
         for rowNo in range(0, self.data_start):
             row_len = len(self.raw_data[rowNo])
             for i, cell in enumerate(self.raw_data[rowNo]):
-                new_file.write(cell)
-                if(i == row_len - 1):
+                if i not in self.deleted_col:
+                    new_file.write(cell)
+                    if(i == row_len - 1):
+                        new_file.write("\n")
+                    else:
+                        new_file.write(",")
+                elif(i == row_len - 1):
                     new_file.write("\n")
-                else:
-                    new_file.write(",")
-        num_rows = len(self.columns[0].values)
+        num_rows = 0
+        for col in self.columns:
+            if not col.deleted: #get length of any column not deleted
+                num_rows = len(col.values)
+                break
         row_len = len(self.columns)
         for rowNo in range(0, num_rows):
             for colNo, column in enumerate(self.columns):
-                new_file.write(column.values[rowNo])
-                if(colNo == row_len - 1):
+                if not column.deleted:
+                    new_file.write(column.values[rowNo])
+                    if(colNo == row_len - 1):
+                        new_file.write("\n")
+                    else:
+                        new_file.write(",")
+                elif(colNo == row_len - 1):
                     new_file.write("\n")
-                else:
-                    new_file.write(",")
         new_file.close()
         return fileLocation
         
@@ -1090,8 +1154,8 @@ class Data(object):
     	"""
     	    Wipes recorded errors to allow find_errors() to be rerun
     	"""
-    	self.errors = []
-    	self.formatted_errors = []
+    	self.errors.clear()
+    	self.formatted_errors.clear()
     	#self.invalid_rows = []              
         
     def rebuild_raw_data(self):
@@ -1103,15 +1167,15 @@ class Data(object):
         valid_pos = 0
         total_rows = len(self.valid_rows) + len(self.invalid_rows)
         for i in range(0, total_rows):
-            if invalid_pos == self.invalid_rows_pos[valid_pos]:
+            if self.valid_rows and invalid_pos == self.invalid_rows_pos[valid_pos]:
                 self.raw_data.append(self.valid_rows.pop(0))
                 valid_pos += 1
-            else:
+            elif self.invalid_rows:
                 self.raw_data.append(self.invalid_rows.pop(0))
                 invalid_pos += 1
-        self.invalid_rows_pos = []
-        self.invalid_rows_indexes = []
-        self.formatted_invalid_rows = []
+        self.invalid_rows_pos.clear()
+        self.invalid_rows_indexes.clear()
+        self.formatted_invalid_rows.clear()
         self.can_edit_rows == False
         #else:
         #   raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
@@ -1125,7 +1189,7 @@ class Data(object):
             row = []
             for col in self.columns:
                 row.append(col.values[i])
-            self.raw_data.append(row)
+            self.valid_rows.append(row)
         self.columns = []
         
     def delete_invalid_row(self, invalid_row_index):
@@ -1148,4 +1212,8 @@ class Data(object):
         else:
             raise RuntimeWarning('function Data.rebuild_raw_data() called after create_columns() or before remove_invalid()')
 
+    def delete_column(self, colNo):
+        self.deleted_col.append(colNo)
+        self.columns[colNo].deleted = True
+        self.columns[colNo].values = []
 

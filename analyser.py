@@ -138,7 +138,6 @@ class NumericalAnalyser(Analyser):
     """
     def __init__(self, values, stdDevs): 
         new_values = []
-        old_values = values
         isNumeric = True
         for i in values:
             if i != '':
@@ -150,7 +149,7 @@ class NumericalAnalyser(Analyser):
                 except:
                     #assuming error cells are not passed to here
                     isNumeric = False
-        values = new_values
+        values = [i for i in new_values]
         super().__init__(values)
         if isNumeric:
             self.stDevOutliers = []
@@ -217,7 +216,7 @@ class CurrencyAnalyser(NumericalAnalyser):
         NumericalAnalyser -- A NumericalAnalyser object.
     """
     def __init__(self, values, stdDevs):
-        temp_values = values
+        temp_values = [i for i in values]
         for x, value in enumerate(temp_values):
                     temp_values[x] = re.sub('(\$)|(€)|(£)', '', value)
                     temp_values[x] = temp_values[x].replace('(','-')#negatives
@@ -228,7 +227,7 @@ class CurrencyAnalyser(NumericalAnalyser):
 
     @staticmethod
     def is_compatable(values):
-        temp_values = values
+        temp_values = [i for i in values]
         for x, value in enumerate(temp_values):
                     temp_values[x] = re.sub('(\$)|(€)|(£)', '', value)
                     temp_values[x] = temp_values[x].replace('(','-')#negatives
@@ -296,7 +295,7 @@ class SciNotationAnalyser(Analyser):
                     new_values.append(float(i))
                 except:
                     isNumeric = False
-        values = new_values
+        values = [i for i in new_values]
         super().__init__(values)
         if isNumeric:
             self.stDevOutliers = []
