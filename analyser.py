@@ -1,13 +1,11 @@
 """Analyser class for running analysis on columns depending on the column type"""
 
-import sys
-import os
+
 import re
-from collections import Counter
 from statistics import mean, mode, median_low, median, median_high, stdev, StatisticsError, Decimal
 from scipy.stats import mstats
 from numpy import array
-from email.utils import parseaddr
+
 from math import floor, log10, pow
 
 threshold = 0.9
