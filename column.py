@@ -40,6 +40,7 @@ Global Variables:
 
 """
 import re
+import tempfile
 from collections import Counter
 from email.utils import parseaddr
 
@@ -138,7 +139,6 @@ class Column(object):
         self.empty = False
         self.header = header
         self.type = ''
-        self.values = []
         self.analysis = None
         self.unique = -1
         self.total_true = 0
@@ -148,6 +148,13 @@ class Column(object):
         self.data_size = -1
         self.ignore_empty = False
         self.deleted = False
+        self.valuefile = tempfile.TemporaryFile()
+
+    @property
+    def values(self):
+        self.valuefile.seek(0)
+        values = self.valuefile.read().decode().split(',')
+        return values
 
     def change_misc_values(self):
         """
@@ -179,8 +186,9 @@ class Column(object):
         """
         self.most_common.clear()
         self.least_common.clear()
-        self.unique = self.uniqueCount(self.values)
-        temp_list = Counter(self.values).most_common()
+        colValues = self.values
+        self.unique = self.uniqueCount(colValues)
+        temp_list = Counter(colValues).most_common()
         for i, e in list(enumerate(temp_list)):
             if i < 15:
                 self.most_common.append(e)
@@ -188,9 +196,9 @@ class Column(object):
             if i < 15:
                 self.least_common.append(e)
         if not self.most_common \
-                or (self.most_common[0][0] == "" and self.most_common[0][1] / len(self.values) >= threshold):
+                or (self.most_common[0][0] == "" and self.most_common[0][1] / len(colValues) >= threshold):
             self.empty = True
-        if self.unique == len(self.values) or self.unique == 1:
+        if self.unique == len(colValues) or self.unique == 1:
             self.least_common = []
             self.most_common = []
 
@@ -210,7 +218,9 @@ class Column(object):
         day_count = 0
         hyper_count = 0
 
-        for x, value in enumerate(self.values):
+        colValues = self.values
+        edited = False
+        for x, value in enumerate(colValues):
             if re_float.match(value):
                 if abs(float(value)) < 0.000001:
                     sci_not_count += 1
@@ -222,11 +232,13 @@ class Column(object):
                 else:
                     int_count += 1
                     value = value.strip()
+                    edited = True
             elif re_email.search(value):
                 if parseaddr(value)[1] != '':
                     email_count += 1
             elif re_currency.search(value):
                 self.values[x].replace('"', '')
+                edited = True
                 currency_count += 1
             elif re_boolean.search(value):
                 boolean_count += 1
@@ -254,12 +266,14 @@ class Column(object):
                 day_count += 1
             elif re_hyper.search(value):
                 hyper_count += 1
-        num_values = len(self.values)
+        if edited:
+            self.values = colValues
+        num_values = len(colValues)
         if self.empty:
             self.type = 'Ignored'
-        elif float_count / len(self.values) >= threshold:
+        elif float_count / len(colValues) >= threshold:
             self.type = 'Float'
-        elif int_count / len(self.values) >= threshold:
+        elif int_count / len(colValues) >= threshold:
             self.type = 'Integer'
         elif float_count / num_values >= threshold:
             self.type = 'Float'
@@ -365,7 +379,9 @@ class Column(object):
                             "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
         elif self.type == 'Numeric':
-            for x, value in enumerate(self.values):
+            colValues = self.values
+            edited = False
+            for x, value in enumerate(colValues):
                 if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore,
                                     data_start):
                     continue
@@ -383,7 +399,8 @@ class Column(object):
                         errors.append(tup)
                         formatted_errors.append(
                             "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                        self.updateCell(x, '')
+                        colValues[x] = ''
+                        edited = True
                 except:
                     reason = 'not a number'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
@@ -398,7 +415,8 @@ class Column(object):
                         errors.append(tup)
                         formatted_errors.append(
                             "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-
+            if edited:
+                self.values = colValues
         elif self.type == 'Email':
             for x, value in enumerate(self.values):
                 if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore,
@@ -436,7 +454,6 @@ class Column(object):
                     formatted_errors.append(
                         "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
 
-
         elif self.type == 'String':
             for x, value in enumerate(self.values):
                 self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore,
@@ -460,7 +477,9 @@ class Column(object):
                             freq += 1
 
         elif self.type == 'Sci_Notation':
-            for x, value in enumerate(self.values):
+            colValues = self.values
+            edited = False
+            for x, value in enumerate(colValues):
                 if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore,
                                     data_start):
                     continue
@@ -477,13 +496,16 @@ class Column(object):
                         errors.append(tup)
                         formatted_errors.append(
                             "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                        self.updateCell(x, '')
+                        colValues[x] = ''
+                        edited = True
                 except:
                     reason = 'not a number'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
                     formatted_errors.append(
                         "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+            if edited:
+               self.values = colValues
 
         elif self.type == 'Identifier':
             if self.data_size != -1:
@@ -635,14 +657,26 @@ class Column(object):
             self.data_size = size
         return self.data_size
 
-    def updateCell(self, pos, new_value):
-        """Changes the value of a cell given
+    @values.setter
+    def values(self, values):
+        self.valuefile.close()
+        self.valuefile = tempfile.TemporaryFile()
+        self.valuefile.write(values[0].encode())
+        for value in values[1:]:
+            self.valuefile.write((',' + value).encode())
 
-            Keyword Arguments:
+    @values.deleter
+    def values(self):
+        self.valuefile.close()
+        self.deleted = True
 
-                pos -- position of cell in column to change
+    def add_value(self, value):
+        if self.valuefile.tell() != 0:
+            self.valuefile.write((',').encode())
+        self.valuefile.write(value.encode())
 
-                new_value -- value to set cell too
-        """
 
-        self.values[pos] = new_value
+
+
+
+

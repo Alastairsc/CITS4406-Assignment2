@@ -6,6 +6,7 @@ runs analysis on said data.
 
 import csv
 import os
+import sys
 
 try:
     from .analyser import *
@@ -275,6 +276,8 @@ class Data(object):
                 f = csv.reader( csvfile, delimiter=self.delimiter_type)
                 for row in f:
                     self.raw_data.append(row)
+       #print('Raw data: ', sys.getsizeof(self.raw_data))
+
                 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
@@ -359,13 +362,12 @@ class Data(object):
         length = len(self.valid_rows)
         for row_num in range(0, length):
             for index, value in enumerate(self.valid_rows[row_num]):
-                self.columns[index].values.append(value)
+                self.columns[index].add_value(value)
             self.valid_rows[row_num].clear()
         self.valid_rows = []
         if self.delete_set:
             for colNo in self.delete_set:
-                self.columns[colNo].values.clear()
-                self.columns[colNo].deleted = True
+                self.columns[colNo].delete_col()
                 self.deleted_col.append(colNo)
             self.delete_set.clear() #only do once
         #self.invalid_rows = [] #dont for reversibility but uses more memory
@@ -411,8 +413,7 @@ class Data(object):
         size to me no more than data_size.
         """             
         for colNo, column in enumerate(self.columns):
-
-            column.define_most_least_common()   
+            column.define_most_least_common()
             if self.template != None and colNo in self.template.columns:
                 column.set_type(self.template.columns[colNo])
                 column.set_not_empty()
@@ -427,7 +428,6 @@ class Data(object):
                 column.compatible = self.analysers[column.type].is_compatable(column.values)
             if self.ignore_empty:
                 column.ignore_empty = True
-            #print(column.values)
         self.datatypes_are_defined = True
 
     def check_compatible(self):
