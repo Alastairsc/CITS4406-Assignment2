@@ -39,9 +39,7 @@ Global Variables:
     re_hyper -- Regular expression for hyperlink type.
 
 """
-import re
-import os
-import tempfile
+import re, os, stat, random, string, sys
 from collections import Counter
 from email.utils import parseaddr
 
@@ -133,7 +131,7 @@ class Column(object):
 
     """
 
-    def __init__(self,online, header=''):
+    def __init__(self, header=''):
         self.compatible = True
         self.most_common = []
         self.least_common = []
@@ -149,28 +147,46 @@ class Column(object):
         self.data_size = -1
         self.ignore_empty = False
         self.deleted = False
-        self.online = online
-        if online:
-            self._values = []
-            self.valuefile = []
-        else:
-            self.valuefile = tempfile.TemporaryFile()
-            pass
+        #TODO check randomly generated file name doesnt already exist
+        self.valuefilename = os.path.join(os.getcwd(),'temp',self.randomString(50)+'.csv')
+        self.valuefile = open(self.valuefilename, 'w+')
+        os.chmod(self.valuefile.name, stat.S_IWRITE)
 
+    def __sizeof__(self):
+        """
+            Returns the size of this column object (not including stored values)
+        :return:
+        """
+        total = 0
+        for attr in dir(self):
+            size = sys.getsizeof(getattr(self, attr))
+            #print(attr, " - ", size)
+            total += size
+        return total
 
+    def randomString(self,length):
+        """
+        Generates random strings for value storage file names
+        :param length:
+        :return:
+        """
+        random.seed()
+        choices = string.ascii_lowercase + string.ascii_uppercase + string.digits
+        randString = ""
+        for i in range(0, length):
+            randString = randString + random.choice(choices)
+        return randString
 
 
     @property
     def values(self):
         """
-            Stores values in a temporary file if offline, if online temporary file cannot be serialised.
+            Stores values in a temporary file
             :return value:
         """
-        if self.online:
-            return self._values
-        self.valuefile.seek(0)
-        values = self.valuefile.read().decode().split(',')
-        return values
+        with open(self.valuefilename, 'r') as fp:
+            values = fp.read().split(',')
+            return values
 
     def change_misc_values(self):
         """
@@ -675,33 +691,28 @@ class Column(object):
 
     @values.setter
     def values(self, values):
-        if self.online:
-            self._values = values
-        else:
-            self.valuefile.close()
-            self.valuefile = tempfile.TemporaryFile()
+        with open(self.valuefilename, 'w+') as fp:
+            fp.seek(0)
+            fp.truncate()
             if values:
-                self.valuefile.write((values[0]).encode())
+                fp.write(values[0])
             for value in values[1:]:
-                self.valuefile.write((',' + value).encode())
+                fp.write(',' + value)
 
     @values.deleter
     def values(self):
-        if self.online:
-            self._values.clear()
-        else:
-            self.valuefile.close()
         self.deleted = True
+        os.remove(self.valuefilename)
 
     def add_value(self, value):
-        if self.online:
-            self._values.append(value)
-        else:
-            if self.valuefile.tell() != 0:
-                self.valuefile.write((',').encode())
-            self.valuefile.write(value.encode())
+        """Adds value to column, call save values when finished adding values"""
+        if self.valuefile.tell() != 0:
+            self.valuefile.write((','))
+        self.valuefile.write(value)
 
-
+    def save_file(self):
+        self.valuefile.close()
+        del(self.valuefile)
 
 
 

@@ -4,7 +4,7 @@
 runs analysis on said data.
 """
 
-import csv
+import csv, stat, sys
 import os
 
 try:
@@ -180,7 +180,7 @@ class Data(object):
             ('Ignored', 'Ignored / not detected')
         )
     
-    def __init__(self, *args, online=False):
+    def __init__(self, *args):
         """Can take up to two arguments, 
             first argument -- filename
             second argument -- template"""
@@ -198,7 +198,6 @@ class Data(object):
         self.data_in_columns = False
         self.datatypes_are_defined = False
         self.valid_rows = []
-        self.online = online
         
         #Template settings
         self.template = None
@@ -227,7 +226,12 @@ class Data(object):
             self.delete_set = self.template.delete_set
         #Process data
         self.read(self.filename)
-        
+
+    def __sizeof__(self):
+        total = 0
+        for attr in dir(self):
+            total += sys.getsizeof(getattr(self, attr))
+        return total
 
     def read(self, csv_file):
         """Opens and reads the CSV file, line by line, to raw_data variable.
@@ -277,7 +281,10 @@ class Data(object):
                 f = csv.reader( csvfile, delimiter=self.delimiter_type)
                 for row in f:
                     self.raw_data.append(row)
-       #print('Raw data: ', sys.getsizeof(self.raw_data))
+        #total = 0
+        #for row in self.raw_data:
+         #   total += sys.getsizeof(row)
+        #print("Raw data: ", total)
 
                 
     def remove_invalid(self):
@@ -349,6 +356,7 @@ class Data(object):
         """
         if self.columns:
             self.columns.clear()
+        os.chmod(os.path.join(os.getcwd(),'temp'), stat.S_IRUSR )
         if self.header_row >=0:
             i = 1
             for value in self.raw_data[self.header_row]:
@@ -359,13 +367,16 @@ class Data(object):
                 tmp_list.append(")")
                 s = ''.join(tmp_list)
                 i += 1
-                self.columns.append(Column(self.online,header=s))
+                self.columns.append(Column(header=s))
         length = len(self.valid_rows)
         for row_num in range(0, length):
             for index, value in enumerate(self.valid_rows[row_num]):
                 self.columns[index].add_value(value)
             self.valid_rows[row_num].clear()
-        self.valid_rows = []
+        self.valid_rows.clear()
+        for col in self.columns:
+            col.save_file()
+        #print("Col: ", sys.getsizeof(self.columns[0]))
         if self.delete_set:
             for colNo in self.delete_set:
                 self.columns[colNo].delete_col()
@@ -616,5 +627,9 @@ class Data(object):
     def delete_column(self, colNo):
         self.deleted_col.append(colNo)
         self.columns[colNo].deleted = True
-        self.columns[colNo].values = []
+        del(self.columns[colNo].values)
+
+    def clear_columns(self):
+        for col in self.columns:
+            del col.values
 
