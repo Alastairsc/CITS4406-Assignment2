@@ -6,7 +6,6 @@ runs analysis on said data.
 
 import csv
 import os
-import sys
 
 try:
     from .analyser import *
@@ -70,6 +69,8 @@ class Data(object):
         rebuild_raw_data -- Recreates raw_data from Data's columns and row.
         
         delete_invalid_row -- Deletes given invalid row at the index from the data.
+
+        delete_column -- Deletes a given column
 
     Variables:
     
@@ -179,7 +180,7 @@ class Data(object):
             ('Ignored', 'Ignored / not detected')
         )
     
-    def __init__(self, *args):
+    def __init__(self, *args, online=False):
         """Can take up to two arguments, 
             first argument -- filename
             second argument -- template"""
@@ -197,7 +198,7 @@ class Data(object):
         self.data_in_columns = False
         self.datatypes_are_defined = False
         self.valid_rows = []
-
+        self.online = online
         
         #Template settings
         self.template = None
@@ -358,7 +359,7 @@ class Data(object):
                 tmp_list.append(")")
                 s = ''.join(tmp_list)
                 i += 1
-                self.columns.append(Column(header=s))
+                self.columns.append(Column(self.online,header=s))
         length = len(self.valid_rows)
         for row_num in range(0, length):
             for index, value in enumerate(self.valid_rows[row_num]):

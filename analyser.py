@@ -144,7 +144,7 @@ class NumericalAnalyser(Analyser):
                         new_values.append(float(i))
                     else:
                         new_values.append(int(i))
-                except:
+                except ValueError:
                     #assuming error cells are not passed to here
                     isNumeric = False
         values = [i for i in new_values]

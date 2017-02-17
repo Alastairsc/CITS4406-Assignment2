@@ -40,6 +40,7 @@ Global Variables:
 
 """
 import re
+import os
 import tempfile
 from collections import Counter
 from email.utils import parseaddr
@@ -132,7 +133,7 @@ class Column(object):
 
     """
 
-    def __init__(self, header=''):
+    def __init__(self,online, header=''):
         self.compatible = True
         self.most_common = []
         self.least_common = []
@@ -148,10 +149,25 @@ class Column(object):
         self.data_size = -1
         self.ignore_empty = False
         self.deleted = False
-        self.valuefile = tempfile.TemporaryFile()
+        self.online = online
+        if online:
+            self._values = []
+            self.valuefile = []
+        else:
+            self.valuefile = tempfile.TemporaryFile()
+            pass
+
+
+
 
     @property
     def values(self):
+        """
+            Stores values in a temporary file if offline, if online temporary file cannot be serialised.
+            :return value:
+        """
+        if self.online:
+            return self._values
         self.valuefile.seek(0)
         values = self.valuefile.read().decode().split(',')
         return values
@@ -231,7 +247,7 @@ class Column(object):
                     sci_not_count += 1
                 else:
                     int_count += 1
-                    value = value.strip()
+                    colValues[x] = value.strip()
                     edited = True
             elif re_email.search(value):
                 if parseaddr(value)[1] != '':
@@ -659,22 +675,31 @@ class Column(object):
 
     @values.setter
     def values(self, values):
-        self.valuefile.close()
-        self.valuefile = tempfile.TemporaryFile()
-        self.valuefile.write(values[0].encode())
-        for value in values[1:]:
-            self.valuefile.write((',' + value).encode())
+        if self.online:
+            self._values = values
+        else:
+            self.valuefile.close()
+            self.valuefile = tempfile.TemporaryFile()
+            if values:
+                self.valuefile.write((values[0]).encode())
+            for value in values[1:]:
+                self.valuefile.write((',' + value).encode())
 
     @values.deleter
     def values(self):
-        self.valuefile.close()
+        if self.online:
+            self._values.clear()
+        else:
+            self.valuefile.close()
         self.deleted = True
 
     def add_value(self, value):
-        if self.valuefile.tell() != 0:
-            self.valuefile.write((',').encode())
-        self.valuefile.write(value.encode())
-
+        if self.online:
+            self._values.append(value)
+        else:
+            if self.valuefile.tell() != 0:
+                self.valuefile.write((',').encode())
+            self.valuefile.write(value.encode())
 
 
 
