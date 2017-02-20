@@ -1,59 +1,53 @@
 # UWA Data Analysis
-Provide a Python file to perform basic cleansing and statistical analysis on data provided via a csv file. Ideally structure the project so that other students can easily pick up/extend the functionality at a later date.
 
-### Contributors
-* Liam Jones
-* Alastair Chin
-* Jordan Hedges
-* Kieran Richards
-* Leighton Lilford
-* Jan Villanueva
-* Alastair Mory
-* Csv spliiter by scorpion: http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html
+Provide a Python file to perform basic cleansing, statistical analysis and error detection on data provided via a csv file.
 
-Instructions
-===============
+This document will give step-by-step instructions on how to set up this program to run on your local machines and teaches you how to use it. It also documents what data types and type of analysis and error detection it can do.
 
-1. Install the Anaconda package for Python 3 from:	http://continuum.io/downloads and follow the installation intructions
-2. If you haven't navigated using the terminal/command line before we reccomend reading the following tutorial found at:     http://linuxcommand.org/lts0020.php
+## Getting Started
 
-###Ubuntu
+1. Install the [Anaconda](http://continuum.io/downloads) package for your operating system for Python 3 and follow the installation instructions.
+2. If you haven't navigated using the terminal/command line before we recommend reading this [tutorial](http://linuxcommand.org/lts0020.php)
 
-Open the terminal, navigate to the directory containing the application.py file and run using 
->'python3 application.py *csv_filename_here*'.
+###Mac/Ubuntu
+
+Open the terminal, navigate to the directory containing the application.py file and run using
+>python3 application.py *csv_filename_here*
 
 Where *csv_filename_here* is replaced with the path to the file you want to run.
-For example: to run the email.csv file found in csv_files in the program folder type
->'python3 application.py csv_files/email.csv'
+For example: to run the SampleFile.csv file found in csv_files in the program folder enter the following:
+>python3 application.py csv_files/SampleFile.csv
+
 
 If you don't want to list out the path to the file through typing you can drag and drop the file onto the terminal to paste its path in.
 
 ###Windows
 
-Open windows powershell, navigate to the directory containing the application.py file and run using 
->'python application.py *csv_filename_here*'.
+Open windows powershell, navigate to the directory containing the application.py file and run using
+>python application.py *csv_filename_here*
 
 Where *csv_filename_here* is replaced with the path to the file you want to run.
-For example: to run the email.csv file found in csv_files in the program folder type 
->'python application.py csv_files\email.csv'
+For example: to run the SampleFile.csv file found in csv_files in the program folder enter the following:
+>python application.py csv_files/SampleFile.csv
+
 
 If you don't want to list out the path to the file through typing you can drag and drop the file onto the terminal to paste its path in.
 
-###Usage
+##Usage
 
 You can specify multiple files using: 
->'python application.py *csv_fileame* *csv_filename*'
+>python application.py *csv_fileame1* *csv_filename2*
 
-You can use templates using the -t flag:
->'python application.py *csv_filaname* -t *template_name*'
+
+The reports generated are html files which can be opening with any internet browser and are saved in the same location as the original csv file.
+
+You can use templates using the -t flag see the [documentation](http://35.165.229.31/upload/createTemplate/) for more information on templates:
+>python application.py *csv_filaname* -t *template_name*
 
 You can specify entire directories (sub directories are not recursed, only csv files) by specifying a directory in the program directory running:
->'python3 application.py csv_files/' 
->or 'python application.py csv_files\'
+>python application.py csv_files\
 
-depending on operating system will run the program on all csv files in the csv_files directory.
-
-Files can either be csv files or excel files. We reccomend saving excel spreadsheets as csv files using the save as function in excel as there are errors in used modules that prevent some excel files being run. If using excel files the program will create a csv file for each sheet in your excel file. Each sheet is analysed independently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
+Files can either be csv files or excel files. We recommend saving excel spreadsheets as csv files using the save as function in excel as there are errors in used modules that prevent some excel files being run. If using excel files the program will create a csv file for each sheet in your excel file. Each sheet is analysed independently and a new report is generated for each. All these are saved in a new directory located in the same locations as the original excel file.
 
 If multiple files are given with only one template all files will be processed using the template. The same will occur given a excel file with multiple sheets and a single template. For using multiple templates with multiple files there must be an equal number of files and templates.
 
@@ -64,12 +58,18 @@ csv_filenames can be specified by relative path or using its absolute path
 
 ###Large files
 
-For files larger than 300Mb we recommend splitting your data using a Csv spliiter. We recommend using one by Sopheap Ly from the fxfisherman forums:
+For files larger than 300Mb we recommend splitting your data using a Csv spliiter. We recommend using one by Sopheap Ly from the [fxfisherman forums](http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html#post727), [download here](http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip)
 
-http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html#post727
-
-Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
-
+## Contributors
+* Liam Jones
+* Alastair Chin
+* Jordan Hedges
+* Kieran Richards
+* Leighton Lilford
+* Jan Villanueva
+* Alastair Mory
+* [Csv Splitter](http://www.fxfisherman.com/forums/forex-metatrader/tools-utilities/75-csv-splitter-divide-large-csv-files.html) by scorpion:
+## Functionality
 ### Supported Data types
 * Int
 * Float
@@ -85,8 +85,6 @@ Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
 * Time
 * Hyperlink
 * Character
-
-
 
 ### Cleansing
 * Inconsistent row lengths
@@ -110,9 +108,9 @@ Download link: http://www.fxfisherman.com/downloads/csv-splitter-1.1.zip
 * Number of unique entries
 
 
-###Directory Structure
+##Directory Structure
 * The source code is all in the main directory
 * csv_files contains test files used to evaluate the program
-* Sphinx contains documentation of classes and methods of the         	program
+* Sphinx contains documentation of classes and methods of the program
 * templates folder contains templates used with the test files in csv_files
 * Detailed documentation is a pdf generated by the Sphinx Code 
