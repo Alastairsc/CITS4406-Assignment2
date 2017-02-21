@@ -510,7 +510,7 @@ class Data(object):
         for rowNo in range(0, num_rows):
             for colNo, column in enumerate(self.columns):
                 if not column.deleted:
-                    new_file.write(column.values[rowNo])
+                    new_file.write(column.iterate_next())
                     if(colNo == row_len - 1):
                         new_file.write("\n")
                     else:
@@ -596,14 +596,21 @@ class Data(object):
         """
             Recreates raw data from the data's columns
         """
-        total_rows = len(self.columns[0].values)
+
+        col_values = []
+        for col in self.columns:
+            col_values.append(col.values)
+        total_rows = len(col_values[0])
         for i in range(0, total_rows):
             row = []
-            for col in self.columns:
-                row.append(col.values[i])
+            for col_value in col_values:
+                row.append(col_value[i])
             self.valid_rows.append(row)
-        self.columns = []
-        
+        for col in self.columns:
+            del(col.values)
+            del(col)
+        self.columns.clear()
+
     def delete_invalid_row(self, invalid_row_index):
         """
             Deletes given invalid row at the index from the data.

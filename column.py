@@ -150,6 +150,7 @@ class Column(object):
         #TODO check randomly generated file name doesnt already exist
         self.valuefilename = os.path.join(os.getcwd(),'temp',self.randomString(50)+'.csv')
         self.valuefile = open(self.valuefilename, 'w+')
+        self.pos = None
         os.chmod(self.valuefile.name, stat.S_IWRITE)
 
     def __sizeof__(self):
@@ -160,7 +161,7 @@ class Column(object):
         total = 0
         for attr in dir(self):
             size = sys.getsizeof(getattr(self, attr))
-            #print(attr, " - ", size)
+            #1print(attr, " - ", size)
             total += size
         return total
 
@@ -696,8 +697,8 @@ class Column(object):
             fp.truncate()
             if values:
                 fp.write(values[0])
-            for value in values[1:]:
-                fp.write(',' + value)
+                for value in values[1:]:
+                    fp.write(',' + value)
 
     @values.deleter
     def values(self):
@@ -713,6 +714,108 @@ class Column(object):
     def save_file(self):
         self.valuefile.close()
         del(self.valuefile)
+
+
+    def get_values(self, position, number):
+        line = ""
+        count = 0
+        nextC = ' '
+        if position - number/2 < 0:
+            pos = number
+        else:
+            pos = position + number/2
+        with open(self.valuefilename, 'r') as fp:
+            while count <= pos and nextC != '':
+                nextC = fp.read(5)
+                count += nextC.count(',')
+                line += nextC
+        if nextC == '':
+            line = line.split(',')
+            line_size = len(line)
+            if line_size < number:
+                return line, position
+            return line[-number:], position + number - line_size
+        line = line[:line.rfind(',')]
+        line = line.split(',')
+        if position - number/2 < 0:
+            return line[:number], position
+        return line[int(position-number/2):int(position+number/2)], number/2
+
+    def get_value(self, position):
+        value = ''
+        with open(self.valuefilename, 'r') as fp:
+            values = ''
+            nextC = fp.read(1)
+            while nextC != ',' and nextC != '':
+                values += nextC
+                nextC = fp.read(1)
+            if nextC == '':
+                raise EOFError("No values found in column")
+            values += fp.read(len(value) * position)
+            count = values.count(',')
+            while count <= position and nextC != '':
+                nextC = fp.read(5)
+                count += nextC.count(',')
+                values += nextC
+            if nextC == '' and count <= position:
+                raise IndexError("Position: " + position + " outside range of values in column")
+            values = values.split(',')
+        return values[position]
+
+    def edit_value(self, position, value):
+        if value != None:
+            with open(self.valuefilename, 'r+') as fp:
+                values = ''
+                nextC = fp.read(1)
+                while nextC != ',' and nextC != '':
+                    values += nextC
+                    nextC = fp.read(1)
+                if nextC == '':
+                    print("File: ",self.valuefilename)
+                    raise EOFError("No values found in column")
+                values += nextC
+                values += fp.read(len(value) * position)
+                count = values.count(',')
+                if count > position: #progress to next comma
+                    nextC = ' '
+                    while nextC != ',' and nextC != '':
+                        nextC = fp.read(1)
+                        values += nextC
+                while count <= position and nextC != '':
+                    nextC = fp.read(1)
+                    count += nextC.count(',')
+                    values += nextC
+                values = values.split(',')
+                if values and values[position] != value: #only rewrite values if they have changed
+                    values[position] = value
+                    remainder = fp.read()
+                    fp.seek(0)
+                    fp.truncate()
+                    fp.write(values[0])
+                    for oldvalue in values[1:]:
+                        fp.write(',' + oldvalue)
+                    if len(remainder) > 0:
+                        fp.write(remainder)
+
+    def iterate_next(self):
+        if self.pos == None:
+            self.pos = 0
+        with open(self.valuefilename, 'r') as fp:
+            fp.seek(self.pos)
+            value = ''
+            nextC = fp.read(1)
+            while nextC != ',' and nextC != '':
+                value += nextC
+                nextC = fp.read(1)
+            if nextC == '':
+                self.pos = None
+            else:
+                self.pos = fp.tell()
+            return value
+
+
+
+
 
 
 

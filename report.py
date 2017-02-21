@@ -199,8 +199,9 @@ class Report(object):
                         #same type
                 self.chart_data = ''.join([self.chart_data, "['Row ','Value'],"])
                 valueRowNo = 0
-                if len(column.values)>self.GRAPH_LIMIT:
-                    for value in column.values[:self.GRAPH_LIMIT]:
+                values = column.values
+                if len(values)>self.GRAPH_LIMIT:
+                    for value in values[:self.GRAPH_LIMIT]:
                         try:
                             x = float(value)  
                             valueRowNo+=1
@@ -209,7 +210,7 @@ class Report(object):
                         except:
                             pass
                 else:
-                    for value in column.values:
+                    for value in values:
                         try:
                             x = float(value)  
                             valueRowNo+=1
@@ -365,8 +366,9 @@ class Report(object):
                        column.analysis.unique]
                 self.chart_data = ''.join([self.chart_data , "['Row ','Value'],"])
                 valueRowNo = 0
-                if len(column.values)>self.GRAPH_LIMIT:
-                    for value in column.values[:self.GRAPH_LIMIT]:
+                values = column.values
+                if len(values)>self.GRAPH_LIMIT:
+                    for value in values[:self.GRAPH_LIMIT]:
                         try:
                             x = float(value)  
                             valueRowNo+=1
@@ -374,7 +376,7 @@ class Report(object):
                         except:
                             pass
                 else:
-                    for value in column.values:
+                    for value in values:
                         try:
                             x = float(value)  
                             valueRowNo+=1
