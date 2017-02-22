@@ -65,7 +65,7 @@ class Report(object):
     """
 
 
-    def __init__(self, data, file):
+    def __init__(self, data):
         """Initialise the Report object and assign local variables.
         
         Keyword arguments:
@@ -75,7 +75,7 @@ class Report(object):
         """
         self.GRAPH_LIMIT = 10000
         self.data = data
-        self.file_name = file
+        self.file_name = data.filename
         self.chart_data = ''
     
     @staticmethod
@@ -92,13 +92,14 @@ class Report(object):
         type analyses. Returns a string of html.
         """
         html = base_template.format(
+            filename = path.split(self.file_name)[1],
             len_invalid_rows=len(self.data.formatted_invalid_rows),
             invalid_rows=self.list_creator(self.data.formatted_invalid_rows), 
             empty_columns=self.list_creator(self.empty_columns()),
             len_empty_columns=len(self.empty_columns()),
             error_columns=self.list_creator(self.data.formatted_errors),
             len_error_columns=len(self.data.errors),
-            len_columns=len(self.data.valid_rows),
+            len_columns=len(self.data.columns[0].values),
             delimiter_type = self.data.delimiter_type,   #   NEW
             numerical_analysis=self.numerical_analysis(),
             string_analysis=self.string_analysis(),
@@ -107,6 +108,7 @@ class Report(object):
             email_analysis=self.email_analysis(),
             currency_analysis =self.currency_analysis(),
             boolean_analysis = self.boolean_analysis(),
+            datetime_analysis = self.datetime_analysis(),
             date_analysis = self.date_analysis(),
             time_analysis = self.time_analysis(),
             char_analysis = self.char_analysis(),
@@ -558,6 +560,33 @@ class Report(object):
                 self.chart_data = self.chart_data[:-1]
                 self.chart_data = ''.join([self.chart_data,"],"])
                 rows += self.row_creator(row,rowNo,'I')
+        self.chart_data = self.chart_data[:-1]
+        self.chart_data += "];"
+        return rows
+
+    def datetime_analysis(self):
+        """Return HTML string of date analysis on columns of type date
+        in the data object by accessing the various class variables of the
+        columns.
+        """
+        rows = ''
+        rowNo = 0;
+        self.chart_data += "var dateData = [ "
+        for column in self.data.columns:
+            if column.type == 'Datetime':
+                row = [column.header,
+                       column.analysis.mode,
+                       column.most_common[:5],
+                       column.least_common[:5],
+                       column.analysis.unique]
+                rowNo += 1;
+                self.chart_data = ''.join([self.chart_data, "["])
+                self.chart_data = ''.join([self.chart_data, "['Row ','Value'],"])
+                for col in column.most_common[:10]:
+                    self.chart_data = ''.join([self.chart_data, "[", str(col).replace("(", "").replace(")", ""), "],"])
+                self.chart_data = self.chart_data[:-1]
+                self.chart_data = ''.join([self.chart_data, "],"])
+                rows += self.row_creator(row, rowNo, 'D')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows

@@ -18,7 +18,7 @@ base_template = \
 init();
 {chart_data}
 </script>
-<title>Analysis Report</title>
+<title>Analysis Report </title>
 
 </head>
 <body>
@@ -42,6 +42,7 @@ init();
             <li><a href="#boolean">Boolean</a></li>
             <li><a href="#enum">Enum</a></li>
             <li><a href="#identifier">Identifier</a></li>
+            <li><a href="#datetime">Date Time</a></li>
             <li><a href="#date">Date</a></li>
             <li><a href="#time">Time</a></li>
             <li><a href="#day">Day</a></li>
@@ -56,7 +57,7 @@ init();
 
 <br>&nbsp<br>
 <div class="container">
-    <h1>Analysis Report</h1>
+    <h1>Analysis Report of {filename}</h1>
 </div>
 
 <div class="container">
@@ -180,6 +181,20 @@ init();
                     <th>View Chart</th>
                 </tr>
                 {identifier_analysis}
+            </table>
+
+            <hr id="datetime"/>
+            <h2 class="titleRow">Datetime</h2>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Column</th>
+                    <th>Mode</th>
+                    <th>Most Common (Top 5)</th>
+                    <th>Least Common (Top 5)</th>
+                    <th>Unique Items</th>
+                    <th>View Chart</th>
+                </tr>
+                {datetime_analysis}
             </table>
             
             <hr id="date"/>
