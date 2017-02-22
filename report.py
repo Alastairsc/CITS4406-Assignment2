@@ -144,7 +144,7 @@ class Report(object):
         return html_list
 
     @staticmethod
-    def row_creator(row_items, rowNumber = 0, type = 'none'):
+    def row_creator(row_items, rowNumber = 0, type = 'none', hide = False):
         """Return provided list as HTML rows.
         
         Arguments:
@@ -160,7 +160,10 @@ class Report(object):
         for item in row_items:
             html_row += '<td>' + str(item) + '</td>'
         #Chart
-        html_row += '<td><a onclick="showChart(\''+type+'\','+str(rowNumber)+',this)" href="#col_analysis">Show Data</a></td>'
+        if not hide:
+            html_row += '<td><a onclick="showChart(\''+type+'\','+str(rowNumber)+',this)" href="#col_analysis">Show Data</a></td>'
+        else:
+            html_row += '<td>&nbsp</td>'
         html_row += '</tr>'
         return html_row
         
@@ -580,15 +583,15 @@ class Report(object):
                        column.least_common[:5],
                        column.analysis.unique]
                 rowNo += 1;
-                self.chart_data = ''.join([self.chart_data, "["])
-                self.chart_data = ''.join([self.chart_data, "['Row ','Value'],"])
-                for col in column.most_common[:10]:
-                    self.chart_data = ''.join([self.chart_data, "[", str(col).replace("(", "").replace(")", ""), "],"])
-                self.chart_data = self.chart_data[:-1]
-                self.chart_data = ''.join([self.chart_data, "],"])
-                rows += self.row_creator(row, rowNo, 'D')
-        self.chart_data = self.chart_data[:-1]
-        self.chart_data += "];"
+                #self.chart_data = ''.join([self.chart_data, "["])
+                #self.chart_data = ''.join([self.chart_data, "['Row ','Value'],"])
+                #for col in column.most_common[:10]:
+                #    self.chart_data = ''.join([self.chart_data, "[", str(col).replace("(", "").replace(")", ""), "],"])
+                #self.chart_data = self.chart_data[:-1]
+                #self.chart_data = ''.join([self.chart_data, "],"])
+                rows += self.row_creator(row, rowNo, 'D', hide=True)
+        #self.chart_data = self.chart_data[:-1]
+        #self.chart_data += "];"
         return rows
         
     def gen_html(self, html):
