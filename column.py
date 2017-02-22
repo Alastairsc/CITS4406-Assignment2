@@ -305,7 +305,6 @@ class Column(object):
                 if len(split_value) == 2 and \
                         re_date.search(split_value[0].strip(' \t')) and re_time.search(split_value[1].strip(' \t')):
                     datetime_count += 1
-                    print(datetime_count / len(colValues))
         if edited:
             self.values = colValues
         num_values = len(colValues)
