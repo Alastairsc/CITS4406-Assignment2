@@ -49,7 +49,7 @@ def main(*args):
     print("[Step 5/7] Running Analysis")
     data.analysis()
     #tr.create_snapshot()
-    report = Report(data, filename)
+    report = Report(data)
     str_report = report.html_report()
     print("[Step 6/7] Generating report")
     report.gen_html(str_report)

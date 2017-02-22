@@ -356,7 +356,7 @@ class Data(object):
         """
         if self.columns:
             self.columns.clear()
-        os.chmod(os.path.join(os.getcwd(),'temp'), stat.S_IRUSR )
+        #os.chmod(os.path.join(os.getcwd(),'temp'), stat.S_IRUSR )
         if self.header_row >=0:
             i = 1
             for value in self.raw_data[self.header_row]:

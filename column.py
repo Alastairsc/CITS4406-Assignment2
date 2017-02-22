@@ -151,7 +151,7 @@ class Column(object):
         self.valuefilename = os.path.join(os.getcwd(),'temp',self.randomString(50)+'.csv')
         self.valuefile = open(self.valuefilename, 'w+')
         self.pos = None
-        os.chmod(self.valuefile.name, stat.S_IWRITE)
+        #os.chmod(self.valuefile.name, stat.S_IWRITE)
 
     def __sizeof__(self):
         """
