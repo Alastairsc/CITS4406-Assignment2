@@ -57,7 +57,7 @@ re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Ye
 re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 
 re_date = re.compile('^((31(\/|-)(0?[13578]|1[02]))(\/|-)|((29|30)(\/|-)(0?[1,3-9]|1[0-2])(\/|-)))((1[6-9]|[2-9]\d)?\d{2})$|^(29(\/|-)0?2(\/|-)(((1[6-9]|[2-9]\d)?(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$|^(0?[1-9]|1\d|2[0-8])(\/|-)((0?[1-9])|(1[0-2]))(\/|-)((1[6-9]|[2-9]\d)?\d{2})$')
-re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$)|(^(1[012]|0?[1-9]):[0-5][0-9](\ )?(?i)(am|pm)$)')
+re_time = re.compile('(^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$)|(^(1[012]|0?[1-9]):[0-5][0-9](:[0-5][0-9])?(\ )?(?i)(am|pm)$)')
 re_char = re.compile('^\D$')
 re_day = re.compile('^(?i)(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$')
 re_hyper = re.compile('^(?i)(https?:\/\/).+$')
@@ -250,6 +250,7 @@ class Column(object):
         char_count = 0
         day_count = 0
         hyper_count = 0
+        datetime_count = 0
 
         colValues = self.values
         edited = False
@@ -299,6 +300,12 @@ class Column(object):
                 day_count += 1
             elif re_hyper.search(value):
                 hyper_count += 1
+            else:
+                split_value = value.split(' ',1)
+                if len(split_value) == 2 and \
+                        re_date.search(split_value[0].strip(' \t')) and re_time.search(split_value[1].strip(' \t')):
+                    datetime_count += 1
+                    print(datetime_count / len(colValues))
         if edited:
             self.values = colValues
         num_values = len(colValues)
@@ -330,6 +337,8 @@ class Column(object):
             self.type = 'Day'
         elif hyper_count / num_values >= threshold:
             self.type = 'Hyperlink'
+        elif datetime_count / num_values >= threshold:
+            self.type = 'Datetime'
         elif len(self.most_common) < 10 and len(self.most_common) != 0:
             self.type = 'Enum'
         else:
@@ -614,6 +623,21 @@ class Column(object):
                     errors.append(tup)
                     formatted_errors.append(
                         "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+        elif self.type == 'Datetime':
+            for x, value in enumerate(self.values):
+                if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore,
+                                    data_start):
+                    continue
+                else:
+                    split_value = value.split(' ',1)
+                    if not len(split_value) == 2 or not \
+                            (re_date.search(split_value[0].strip(' \t')) and re_time.search(split_value[1].strip(' \t'))):
+                        reason = 'not a recognised date time format'
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                        errors.append(tup)
+                        formatted_errors.append(
+                            "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+
 
     def check_empty(self, x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore,
                     data_start):

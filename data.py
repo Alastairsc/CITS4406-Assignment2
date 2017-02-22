@@ -159,13 +159,15 @@ class Data(object):
         'Char': CharAnalyser,
         'Day': DayAnalyser,
         'Hyperlink': HyperAnalyser, 
-        'Numeric': NumericalAnalyser
+        'Numeric': NumericalAnalyser,
+        'Datetime': DatetimeAnalyser,
         }
     types = (
             ('Boolean', 'Boolean'),
             ('Char', 'Character'),
             ('Currency', 'Currency'),
             ('Date', 'Date'),
+            ('Datetime', 'Date Time'),
             ('Day', 'Day of the Week'),
             ('Email', 'Email Address'),
             ('Enum', 'Enumerable Set'),

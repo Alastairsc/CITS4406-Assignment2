@@ -454,3 +454,10 @@ class HyperAnalyser(Analyser):
     def __init__(self, values):
         super().__init__(values)
         # TODO Implement some hyperlink unique stats, e.g. domain frequency.
+
+class DatetimeAnalyser(Analyser):
+    """Run datetime analysis, currenytly only using Analyser super class methods.
+    """
+    def __init__(self, values):
+        super().__init__(values)
+        # TODO implement datetime unique stats
