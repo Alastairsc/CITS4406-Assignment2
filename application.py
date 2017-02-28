@@ -8,12 +8,11 @@ Last Updated: 28/02/2017
 import argparse
 import webbrowser
 import textwrap
-import pandas as pd
+import xlrd
 import os
 from tkinter import *
 from tkinter import filedialog, ttk
 from threading import Thread
-from functools import partial
 try:
     from .data import *
     from .report import *
@@ -313,12 +312,20 @@ def process_files(files, templates, exportfile=''):
         # TODO handle empty sheets
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
             print("[Step 0/7] Converting to csv file")
-            xls = pd.ExcelFile(file)
-            sheet_names = xls.sheet_names
+            wb = xlrd.open_workbook(file)
+            sheet_names = wb.sheet_names()
+            #xls = ExcelFile(file)
+            #sheet_names = xls.sheet_names
             if len(sheet_names) == 1:
-                df = xls.parse(sheet_names[0], index_col=None, na_values=['NA'])
+                sh = wb.sheet_by_name(sheet_names[0])
                 new_name = os.path.splitext(file)[0] + ".csv"
-                df.to_csv(new_name, index=False)
+                with open(new_name, 'w', newline='') as fp:
+                    wr = csv.writer(fp)
+                    for rownum in range(sh.nrows):
+                        wr.writerow(sh.row_values(rownum))
+                #df = xls.parse(sheet_names[0], index_col=None, na_values=['NA'])
+                #new_name = os.path.splitext(file)[0] + ".csv"
+                #df.to_csv(new_name, index=False)
                 filenames.append(new_name)
             else:
                 file_dir = os.getcwd()
@@ -326,10 +333,17 @@ def process_files(files, templates, exportfile=''):
                     os.makedirs(os.path.join(file_dir, "csv_copies"))
                     # makes new directory to store new csv files
                 for sheet in sheet_names:
-                    df = xls.parse(sheet, index_col=None, na_values=['NA'])
+                    sh = wb.sheet_by_name(sheet)
                     new_name = os.path.join(file_dir, "csv_copies", \
                                             os.path.splitext(os.path.split(file)[1])[0] + "_" + sheet + ".csv")
-                    df.to_csv(new_name, index=False)
+                    with open(new_name, 'w', newline='') as fp:
+                        wr = csv.writer(fp)
+                        for rownum in range(sh.nrows):
+                            wr.writerow(sh.row_values(rownum))
+                    #df = xls.parse(sheet, index_col=None, na_values=['NA'])
+                    #new_name = os.path.join(file_dir, "csv_copies", \
+                    #                        os.path.splitext(os.path.split(file)[1])[0] + "_" + sheet + ".csv")
+                    #df.to_csv(new_name, index=False)
                     filenames.append(new_name)
         elif name_ext[1] == '.csv':
             filenames.append(file)
