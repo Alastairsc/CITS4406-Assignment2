@@ -13,6 +13,9 @@ try:
 except SystemError:
     from analyser import *
     from column import *
+except ImportError:
+    from analyser import *
+    from column import *
 
 
 num_headers = 1
