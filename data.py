@@ -4,8 +4,7 @@
 runs analysis on said data.
 """
 
-import csv, stat, sys
-import os
+import csv
 
 try:
     from .analyser import *
