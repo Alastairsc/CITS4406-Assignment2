@@ -596,7 +596,8 @@ class Report(object):
         
     def gen_html(self, html):
         """Generates html report for the file"""
-        
-        html_file = open(path.splitext(self.file_name)[0] + "_report.html", "w")
+        filename = path.splitext(self.file_name)[0] + "_report.html"
+        html_file = open(filename, "w")
         html_file.write(html)
         html_file.close()
+        return filename
