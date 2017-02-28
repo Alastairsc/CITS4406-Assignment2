@@ -732,7 +732,10 @@ class Column(object):
         """Adds value to column, call save values when finished adding values"""
         if self.valuefile.tell() != 0:
             self.valuefile.write((','))
-        self.valuefile.write(value)
+        try:
+            self.valuefile.write(value)
+        except UnicodeEncodeError:
+            print("Encoding Error, cannot evaluate: ",value)
 
     def save_file(self):
         self.valuefile.close()
