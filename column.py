@@ -39,7 +39,7 @@ Global Variables:
     re_hyper -- Regular expression for hyperlink type.
 
 """
-import re, os, stat, random, string, sys
+import re, os, random, string, sys
 from collections import Counter
 from email.utils import parseaddr
 
@@ -53,7 +53,7 @@ re_float = re.compile('^-?\d*?\.\d+$')
 re_int = re.compile('^\s*-?\d+$')
 re_email = re.compile('@')
 re_currency = re.compile('^\(?(\s*((-?(\$|€|£))|((\$|€|£)-?))(\d*\.\d*|\.\d*|\d*))\)?')
-re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$', re.I)
+re_boolean = re.compile('^\s*T$|^\s*F$|^\s*True$|^\s*False$|^\s*Y$|^\s*N$|^\s*Yes$|^\s*No$|[0-1]', re.I)
 re_sci_notation= re.compile('\s*[\+-]?(\d+(\.\d+)?|\d*\.\d+)([eE][+\-]?\d+)?')
 
 re_date = re.compile('^((31(\/|-)(0?[13578]|1[02]))(\/|-)|((29|30)(\/|-)(0?[1,3-9]|1[0-2])(\/|-)))((1[6-9]|[2-9]\d)?\d{2})$|^(29(\/|-)0?2(\/|-)(((1[6-9]|[2-9]\d)?(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$|^(0?[1-9]|1\d|2[0-8])(\/|-)((0?[1-9])|(1[0-2]))(\/|-)((1[6-9]|[2-9]\d)?\d{2})$')
@@ -261,6 +261,12 @@ class Column(object):
                 else:
                     float_count += 1
             elif re_int.match(value) or value == '0':
+                if value == '1' or value == '0':
+                    boolean_count += 1
+                    if value == '1':
+                        self.total_true += 1
+                    else:
+                        self.total_false += 1
                 if abs(int(value)) > 1000000:
                     sci_not_count += 1
                 else:
@@ -276,17 +282,17 @@ class Column(object):
                 currency_count += 1
             elif re_boolean.search(value):
                 boolean_count += 1
-                temp_value = str(value.upper())
-                if temp_value == ' TRUE' or temp_value == ' T' or temp_value == 'TRUE' or temp_value == 'T':
+                temp_value = str(value.strip().upper())
+                if temp_value == 'TRUE' or temp_value == 'T':
                     self.total_true += 1
-                if temp_value == ' FALSE' or temp_value == ' F' or temp_value == 'FALSE' or temp_value == 'F':
+                if temp_value == 'FALSE' or temp_value == 'F':
                     self.total_false += 1
-                if temp_value == ' YES' or temp_value == ' Y' or temp_value == 'YES' or temp_value == 'Y':
+                if temp_value == 'YES' or temp_value == 'Y':
                     self.total_yes += 1
-                if temp_value == ' NO' or temp_value == ' N' or temp_value == 'NO' or temp_value == 'N':
+                if temp_value == 'NO' or temp_value == 'N':
                     self.total_no += 1
                 # These are also chars
-                if temp_value == 'T' or temp_value == 'F' or temp_value == 'Y' or temp_value == 'N':
+                if temp_value == 'T' or temp_value == 'F':
                     char_count += 1
             elif re_sci_notation.fullmatch(value):
                 sci_not_count += 1
@@ -735,7 +741,7 @@ class Column(object):
         try:
             self.valuefile.write(value)
         except UnicodeEncodeError:
-            print("Encoding Error, cannot evaluate: ",value)
+            print("Encoding Error, cannot evaluate")
 
     def save_file(self):
         self.valuefile.close()
