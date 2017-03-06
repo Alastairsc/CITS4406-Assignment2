@@ -9,7 +9,7 @@ import argparse
 import webbrowser
 import textwrap
 import xlrd
-import os
+import os, shutil
 from tkinter import *
 from tkinter import filedialog, ttk
 from threading import Thread
@@ -89,8 +89,8 @@ class DisplayWindow:
     def dataaskopenfile(self):
         """ Asks for files to process and displays them in the output window"""
         self.reset()
-        if self.template != None:
-            Label(self.display, text=str("Template Selected: " + self.template.name), anchor='w').pack(fill=X)
+        if self.template:
+            Label(self.display, text=str("Template Selected: " + self.template[0]), anchor='w').pack(fill=X)
         self.datafiles = filedialog.askopenfiles(mode='r', filetypes=[('All Files', '.*'),('Csv Files','*.csv'),
                                                  ('Excel Workbook', '*.xlsx'), ('Excel 97-2003 Workbook', '.xls')],
                                                  defaultextension="*.csv")
@@ -123,7 +123,7 @@ class DisplayWindow:
 
     def maketemplate(self, event):
         """Opens webbrowser to create template page on Data-oracle website"""
-        webbrowser.open_new("http://35.165.229.31/upload/createTemplate/")
+        webbrowser.open_new("http://52.32.29.14/upload/createTemplate/")
 
     def process_report(self):
         """Runs program and generates report at the end"""
@@ -160,9 +160,11 @@ class DisplayWindow:
 
     def templateaskopenfile(self):
         """Asks for template to use in processing"""
-        self.template = filedialog.askopenfile(mode='r', filetypes=[('All Files', '.*'), ('Csv Files', '*.csv')],
+        self.template = []
+        template = filedialog.askopenfile(mode='r', filetypes=[('All Files', '.*'), ('Csv Files', '*.csv')],
                                                defaultextension="*.csv")
-        Label(self.display, text=str("Template Selected: " + self.template.name), anchor='w').pack(fill=X)
+        self.template.append(template.name)
+        Label(self.display, text=str("Template Selected: " + self.template[0]), anchor='w').pack(fill=X)
         statusText.set("Ready to Process Folder...")
         return self.template
 
@@ -307,10 +309,13 @@ def process_files(files, templates, exportfile=''):
         exportfile -- file to export analsysis to if applicable
     """
     filenames = []
+    excel = False
     for file in files:
         name_ext = os.path.splitext(file)
+        excel = False
         # TODO handle empty sheets
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
+            excel = []
             print("[Step 0/7] Converting to csv file")
             wb = xlrd.open_workbook(file)
             sheet_names = wb.sheet_names()
@@ -328,14 +333,9 @@ def process_files(files, templates, exportfile=''):
                 #df.to_csv(new_name, index=False)
                 filenames.append(new_name)
             else:
-                file_dir = os.getcwd()
-                if not os.path.exists(os.path.join(file_dir, "csv_copies")):
-                    os.makedirs(os.path.join(file_dir, "csv_copies"))
-                    # makes new directory to store new csv files
                 for sheet in sheet_names:
                     sh = wb.sheet_by_name(sheet)
-                    new_name = os.path.join(file_dir, "csv_copies", \
-                                            os.path.splitext(os.path.split(file)[1])[0] + "_" + sheet + ".csv")
+                    new_name = os.path.join(os.path.splitext(file)[0] + "_" + sheet + ".csv")
                     with open(new_name, 'w', newline='') as fp:
                         wr = csv.writer(fp)
                         for rownum in range(sh.nrows):
@@ -345,6 +345,7 @@ def process_files(files, templates, exportfile=''):
                     #                        os.path.splitext(os.path.split(file)[1])[0] + "_" + sheet + ".csv")
                     #df.to_csv(new_name, index=False)
                     filenames.append(new_name)
+                    excel.append(new_name)
         elif name_ext[1] == '.csv':
             filenames.append(file)
     if exportfile != '':
@@ -355,12 +356,13 @@ def process_files(files, templates, exportfile=''):
         global progress
         progress["value"] = 0
         progress["maximum"] = len(filenames) * 5.0 + 0.01
-    if templates != None:
+    if templates != None or templates:
         if len(templates) == 1:
             for name in filenames:
-                main(name, templates, exporter=export)
+                main(name, templates[0], exporter=export)
         else:
             num_templates = len(templates)
+            print(num_templates)
             num_files = len(filenames)
             if (num_templates == num_files):
                 for i in range(0, num_files):
@@ -373,6 +375,9 @@ def process_files(files, templates, exportfile=''):
             main(name, exporter=export)
     if export != None:
         export.write_summary()
+    if excel:
+        for file in excel:
+            os.remove(file)
     
 if __name__ == '__main__':
     """If the program is run with application.py as the argument to the command line
