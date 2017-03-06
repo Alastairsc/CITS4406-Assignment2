@@ -2,7 +2,6 @@
 
 block_cipher = None
 
-
 a = Analysis(['application.py'],
              pathex=['E:\\Documents\\Github\\django_env\\mysite\\common\\analyser'],
              binaries=[],
@@ -25,8 +24,9 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='Data-oracle',
+          name='Data-oracle_win',
           debug=False,
           strip=False,
           upx=True,
-          console=False )
+          console=False,
+          icon='1488810372_analysis.ico')
