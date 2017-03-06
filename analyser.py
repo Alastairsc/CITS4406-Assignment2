@@ -2,11 +2,9 @@
 
 
 import re
-from statistics import mean, mode, median_low, median, median_high, stdev, StatisticsError, Decimal
-from scipy.stats import mstats
-from numpy import array
+from statistics import mode, StatisticsError
 
-from math import floor, log10, pow
+from math import floor, log10, pow, ceil
 
 threshold = 0.9
 max_Outliers = 100
@@ -147,37 +145,63 @@ class NumericalAnalyser(Analyser):
                 except ValueError:
                     #assuming error cells are not passed to here
                     isNumeric = False
+                    print("Can't convert: ",i)
         values = [i for i in new_values]
         super().__init__(values)
         if isNumeric:
             self.stDevOutliers = []
-            standardDeviations = Decimal(stdDevs)
-            if len(values) >= 8:
-                self.pval = mstats.normaltest(array(values))[1]
+            #standardDeviations = Decimal(stdDevs)
+            length = len(values)
+            if values:
+                self.min = values[0]
+                self.max = values[1]
+            self.mean = 0
+            for x in values:
+                if x < self.min:
+                    self.min = x
+                if x > self.max:
+                    self.max = x
+                self.mean += x
+            self.mean = self.mean /length
+            self.stdev = 0
+            for x in values:
+                self.stdev += pow(x-self.mean, 2)
+            self.stdev = pow(self.stdev/length, 1/2)
+            values.sort()
+            self.median = (length+1)/2
+            self.median_low = (length+1)/4
+            self.median_high = 3*(length+1)/4
+            if self.median % 1 == 0:
+                self.median = values[int(self.median)]
             else:
-                self.pval = 100
-            self.min = min(values)
-            self.max = max(values)
-            self.mean = Decimal(mean(values)).quantize(Decimal('.00000'))
-            self.median_low = median_low(values)
-            self.median = median(values)
-            self.median_high = median_high(values)
-            self.stdev = Decimal(stdev(values)).quantize(Decimal('.00'))
-            self.normDist = 'No'
-            if(self.pval > 0.055):
-                self.normDist = 'Yes'
-            elif self.pval == 100:
-                self.normDist = 'N/A'
-            if self.normDist == 'Yes':
-                outlier_count = 0
-                for x, value in enumerate(values):
-                    if value < (self.mean - standardDeviations * self.stdev) or \
-                    value > (self.mean + standardDeviations * self.stdev):  
-                        if outlier_count > max_Outliers:
-                            self.stDevOutliers = ">%d outliers" % max_Outliers
-                            break
-                        self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
-                        outlier_count += 1
+                self.median = (values[floor(self.median)]+values[ceil(self.median)])/2
+            if self.median_low % 1 == 0:
+                self.median_low = values[int(self.median_low)]
+                self.median_high = values[int(self.median_high)]
+            else:
+                self.median_low = (values[floor(self.median_low)] + values[ceil(self.median_low)]) / 2
+                self.median_high = (values[floor(self.median_high)] + values[ceil(self.median_high)]) / 2
+            IQR = self.median_high - self.median_low
+            outlier_count = 0
+            for x, value in enumerate(values):
+                if value < (self.median_low - 1.5 * IQR) or value > (self.median_high + 1.5 * IQR):
+                    if outlier_count > max_Outliers:
+                        self.stDevOutliers = ">%d outliers" % max_Outliers
+                        break
+                    self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
+                    outlier_count += 1
+            self.mean = round(self.mean,4)
+            self.median_low = round(self.median_low, 4)
+            self.median_high = round(self.median_high, 4)
+            self.median = round(self.median, 4)
+            self.stdev = round(self.stdev, 4)
+            for attr in dir(self): #converts large numbers to scientific notation
+                try:
+                    x = getattr(self, attr)
+                    if abs(x) > 100000 or abs(x) < 0.00001:
+                        setattr(self, attr, self.int_to_sci(x))
+                except:
+                    pass
         else:
             print("WARNING: Type error, cannot convert column to numerical value")
             self.min = 'N/A'
@@ -189,6 +213,22 @@ class NumericalAnalyser(Analyser):
             self.stdev = 'N/A'
             self.normDist = 'N/A'
             self.stDevOutliers = 'N/A'
+
+    def int_to_sci(self, value):
+        """Converts numbers into a string in scientific notation form
+
+        Keyword arguments:
+            value -- The value to be converted to scientific notation.
+        """
+        if value == 0:
+            return "0E+0"
+        power = floor(log10(abs(value)))
+        base = round(value / pow(10, power), 4)
+
+        if power > 0:
+            return str(base) + "E+" + str(power)
+        else:
+            return str(base) + "E" + str(power)
 
     @staticmethod
     def is_compatable(values):
@@ -205,6 +245,7 @@ class NumericalAnalyser(Analyser):
         if bad_values / len(values) >= threshold:
             return False
         return True
+
             
 class CurrencyAnalyser(NumericalAnalyser):
     """Run currency analysis, using NumericalAnalyser as a super class. Removes
@@ -293,38 +334,60 @@ class SciNotationAnalyser(Analyser):
                     new_values.append(float(i))
                 except:
                     isNumeric = False
+                    print("Can't convert: ", i)
         values = [i for i in new_values]
         super().__init__(values)
         if isNumeric:
+            length = len(values)
             self.stDevOutliers = []
-            if len(values) >= 8:
-                self.pval = mstats.normaltest(array(values))[1]
+            if values:
+                self.min = values[0]
+                self.max = values[1]
+            self.mean = 0
+            for x in values:
+                if x < self.min:
+                    self.min = x
+                if x > self.max:
+                    self.max = x
+                self.mean += x
+            self.min = self.int_to_sci(self.min)
+            self.max = self.int_to_sci(self.max)
+            self.mean = self.mean /length
+            self.stdev = 0
+            for x in values:
+                self.stdev += pow(x-self.mean, 2)
+            self.stdev = pow(self.stdev/length, 1/2)
+            values.sort()
+            self.median = (length+1)/2
+            self.median_low = (length+1)/4
+            self.median_high = 3*(length+1)/4
+            if self.median % 1 == 0:
+                self.median = values[int(self.median)]
             else:
-                self.pval = 100
+                self.median = (values[floor(self.median)]+values[ceil(self.median)])/2
+            if self.median_low % 1 == 0:
+                self.median_low = values[int(self.median_low)]
+                self.median_high = values[int(self.median_high)]
+            else:
+                self.median_low = (values[floor(self.median_low)] + values[ceil(self.median_low)]) / 2
+                self.median_high = (values[floor(self.median_high)] + values[ceil(self.median_high)]) / 2
+            IQR = self.median_high - self.median_low
+            outlier_count = 0
+            for x, value in enumerate(values):
+                if value < (self.median_low - 1.5 * IQR) or value > (self.median_high + 1.5 * IQR):
+                    if outlier_count > max_Outliers:
+                        self.stDevOutliers = ">%d outliers" % max_Outliers
+                        break
+                    self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
+                    outlier_count += 1
+            self.mean = self.int_to_sci(round(self.mean,4))
+            self.median_low = self.int_to_sci(round(self.median_low, 4))
+            self.median_high = self.int_to_sci(round(self.median_high, 4))
+            self.median = self.int_to_sci(round(self.median, 4))
+            self.stdev = self.int_to_sci(round(self.stdev, 4))
             if self.mode != 'N/A':
                 self.mode = self.int_to_sci(self.mode)
-            self.min = self.int_to_sci(min(values))
-            self.max = self.int_to_sci(max(values))
-            self.mean = self.int_to_sci(mean(values))
-            self.median_low = self.int_to_sci(median_low(values))
-            self.median = self.int_to_sci(median(values))
-            self.median_high =  self.int_to_sci(median_high(values))
-            self.stdev = self.int_to_sci(stdev(values))
-            self.normDist = 'No'
-            if(self.pval < 0.055):
-                self.normDist = 'Yes'
-            elif(self.pval == 100):
-                self.normDist = 'N/A'
-            if self.normDist == 'Yes':
-                outlier_count = 0
-                for x, value in enumerate(values):
-                    if value < (float(self.mean) - standardDeviations * float(self.stdev)) or \
-                    value > (float(self.mean) + standardDeviations * float(self.stdev)):               
-                        if outlier_count > max_Outliers:
-                            self.stDevOutliers = ">%d outliers" % max_Outliers
-                            break
-                        self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
-                        outlier_count += 1
+
         else:
             print("WARNING Cannot convert to scientific notation")
             self.min = 'N/A'
@@ -461,3 +524,17 @@ class DatetimeAnalyser(Analyser):
     def __init__(self, values):
         super().__init__(values)
         # TODO implement datetime unique stats
+
+def normaltest(values):
+    """Normality test of values based on Jarque-Bera Test"""
+    """xbar = mean(values)
+    n = len(values)
+    s_top = sum([pow(x-xbar, 3) for x in values])/n
+    std = sum([pow(x-xbar,2) for x in values])/n
+    s_bot = pow(std, 3/2)
+    S = s_top/s_bot
+    c_top = sum([pow(x-xbar, 4) for x in values])/n
+    c_bot = pow(std , 2)
+    C = c_top/c_bot
+    JB = (n /6) * (pow(S,2) + 0.25 * pow(C-3, 2))
+    print("JB: ", JB)"""
