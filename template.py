@@ -56,6 +56,8 @@ init();
     </nav>
 
 <br>&nbsp<br>
+<br>&nbsp<br>
+<br>&nbsp<br>
 <div class="container">
     <h1>Analysis Report of {filename}</h1>
 </div>
@@ -96,7 +98,7 @@ init();
             <p>Click 'Show Data' at the end of the table to view a chart.</p>
             <p>Note: If numerical/currency data contains more than 10,000 values only the top 10,000 will be displayed in the chart.</p>
             <h4>Showing chart for column:</h4>
-            <div id="Stats_Chart_data" class='hidden'>datda here</div>
+            <div id="Stats_Chart_data" class='hidden'>data here</div>
             <div id="Stats_Chart" class='hidden' style="width: 900px; height: 500px;"></div>
             <hr id="numerical"/>
             <h2 class="titleRow">Numerical</h2>
@@ -110,7 +112,6 @@ init();
                     <th>Median Low</th>
                     <th>Median</th>
                     <th>Median High</th>
-                    <th>Normally Distributed</th>
                     <th>Standard Deviation</th>
                     <th>Outliers</th>
                     <th>Most Common (Top 5)</th>
@@ -299,7 +300,6 @@ init();
                     <th>Median Low</th>
                     <th>Median</th>
                     <th>Median High</th>
-                    <th>Normally Distributed</th>
                     <th>Standard Deviation</th>
                     <th>Outliers</th>
                     <th>Most Common (Top 5)</th>
