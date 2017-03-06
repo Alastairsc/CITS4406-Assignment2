@@ -65,7 +65,7 @@ class Report(object):
     """
 
 
-    def __init__(self, data):
+    def __init__(self, data, offline=True):
         """Initialise the Report object and assign local variables.
         
         Keyword arguments:
@@ -77,11 +77,17 @@ class Report(object):
         self.data = data
         self.file_name = data.filename
         self.chart_data = ''
+        self.offline = offline
     
     @staticmethod
     def initial_show_items():
         """Return the number of items to show initially, where clicking 'show more' will expand."""
         return 4
+
+    @staticmethod
+    def item_limit():
+        """Return the maximum number of items to display if 'show more' is disabled (offline)"""
+        return 500
 
     def empty_columns(self):
         """Return a list of empty columns in the data object."""
@@ -120,8 +126,8 @@ class Report(object):
         #gen report for debugging
         return str(html) 
 
-    @staticmethod
-    def list_creator(list_items):
+
+    def list_creator(self, list_items):
         """Return provided list as an unordered HTML list.
         
         Keyword arguments:
@@ -132,19 +138,19 @@ class Report(object):
         if list_items:
             for item in list_items:
                 itemCount+=1
-                if itemCount>Report.initial_show_items():
+                if not self.offline and itemCount>Report.initial_show_items():
                   html_list += '<li class="hidden">' + str(item) + '</li>'
-                else:
+                elif not(self.offline and itemCount > Report.item_limit()):
                   html_list += '<li>' + str(item) + '</li>'
         else:
             html_list += '<li>' + 'Empty' + '</li>'
-        if itemCount>Report.initial_show_items()+1:
+        if not self.offline and itemCount>Report.initial_show_items()+1:
           html_list += "<li class='showMore'>Show More</li>"
         html_list += '</ul>'
         return html_list
 
-    @staticmethod
-    def row_creator(row_items, rowNumber = 0, type = 'none', hide = False):
+
+    def row_creator(self, row_items, rowNumber = 0, type = 'none', hide = False):
         """Return provided list as HTML rows.
         
         Arguments:
@@ -152,15 +158,15 @@ class Report(object):
         """
         html_row=""
         if rowNumber>Report.initial_show_items():
-          if rowNumber == Report.initial_show_items()+1:
-            html_row = '<tr><td colspan="100%" class="info showMoreTable">Show More</td></tr>'
-          html_row += '<tr class="hidden">'
+            if not self.offline and rowNumber == Report.initial_show_items()+1:
+                html_row = '<tr><td colspan="100%" class="info showMoreTable">Show More</td></tr>'
+                html_row += '<tr class="hidden">'
         else:
-          html_row += '<tr>'
+            html_row += '<tr>'
         for item in row_items:
             html_row += '<td>' + str(item) + '</td>'
         #Chart
-        if not hide:
+        if not hide and not self.offline:
             html_row += '<td><a onclick="showChart(\''+type+'\','+str(rowNumber)+',this)" href="#col_analysis">Show Data</a></td>'
         else:
             html_row += '<td>&nbsp</td>'
@@ -188,7 +194,6 @@ class Report(object):
                        column.analysis.median_low,
                        column.analysis.median,
                        column.analysis.median_high,
-                       column.analysis.normDist,
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],
@@ -363,7 +368,6 @@ class Report(object):
                        column.analysis.median_low,
                        column.analysis.median,
                        column.analysis.median_high,
-                       column.analysis.normDist,
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],
@@ -591,7 +595,7 @@ class Report(object):
                 #self.chart_data = ''.join([self.chart_data, "],"])
                 rows += self.row_creator(row, rowNo, 'D', hide=True)
         #self.chart_data = self.chart_data[:-1]
-        #self.chart_data += "];"
+        self.chart_data += "];"
         return rows
         
     def gen_html(self, html):
