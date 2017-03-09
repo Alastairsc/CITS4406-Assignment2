@@ -643,7 +643,7 @@ class Data(object):
     def clear_columns(self):
         for col in self.columns:
             del col.values
-        if not os.listdir(os.path.join(os.getcwd(), 'temp')):
+        if os.path.isdir(os.path.join(os.getcwd(), 'temp')) and not os.listdir(os.path.join(os.getcwd(), 'temp')):
             os.rmdir(os.path.join(os.getcwd(), 'temp'))
 
 
