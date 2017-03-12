@@ -9,10 +9,7 @@ import csv
 try:
     from .analyser import *
     from .column import *
-except SystemError:
-    from analyser import *
-    from column import *
-except ImportError:
+except:
     from analyser import *
     from column import *
 
