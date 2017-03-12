@@ -109,9 +109,9 @@ init();
                     <th>Max</th>
                     <th>Mode</th>
                     <th>Mean</th>                   
-                    <th>Median Low</th>
+                    <th>Lower Quartile</th>
                     <th>Median</th>
-                    <th>Median High</th>
+                    <th>Upper Quartile</th>
                     <th>Standard Deviation</th>
                     <th>Outliers</th>
                     <th>Most Common (Top 5)</th>

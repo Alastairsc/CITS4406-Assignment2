@@ -6,7 +6,7 @@ Classes:
 """
 try:
 	from .template import *
-except SystemError:
+except:
 	from template import *
 
 from os import path
@@ -191,9 +191,9 @@ class Report(object):
                        column.analysis.max,
                        column.analysis.mode,
                        column.analysis.mean,
-                       column.analysis.median_low,
+                       column.analysis.quartile_low,
                        column.analysis.median,
-                       column.analysis.median_high,
+                       column.analysis.quartile_up,
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],
@@ -365,9 +365,9 @@ class Report(object):
                        column.analysis.max,
                        column.analysis.mode,
                        column.analysis.mean,
-                       column.analysis.median_low,
+                       column.analysis.quartile_low,
                        column.analysis.median,
-                       column.analysis.median_high,
+                       column.analysis.quartile_up,
                        column.analysis.stdev,
                        column.analysis.stDevOutliers,
                        column.most_common[:5],
