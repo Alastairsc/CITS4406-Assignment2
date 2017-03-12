@@ -91,11 +91,12 @@ class DisplayWindow:
         self.datafiles = filedialog.askopenfiles(mode='r', filetypes=[('All Files', '.*'),('Csv Files','*.csv'),
                                                  ('Excel Workbook', '*.xlsx'), ('Excel 97-2003 Workbook', '.xls')],
                                                  defaultextension="*.csv")
-        self.datafiles = [file.name for file in self.datafiles]
-        Label(self.display, text="Selected Files: ", anchor='w').pack(fill=X)
-        self.filetext(self.datafiles)
-        self.statusText.set("Ready to Process Files...")
-        return self.datafiles
+        if self.datafiles != None:
+            self.datafiles = [file.name for file in self.datafiles]
+            Label(self.display, text="Selected Files: ", anchor='w').pack(fill=X)
+            self.filetext(self.datafiles)
+            self.statusText.set("Ready to Process Files...")
+            return self.datafiles
 
     def dataaskopenfolder(self):
         """Asks for folder to process and displays the contained files in the output window"""
@@ -103,12 +104,13 @@ class DisplayWindow:
         if self.template != None:
             Label(self.display, text=str("Template Selected: " + self.template.name), anchor='w').pack(fill=X)
         folder = filedialog.askdirectory()
-        self.datafiles = []
-        for file in os.listdir(folder):
-            self.datafiles.append(os.path.join(folder,file))
-        Label(self.display, text=str("Selected Folder: " + folder), anchor='w').pack(fill=X)
-        self.filetext(self.datafiles)
-        return folder
+        if folder != '':
+            self.datafiles = []
+            for file in os.listdir(folder):
+                self.datafiles.append(os.path.join(folder,file))
+            Label(self.display, text=str("Selected Folder: " + folder), anchor='w').pack(fill=X)
+            self.filetext(self.datafiles)
+            return folder
 
     def filetext(self, files):
         """Provides text for output box given a list of files"""
@@ -159,10 +161,11 @@ class DisplayWindow:
         self.template = []
         template = filedialog.askopenfile(mode='r', filetypes=[('All Files', '.*'), ('Csv Files', '*.csv')],
                                                defaultextension="*.csv")
-        self.template.append(template.name)
-        Label(self.display, text=str("Template Selected: " + self.template[0]), anchor='w').pack(fill=X)
-        statusText.set("Ready to Process Folder...")
-        return self.template
+        if template != None:
+            self.template.append(template.name)
+            Label(self.display, text=str("Template Selected: " + self.template[0]), anchor='w').pack(fill=X)
+            self.statusText.set("Ready to Process Folder...")
+            return self.template
 
     def setmaxprogress(self, max):
         self.progress["maximum"] = max
@@ -235,9 +238,6 @@ def main(*args, **kwargs):
             args -- Arguments provided to the program at runtime.
             exporter -- Exporter object if applicable
     """
-    #tr = classtracker.ClassTracker()
-    #tr.track_class(Data)
-    #tr.create_snapshot()
     exporter = kwargs.pop('exporter', None)
     window = kwargs.pop('window', None)
     filename = args[0]
@@ -253,24 +253,20 @@ def main(*args, **kwargs):
         data = Data(filename)
     data.remove_invalid()
     data.create_columns()
-    #tr.create_snapshot()
     data.clean()
     print("[Step 3/7] Running pre-analysis")
     if window != None:
         window.step_progress()
     data.pre_analysis()
-    #tr.create_snapshot()
     print("[Step 4/7] Finding Errors")
     if window != None:
         window.step_progress()
     data.find_errors()
-    #tr.create_snapshot()
     print("[Step 5/7] Running Analysis")
     if window != None:
         window.step_progress()
         window.setstatus("Running Analysis on " + filename + "...")
     data.analysis()
-    #tr.create_snapshot()
     if exporter == None:
         report = Report(data)
         str_report = report.html_report()
@@ -291,8 +287,6 @@ def main(*args, **kwargs):
         print("Completed analysis for: ", filename)
     if window != None:
         window.setstatus("Completed Analysis for " + filename)
-    #tr.create_snapshot()
-    #tr.stats.print_summary()
             
 def get_file_dir(location):
     """Returns the directory of the file with the file name
@@ -309,21 +303,17 @@ def process_files(files, templates, exportfile='', window=None):
     Keyword arguments:
         files -- files to be processed
         templates -- files to use as templates in processing
-        exportfile -- file to export analsysis to if applicable
+        exportfile -- file to export analysis to if applicable
     """
     filenames = []
-    excel = False
+    excel = []
     for file in files:
         name_ext = os.path.splitext(file)
-        excel = False
         # TODO handle empty sheets
         if name_ext[1] == '.xls' or name_ext[1] == '.xlsx':
-            excel = []
             print("[Step 0/7] Converting to csv file")
             wb = xlrd.open_workbook(file)
             sheet_names = wb.sheet_names()
-            #xls = ExcelFile(file)
-            #sheet_names = xls.sheet_names
             if len(sheet_names) == 1:
                 sh = wb.sheet_by_name(sheet_names[0])
                 new_name = os.path.splitext(file)[0] + ".csv"
@@ -331,10 +321,8 @@ def process_files(files, templates, exportfile='', window=None):
                     wr = csv.writer(fp)
                     for rownum in range(sh.nrows):
                         wr.writerow(sh.row_values(rownum))
-                #df = xls.parse(sheet_names[0], index_col=None, na_values=['NA'])
-                #new_name = os.path.splitext(file)[0] + ".csv"
-                #df.to_csv(new_name, index=False)
                 filenames.append(new_name)
+                excel.append(new_name)
             else:
                 for sheet in sheet_names:
                     sh = wb.sheet_by_name(sheet)
@@ -343,10 +331,6 @@ def process_files(files, templates, exportfile='', window=None):
                         wr = csv.writer(fp)
                         for rownum in range(sh.nrows):
                             wr.writerow(sh.row_values(rownum))
-                    #df = xls.parse(sheet, index_col=None, na_values=['NA'])
-                    #new_name = os.path.join(file_dir, "csv_copies", \
-                    #                        os.path.splitext(os.path.split(file)[1])[0] + "_" + sheet + ".csv")
-                    #df.to_csv(new_name, index=False)
                     filenames.append(new_name)
                     excel.append(new_name)
         elif name_ext[1] == '.csv':
