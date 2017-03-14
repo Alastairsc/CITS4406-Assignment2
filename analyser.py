@@ -67,11 +67,11 @@ class Analyser(object):
             
             mean -- Mean value in column values.
             
-            median_low -- Low median for column values.
+            lower quartile -- Lower quartile for column values.
             
             median -- Median value for column values.
             
-            median_high -- High median for column values.
+            upper quartile -- Upper quartile for column values.
             
             normDist -- String Yes/No if columns value is normally distributed.
             
@@ -169,30 +169,30 @@ class NumericalAnalyser(Analyser):
             self.stdev = pow(self.stdev/length, 1/2)
             values.sort()
             self.median = (length+1)/2
-            self.median_low = (length+1)/4
-            self.median_high = 3*(length+1)/4
+            self.quartile_low = (length+1)/4
+            self.quartile_up = 3*(length+1)/4
             if self.median % 1 == 0:
                 self.median = values[int(self.median)]
             else:
                 self.median = (values[floor(self.median)]+values[ceil(self.median)])/2
-            if self.median_low % 1 == 0:
-                self.median_low = values[int(self.median_low)]
-                self.median_high = values[int(self.median_high)]
+            if self.quartile_low % 1 == 0:
+                self.quartile_low = values[int(self.quartile_low)]
+                self.quartile_up = values[int(self.quartile_up)]
             else:
-                self.median_low = (values[floor(self.median_low)] + values[ceil(self.median_low)]) / 2
-                self.median_high = (values[floor(self.median_high)] + values[ceil(self.median_high)]) / 2
-            IQR = self.median_high - self.median_low
+                self.quartile_low = (values[floor(self.quartile_low)] + values[ceil(self.quartile_low)]) / 2
+                self.quartile_up = (values[floor(self.quartile_up)] + values[ceil(self.quartile_up)]) / 2
+            IQR = self.quartile_up - self.quartile_low
             outlier_count = 0
             for x, value in enumerate(values):
-                if value < (self.median_low - 1.5 * IQR) or value > (self.median_high + 1.5 * IQR):
+                if value < (self.quartile_low - 1.5 * IQR) or value > (self.quartile_up + 1.5 * IQR):
                     if outlier_count > max_Outliers:
                         self.stDevOutliers = ">%d outliers" % max_Outliers
                         break
                     self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
                     outlier_count += 1
             self.mean = round(self.mean,4)
-            self.median_low = round(self.median_low, 4)
-            self.median_high = round(self.median_high, 4)
+            self.quartile_low = round(self.quartile_low, 4)
+            self.quartile_up = round(self.quartile_up, 4)
             self.median = round(self.median, 4)
             self.stdev = round(self.stdev, 4)
             for attr in dir(self): #converts large numbers to scientific notation
@@ -207,9 +207,9 @@ class NumericalAnalyser(Analyser):
             self.min = 'N/A'
             self.max = 'N/A'
             self.mean = 'N/A'
-            self.median_low = 'N/A'
+            self.quartile_low = 'N/A'
             self.median = 'N/A'
-            self.median_high =  'N/A'
+            self.quartile_up =  'N/A'
             self.stdev = 'N/A'
             self.normDist = 'N/A'
             self.stDevOutliers = 'N/A'
@@ -359,30 +359,30 @@ class SciNotationAnalyser(Analyser):
             self.stdev = pow(self.stdev/length, 1/2)
             values.sort()
             self.median = (length+1)/2
-            self.median_low = (length+1)/4
-            self.median_high = 3*(length+1)/4
+            self.quartile_low = (length+1)/4
+            self.quartile_up = 3*(length+1)/4
             if self.median % 1 == 0:
                 self.median = values[int(self.median)]
             else:
                 self.median = (values[floor(self.median)]+values[ceil(self.median)])/2
-            if self.median_low % 1 == 0:
-                self.median_low = values[int(self.median_low)]
-                self.median_high = values[int(self.median_high)]
+            if self.quartile_low % 1 == 0:
+                self.quartile_low = values[int(self.quartile_low)]
+                self.quartile_up = values[int(self.quartile_up)]
             else:
-                self.median_low = (values[floor(self.median_low)] + values[ceil(self.median_low)]) / 2
-                self.median_high = (values[floor(self.median_high)] + values[ceil(self.median_high)]) / 2
-            IQR = self.median_high - self.median_low
+                self.quartile_low = (values[floor(self.quartile_low)] + values[ceil(self.quartile_low)]) / 2
+                self.quartile_up = (values[floor(self.quartile_up)] + values[ceil(self.quartile_up)]) / 2
+            IQR = self.quartile_up - self.quartile_low
             outlier_count = 0
             for x, value in enumerate(values):
-                if value < (self.median_low - 1.5 * IQR) or value > (self.median_high + 1.5 * IQR):
+                if value < (self.quartile_low - 1.5 * IQR) or value > (self.quartile_up + 1.5 * IQR):
                     if outlier_count > max_Outliers:
                         self.stDevOutliers = ">%d outliers" % max_Outliers
                         break
                     self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
                     outlier_count += 1
             self.mean = self.int_to_sci(round(self.mean,4))
-            self.median_low = self.int_to_sci(round(self.median_low, 4))
-            self.median_high = self.int_to_sci(round(self.median_high, 4))
+            self.quartile_low = self.int_to_sci(round(self.quartile_low, 4))
+            self.quartile_up = self.int_to_sci(round(self.quartile_up, 4))
             self.median = self.int_to_sci(round(self.median, 4))
             self.stdev = self.int_to_sci(round(self.stdev, 4))
             if self.mode != 'N/A':
@@ -393,9 +393,9 @@ class SciNotationAnalyser(Analyser):
             self.min = 'N/A'
             self.max = 'N/A'
             self.mean = 'N/A'
-            self.median_low = 'N/A'
+            self.quartile_low = 'N/A'
             self.median = 'N/A'
-            self.median_high =  'N/A'
+            self.quartile_up =  'N/A'
             self.stdev = 'N/A'
             self.normDist = 'N/A'
             self.stDevOutliers = 'N/A'
