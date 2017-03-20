@@ -157,10 +157,10 @@ class Report(object):
         row_items -- List of items to be turned into HTML.
         """
         html_row=""
-        if rowNumber>Report.initial_show_items():
-            if not self.offline and rowNumber == Report.initial_show_items()+1:
+        if not self.offline and rowNumber>Report.initial_show_items():
+            if rowNumber == Report.initial_show_items()+1:
                 html_row = '<tr><td colspan="100%" class="info showMoreTable">Show More</td></tr>'
-                html_row += '<tr class="hidden">'
+            html_row += '<tr class="hidden">'
         else:
             html_row += '<tr>'
         for item in row_items:
