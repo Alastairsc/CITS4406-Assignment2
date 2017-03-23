@@ -117,7 +117,10 @@ class DisplayWindow:
         remove_file = lambda x, m: (lambda p: self.removefile(x, m))
         for file in files:
             label = Label(self.display, text=str("\t" + file), anchor='w')
-            label.bind("<Button-3>", remove_file(file, label))
+            if os.name == 'posix':
+                label.bind("<Button-2>", remove_file(file, label))
+            else:
+                label.bind("<Button-3>", remove_file(file, label))
             label.pack(fill=X)
 
     def maketemplate(self, event):
