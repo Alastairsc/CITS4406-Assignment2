@@ -12,6 +12,7 @@ import xlrd
 import os, shutil
 from tkinter import *
 from tkinter import filedialog, ttk
+from threading import Thread
 try:
     from .data import *
     from .report import *
@@ -131,8 +132,8 @@ class DisplayWindow:
         """Runs program and generates report at the end"""
         self.progress["value"] = 0
         self.setstatus("Processing Files...")
-        #thread = Thread(target=process_files, args=(self.datafiles, self.template), kwargs={'window':self})
-        process_files(self.datafiles, self.template, window=self)
+        Thread(target=process_files, args=(self.datafiles, self.template), kwargs={'window':self}).start()
+        #process_files(self.datafiles, self.template, window=self)
 
     def process_export(self):
         """Runs program and exports results to file"""
@@ -141,7 +142,8 @@ class DisplayWindow:
         exportfile = filedialog.asksaveasfile(mode='w', defaultextension='*.csv', filetypes=[('Csv Files', '*.csv'),
                                                                                                  ('All Files', '.*')])
         exportfile.close()
-        process_files(self.datafiles, self.template, exportfile=exportfile.name, window=self)
+        Thread(target=process_files, ars={self.datafiles, self.template}, kwargs={'exportfile':exportfile.name, "window":self}).start()
+        #process_files(self.datafiles, self.template, exportfile=exportfile.name, window=self)
 
     def removefile(self, file, label):
         """Removes file from process list and removes label"""
@@ -338,6 +340,10 @@ def process_files(files, templates, exportfile='', window=None):
                     excel.append(new_name)
         elif name_ext[1] == '.csv':
             filenames.append(file)
+        else:
+            print("ERROR: Unsupported file type: " + file)
+            if window != None:
+                window.setStatus("WARNING: Unsupported file type " + file)
     if exportfile != '':
         export = Exporter(exportfile)
     else:
