@@ -185,7 +185,6 @@ class Data(object):
         """Can take up to two arguments, 
             first argument -- filename
             second argument -- template"""
-
         self.filename = args[0]
         self.columns = []
         self.invalid_rows = []
@@ -244,49 +243,56 @@ class Data(object):
         #for row in f:
         #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
-        if self.delimiter_type == '':
-            with open(csv_file,'rU', newline='', encoding='ISO-8859-1') as csvfile:
-                try:
-                    #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
-                    #csvfile.seek(0)
-                    #f = csv.reader(csvfile, dialect)
-                    #NEW SPLIT DELIMITER
-                    f = csv.reader(csvfile)
-                    for line in f:
-                        n_col = len(line)
-                        if n_col == 1:
-                            result = re.split(re_separation, line[0])
-                            self.raw_data.append(result)
-                            delimiter_search = re.search(re_separation, line[0]).group(0)   #NEW
-                            if delimiter_search == ' ':
-                                self.delimiter_type = 'Space'
-                            elif delimiter_search == '\t':
-                                self.delimiter_type = 'Tab'
+        try:
+            if self.delimiter_type == '':
+                with open(csv_file,'rU', newline='', encoding='ISO-8859-1') as csvfile:
+                    try:
+                        #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
+                        #csvfile.seek(0)
+                        #f = csv.reader(csvfile, dialect)
+                        #NEW SPLIT DELIMITER
+                        f = csv.reader(csvfile)
+                        for line in f:
+                            n_col = len(line)
+                            if n_col == 1:
+                                result = re.split(re_separation, line[0])
+                                self.raw_data.append(result)
+                                delimiter_search = re.search(re_separation, line[0]).group(0)   #NEW
+                                if delimiter_search == ' ':
+                                    self.delimiter_type = 'Space'
+                                elif delimiter_search == '\t':
+                                    self.delimiter_type = 'Tab'
+                                else:
+                                    self.delimiter_type = delimiter_search   #NEW
                             else:
-                                self.delimiter_type = delimiter_search   #NEW
-                        else:
-                            self.raw_data.append(line)
-                            self.delimiter_type = ','   #NEW
+                                self.raw_data.append(line)
+                                self.delimiter_type = ','   #NEW
 
-                except:
-                    print("Delimiter Warning: could not determine delimiter, consider",
-                    "specifying using template. Continuing using comma")
-                    csvfile.seek(0)
-                    f = csv.reader(csvfile, delimiter=',')
-                    self.delimiter_type = ','
-                    for row in f:                          
+                    except:
+                        print("Delimiter Warning: could not determine delimiter, consider",
+                        "specifying using template. Continuing using comma")
+                        csvfile.seek(0)
+                        f = csv.reader(csvfile, delimiter=',')
+                        self.delimiter_type = ','
+                        for row in f:
+                            self.raw_data.append(row)
+            else:
+                # template specified delimiter
+                with open(csv_file, 'rU', encoding='ISO-8859-1') as csvfile:
+                    f = csv.reader(csvfile, delimiter=self.delimiter_type)
+                    for row in f:
                         self.raw_data.append(row)
-        else:
-            #template specified delimiter
-            with open(csv_file, 'rU', encoding='ISO-8859-1') as csvfile:
-                f = csv.reader( csvfile, delimiter=self.delimiter_type)
-                for row in f:
-                    self.raw_data.append(row)
-        #total = 0
-        #for row in self.raw_data:
-         #   total += sys.getsizeof(row)
-        #print("Raw data: ", total)
-
+        except: # Most likely a read error from a badly formatted file
+            pass
+        # Set header row as first non-empty row and data-start as row after that
+        header = False
+        for i, row in enumerate(self.raw_data):
+            if not header and row:
+                self.header_row = i
+                header = True
+            elif row:
+                self.data_start = i
+                break
                 
     def remove_invalid(self):
         """For each row in raw_data variable, checks row length and appends to 
@@ -311,7 +317,7 @@ class Data(object):
             row = self.trim_row(row, empty_col)
             if len(row) != row_length:
                 self.invalid_rows_indexes.append( index)
-                self.formatted_invalid_rows.append(["%s: %d" % ("Line", index + 1)])
+                self.formatted_invalid_rows.append(["%s: %d" % ("Row", index + 1)])
                 self.invalid_rows.append(row)
                 self.raw_data[index].clear()
                 count += 1
@@ -349,7 +355,7 @@ class Data(object):
                 new_row.append(cell)
         return new_row
 
-    def create_columns(self):
+    def create_columns(self, offline=True):
         """For each row in raw_data variable, assigns the first value to the 
         headers variable and creates a Column object with that header provided.
         Then removes header row from valid_rows. Then for each row in valid_rows,
@@ -368,7 +374,7 @@ class Data(object):
                 tmp_list.append(")")
                 s = ''.join(tmp_list)
                 i += 1
-                self.columns.append(Column(header=s))
+                self.columns.append(Column(header=s, offline=offline))
         length = len(self.valid_rows)
         for row_num in range(0, length):
             for index, value in enumerate(self.valid_rows[row_num]):
@@ -377,7 +383,6 @@ class Data(object):
         self.valid_rows.clear()
         for col in self.columns:
             col.save_file()
-        #print("Col: ", sys.getsizeof(self.columns[0]))
         if self.delete_set:
             for colNo in self.delete_set:
                 self.columns[colNo].delete_col()
@@ -400,7 +405,7 @@ class Data(object):
         """Iterates through each column and analyses the columns values using the
         columns type analyser.
         """
-        for colNo, column in enumerate(self.columns):          
+        for colNo, column in enumerate(self.columns):
             if not column.empty and column.type in self.analysers:
                 column.define_most_least_common()
                 if( column.type == 'Integer' or column.type == 'Float' \
@@ -409,7 +414,7 @@ class Data(object):
                     column.analysis = self.analysers[column.type](column.values, self.std_devs_val)
                 else:
                     column.analysis = self.analysers[column.type](column.values)
-        
+
     def find_errors(self):
         """Iterates through each column and finds any errors according to pre-determined
         conditions.
