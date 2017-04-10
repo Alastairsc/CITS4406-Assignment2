@@ -95,7 +95,7 @@ init();
         <div class="col-md-12">
             <h2 class="titleRow" id="col_analysis">Column Analysis (Based on {len_columns} rows)</h2>
             <h2 class="titleRow" id="charts_header">Charts</h2>
-            <p>Click 'Show Data' at the end of the table to view a chart.</p>
+            <p>Click 'Show Data' at the end of the table to view a chart. (Disabled for offline reports)</p>
             <p>Note: If numerical/currency data contains more than 10,000 values only the top 10,000 will be displayed in the chart.</p>
             <h4>Showing chart for column:</h4>
             <div id="Stats_Chart_data" class='hidden'>data here</div>
@@ -107,7 +107,6 @@ init();
                     <th>Column</th>
                     <th>Min</th>
                     <th>Max</th>
-                    <th>Mode</th>
                     <th>Mean</th>                   
                     <th>Lower Quartile</th>
                     <th>Median</th>
