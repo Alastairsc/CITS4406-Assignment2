@@ -152,9 +152,11 @@ class Column(object):
         if self.offline:
             self.mvalues = []
         else:
-            #TODO check randomly generated file name doesnt already exist
             filepath = os.path.join(os.getcwd(),'temp')
             self.valuefilename = os.path.join(filepath, self.randomString(50)+'.csv')
+            while os.path.isfile(self.valuefilename):
+                # Gets a different random filename if the generated one already exists
+                self.valuefilename = os.path.join(filepath, self.randomString(50) + '.csv')
             if not os.path.exists(filepath):
                 os.makedirs(filepath)
             self.valuefile = open(self.valuefilename, 'w+')
@@ -168,7 +170,6 @@ class Column(object):
         total = 0
         for attr in dir(self):
             size = sys.getsizeof(getattr(self, attr))
-            #1print(attr, " - ", size)
             total += size
         return total
 
@@ -402,7 +403,7 @@ class Column(object):
                 if self.check_empty(x, value, columnNumber, errors, formatted_errors, invalid_rows_pos, set_to_ignore,
                                     data_start):
                     continue
-                elif not re_float.match(value):
+                elif not re_float.match(value) and not value == '0':
                     reason = 'not a decimal number'
                     tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
                     errors.append(tup)
@@ -462,6 +463,7 @@ class Column(object):
                         "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     colValues[x] = ''
                     edited = True
+                    continue
                 try:
                     if (abs(float(value)) < 6.00E-58 or 6.00E+58 < abs(float(value))) and not value == '0':
                         reason = 'too large or too small'
@@ -565,6 +567,7 @@ class Column(object):
                         "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     colValues[x] = ''
                     edited = True
+                    continue
                 try:
                     if abs(float(value)) < 6.00E-76 or 6.00E+76 < abs(float(value)):
                         reason = 'too large or too small'
@@ -854,7 +857,6 @@ class Column(object):
                     values += nextC
                     nextC = fp.read(1)
                 if nextC == '':
-                    print("File: ",self.valuefilename)
                     raise EOFError("No values found in column")
                 values += nextC
                 values += fp.read(len(value) * position)
