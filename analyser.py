@@ -145,7 +145,11 @@ class NumericalAnalyser(Analyser):
                 except ValueError:
                     #assuming error cells are not passed to here
                     isNumeric = False
-                    print("Can't convert: ",i)
+                    try:
+                        print("Can't convert: ",i)
+                    except UnicodeEncodeError:
+                        # Character not recognised in python
+                        pass
         values = [i for i in new_values]
         super().__init__(values)
         if isNumeric:
@@ -168,40 +172,34 @@ class NumericalAnalyser(Analyser):
                 self.stdev += pow(x-self.mean, 2)
             self.stdev = pow(self.stdev/length, 1/2)
             values.sort()
-            self.median = (length+1)/2
-            self.quartile_low = (length+1)/4
-            self.quartile_up = 3*(length+1)/4
-            if self.median % 1 == 0:
-                self.median = values[int(self.median)]
+            median_index = (length+1)/2 - 1
+            qlow_index = (length+1)/4 - 1
+            qup_index = 3*(length+1)/4 - 1
+            if median_index % 1 == 0:
+                self.median = values[int(median_index)]
             else:
-                self.median = (values[floor(self.median)]+values[ceil(self.median)])/2
-            if self.quartile_low % 1 == 0:
-                self.quartile_low = values[int(self.quartile_low)]
-                self.quartile_up = values[int(self.quartile_up)]
+                self.median = (values[floor(median_index)]+values[ceil(median_index)])/2
+            if qlow_index % 1 == 0:
+                self.quartile_low = values[int(qlow_index)]
+                self.quartile_up = values[int(qup_index)]
             else:
-                self.quartile_low = (values[floor(self.quartile_low)] + values[ceil(self.quartile_low)]) / 2
-                self.quartile_up = (values[floor(self.quartile_up)] + values[ceil(self.quartile_up)]) / 2
+                self.quartile_low = (values[floor(qlow_index)] + values[ceil(qlow_index)]) / 2
+                self.quartile_up = (values[floor(qup_index)] + values[ceil(qup_index)]) / 2
             IQR = self.quartile_up - self.quartile_low
             outlier_count = 0
             for x, value in enumerate(values):
                 if value < (self.quartile_low - 1.5 * IQR) or value > (self.quartile_up + 1.5 * IQR):
-                    if outlier_count > max_Outliers:
-                        self.stDevOutliers = ">%d outliers" % max_Outliers
-                        break
                     self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
                     outlier_count += 1
-            self.mean = round(self.mean,4)
-            self.quartile_low = round(self.quartile_low, 4)
-            self.quartile_up = round(self.quartile_up, 4)
-            self.median = round(self.median, 4)
-            self.stdev = round(self.stdev, 4)
-            for attr in dir(self): #converts large numbers to scientific notation
-                try:
-                    x = getattr(self, attr)
-                    if abs(x) > 100000 or abs(x) < 0.00001:
-                        setattr(self, attr, self.int_to_sci(x))
-                except:
-                    pass
+            #if outlier_count > max_Outliers:
+                #self.stDevOutliers = "%d outliers" % outlier_count
+            self.max = self.round_significant(self.max)
+            self.min = self.round_significant(self.min)
+            self.mean = self.round_significant(self.mean)
+            self.quartile_low = self.round_significant(self.quartile_low)
+            self.quartile_up = self.round_significant(self.quartile_up)
+            self.median = self.round_significant(self.median)
+            self.stdev = self.round_significant(self.stdev)
         else:
             print("WARNING: Type error, cannot convert column to numerical value")
             self.min = 'N/A'
@@ -214,7 +212,17 @@ class NumericalAnalyser(Analyser):
             self.normDist = 'N/A'
             self.stDevOutliers = 'N/A'
 
-    def int_to_sci(self, value):
+    @staticmethod
+    def round_significant(x):
+        # Rounds to 6 significant figures
+        if isinstance(x, int) and abs(x) < 1000000 and abs(x) > 0.000001 or x == 0:
+            return x
+        if abs(x) >= 1000000:
+            return NumericalAnalyser.int_to_sci(x)
+        return float('%.6g' % x)
+
+    @staticmethod
+    def int_to_sci(value):
         """Converts numbers into a string in scientific notation form
 
         Keyword arguments:
@@ -223,12 +231,12 @@ class NumericalAnalyser(Analyser):
         if value == 0:
             return "0E+0"
         power = floor(log10(abs(value)))
-        base = round(value / pow(10, power), 4)
+        base = round(value / pow(10, power), 5)
 
         if power > 0:
-            return str(base) + "E+" + str(power)
+            return str(base) + "e+" + str(power)
         else:
-            return str(base) + "E" + str(power)
+            return str(base) + "e-" + str(power)
 
     @staticmethod
     def is_compatable(values):
@@ -350,43 +358,42 @@ class SciNotationAnalyser(Analyser):
                 if x > self.max:
                     self.max = x
                 self.mean += x
-            self.min = self.int_to_sci(self.min)
-            self.max = self.int_to_sci(self.max)
+            self.min = NumericalAnalyser.int_to_sci(self.min)
+            self.max = NumericalAnalyser.int_to_sci(self.max)
             self.mean = self.mean /length
             self.stdev = 0
             for x in values:
                 self.stdev += pow(x-self.mean, 2)
             self.stdev = pow(self.stdev/length, 1/2)
             values.sort()
-            self.median = (length+1)/2
-            self.quartile_low = (length+1)/4
-            self.quartile_up = 3*(length+1)/4
-            if self.median % 1 == 0:
-                self.median = values[int(self.median)]
+            median_index = (length + 1) / 2 - 1
+            qlow_index = (length + 1) / 4 - 1
+            qup_index = 3 * (length + 1) / 4 - 1
+            if median_index % 1 == 0:
+                self.median = values[int(median_index)]
             else:
-                self.median = (values[floor(self.median)]+values[ceil(self.median)])/2
-            if self.quartile_low % 1 == 0:
-                self.quartile_low = values[int(self.quartile_low)]
-                self.quartile_up = values[int(self.quartile_up)]
+                self.median = (values[floor(median_index)] + values[ceil(median_index)]) / 2
+            if qlow_index % 1 == 0:
+                self.quartile_low = values[int(qlow_index)]
+                self.quartile_up = values[int(qup_index)]
             else:
-                self.quartile_low = (values[floor(self.quartile_low)] + values[ceil(self.quartile_low)]) / 2
-                self.quartile_up = (values[floor(self.quartile_up)] + values[ceil(self.quartile_up)]) / 2
+                self.quartile_low = (values[floor(qlow_index)] + values[ceil(qlow_index)]) / 2
+                self.quartile_up = (values[floor(qup_index)] + values[ceil(qup_index)]) / 2
             IQR = self.quartile_up - self.quartile_low
             outlier_count = 0
             for x, value in enumerate(values):
                 if value < (self.quartile_low - 1.5 * IQR) or value > (self.quartile_up + 1.5 * IQR):
-                    if outlier_count > max_Outliers:
-                        self.stDevOutliers = ">%d outliers" % max_Outliers
-                        break
                     self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
                     outlier_count += 1
-            self.mean = self.int_to_sci(round(self.mean,4))
-            self.quartile_low = self.int_to_sci(round(self.quartile_low, 4))
-            self.quartile_up = self.int_to_sci(round(self.quartile_up, 4))
-            self.median = self.int_to_sci(round(self.median, 4))
-            self.stdev = self.int_to_sci(round(self.stdev, 4))
+            #if outlier_count > max_Outliers:
+                #self.stDevOutliers = "%d outliers" % outlier_count
+            self.mean = NumericalAnalyser.round_significant(self.mean)
+            self.quartile_low = NumericalAnalyser.round_significant(self.quartile_low)
+            self.quartile_up = NumericalAnalyser.round_significant(self.quartile_up)
+            self.median = NumericalAnalyser.round_significant(self.median)
+            self.stdev = NumericalAnalyser.round_significant(self.stdev)
             if self.mode != 'N/A':
-                self.mode = self.int_to_sci(self.mode)
+                self.mode = NumericalAnalyser.int_to_sci(self.mode)
 
         else:
             print("WARNING Cannot convert to scientific notation")
@@ -399,22 +406,6 @@ class SciNotationAnalyser(Analyser):
             self.stdev = 'N/A'
             self.normDist = 'N/A'
             self.stDevOutliers = 'N/A'
-            
-    def int_to_sci(self, value):
-        """Converts numbers into a string in scientific notation form
-        
-        Keyword arguments:
-            value -- The value to be converted to scientific notation.
-        """
-        if value == 0:
-            return "0E+0"
-        power = floor(log10(abs(value)))
-        base = round(value / pow(10, power), 4)
-    
-        if power > 0:
-            return str(base) + "E+" + str(power)
-        else:
-            return str(base) + "E" + str(power)
 
     @staticmethod
     def is_compatable(values):
