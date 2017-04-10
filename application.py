@@ -9,7 +9,6 @@ import argparse
 import webbrowser
 import textwrap
 import xlrd
-import os, shutil
 from tkinter import *
 from tkinter import filedialog, ttk
 from threading import Thread
@@ -53,7 +52,7 @@ class DisplayWindow:
         root.wm_title("UWA Data-oracle")
         self.datafiles = []
         self.template = None
-        #Main Window
+        # Main Window
         mainwindow = Frame(root)
         self.display = Frame(mainwindow)
         Label(mainwindow, text="Select File(s) or Folder(s) to process: ").grid(row=0, sticky=E, pady=10)
@@ -73,10 +72,10 @@ class DisplayWindow:
         self.progress.grid(row=5, columnspan=3, sticky='ew', padx=10, pady=5)
         mainwindow.pack()
 
-        #Output Window
+        # Output Window
         self.display.grid(row=0, column=3, rowspan=7, sticky=N)
 
-        #Status Bar
+        # Status Bar
         self.statusText = StringVar()
         self.statusText.set("Waiting for File...")
         status = Label(root, textvariable=self.statusText, bd=1, relief=SUNKEN, anchor=W)
@@ -92,7 +91,7 @@ class DisplayWindow:
         self.datafiles = filedialog.askopenfiles(mode='r', filetypes=[('All Files', '.*'),('Csv Files','*.csv'),
                                                  ('Excel Workbook', '*.xlsx'), ('Excel 97-2003 Workbook', '.xls')],
                                                  defaultextension="*.csv")
-        if self.datafiles != None:
+        if self.datafiles is not None:
             self.datafiles = [file.name for file in self.datafiles]
             Label(self.display, text="Selected Files: ", anchor='w').pack(fill=X)
             self.filetext(self.datafiles)
@@ -102,7 +101,7 @@ class DisplayWindow:
     def dataaskopenfolder(self):
         """Asks for folder to process and displays the contained files in the output window"""
         self.reset()
-        if self.template != None:
+        if self.template is not None:
             Label(self.display, text=str("Template Selected: " + self.template.name), anchor='w').pack(fill=X)
         folder = filedialog.askdirectory()
         if folder != '':
@@ -126,24 +125,29 @@ class DisplayWindow:
 
     def maketemplate(self, event):
         """Opens webbrowser to create template page on Data-oracle website"""
-        webbrowser.open_new("http://52.32.29.14/upload/createTemplate/")
+        webbrowser.open_new("http://www.data-oracle.com/upload/createTemplate/")
 
     def process_report(self):
         """Runs program and generates report at the end"""
         self.progress["value"] = 0
         self.setstatus("Processing Files...")
         Thread(target=process_files, args=(self.datafiles, self.template), kwargs={'window':self}).start()
-        #process_files(self.datafiles, self.template, window=self)
 
     def process_export(self):
         """Runs program and exports results to file"""
         self.progress["value"] = 0
         self.setstatus("Processing Files...")
-        exportfile = filedialog.asksaveasfile(mode='w', defaultextension='*.csv', filetypes=[('Csv Files', '*.csv'),
+        exportfile = ''
+        try:
+            exportfile = filedialog.asksaveasfile(mode='w', defaultextension='*.csv', filetypes=[('Csv Files', '*.csv'),
                                                                                                  ('All Files', '.*')])
-        exportfile.close()
-        Thread(target=process_files, ars={self.datafiles, self.template}, kwargs={'exportfile':exportfile.name, "window":self}).start()
-        #process_files(self.datafiles, self.template, exportfile=exportfile.name, window=self)
+            exportfile.close()
+            Thread(target=process_files, args=(self.datafiles, self.template),
+                   kwargs={'exportfile': exportfile.name, 'window': self}).start()
+        except PermissionError:
+            # Occurs if export file is open
+            self.setstatus("ERROR: Permission Denied, ensure export file is not open in another program")
+
 
     def removefile(self, file, label):
         """Removes file from process list and removes label"""
@@ -166,10 +170,13 @@ class DisplayWindow:
         self.template = []
         template = filedialog.askopenfile(mode='r', filetypes=[('All Files', '.*'), ('Csv Files', '*.csv')],
                                                defaultextension="*.csv")
-        if template != None:
+        if template is not None:
             self.template.append(template.name)
-            Label(self.display, text=str("Template Selected: " + self.template[0]), anchor='w').pack(fill=X)
-            self.statusText.set("Ready to Process Folder...")
+            if hasattr(self, 'templateLabel'):
+                self.templateLabel.destroy()
+            self.templateLabel = Label(self.display, text=str("Template Selected: " + self.template[0]), anchor='w')
+            self.templateLabel.pack(fill=X)
+            self.setstatus("Ready to Process Folder...")
             return self.template
 
     def setmaxprogress(self, max):
@@ -195,12 +202,15 @@ class Exporter(object):
         total_empty -- total number of empty columns
         total_errors -- total numher of errors throughout files
     """
-    def __init__(self, filename):
+    def __init__(self, filename, offline=True):
         self.filename = filename
         self.total_files = 0
         self.total_invalid = 0
         self.total_empty = 0
         self.total_errors = 0
+        if not offline:
+            with open(self.filename, 'w') as fp:
+                pass
 
     def write_stats(self, data):
         """Writes statistics of a single data object"""
@@ -215,7 +225,10 @@ class Exporter(object):
             self.total_empty = len(empty_columns)
             fp.write("Number of Error Cells:  " + str(len(data.errors)) + '\n')
             self.total_errors = len(data.errors)
-            fp.write("Delimiter:  " + data.delimiter_type + '\n')
+            if data.delimiter_type == ',':
+                fp.write("Delimiter: comma\n")
+            else:
+                fp.write("Delimiter:  " + data.delimiter_type + '\n')
             fp.write("\n")
 
     def write_summary(self):
@@ -233,7 +246,13 @@ class Exporter(object):
         os.remove(self.filename)
         os.rename(temp_file, self.filename)
 
-#TODO Export method after analysis has completed
+    def write_error(self, data):
+        """Writes error message for files not processed fully"""
+        with open(self.filename, 'r+') as fp:
+            fp.seek(0,2)
+            fp.write("Analysis of " + os.path.split(data.filename)[1] + '\n')
+            fp.write("ERROR: Unable to read file, no readable data detected.\n\n")
+
 def main(*args, **kwargs):
     """
     Create Data and Report objects, providing necessary information for them 
@@ -248,7 +267,7 @@ def main(*args, **kwargs):
     filename = args[0]
     print("[Step 1/7] Processing file: ",filename)
     print("[Step 2/7] Reading data")
-    if window != None:
+    if window is not None:
         window.step_progress()
         window.setstatus("Processing " + filename + "...")
     if len(args) > 1:
@@ -256,43 +275,51 @@ def main(*args, **kwargs):
         data = Data(filename, temp)
     else:
         data = Data(filename)
+    if not data.raw_data:
+        print("ERROR: Unable to read file: " + filename)
+        window.setstatus("ERROR: Unable to read file: " + filename)
+        if exporter is not None:
+            exporter.write_error(data)
+        return None
     data.remove_invalid()
     data.create_columns()
     data.clean()
+
     print("[Step 3/7] Running pre-analysis")
-    if window != None:
+    if window is not None:
         window.step_progress()
     data.pre_analysis()
     print("[Step 4/7] Finding Errors")
-    if window != None:
+    if window is not None:
         window.step_progress()
     data.find_errors()
     print("[Step 5/7] Running Analysis")
-    if window != None:
+    if window is not None:
         window.step_progress()
         window.setstatus("Running Analysis on " + filename + "...")
     data.analysis()
-    if exporter == None:
+    if exporter is None:
+        print("[Step 6/7] Generating report")
         report = Report(data)
         str_report = report.html_report()
-        print("[Step 6/7] Generating report")
         html = report.gen_html(str_report)
-        #returns string of html, also generates html report for debugging purposes
+        # returns string of html, also generates html report for debugging purposes
         print("[Step 7/7] Report Successfully Generated")
         print("Completed analysis for: ",filename)
-        if window != None:
+        if window is not None:
             window.step_progress()
         webbrowser.open("file://"+html,new=2)
     else:
         print("[Step 6/7] Generating report")
         exporter.write_stats(data)
         print("[Step 7/7] Report Successfully Generated")
-        if window != None:
+        if window is not None:
             window.step_progress()
         print("Completed analysis for: ", filename)
-    if window != None:
+    if window is not None:
         window.setstatus("Completed Analysis for " + filename)
-            
+
+
 def get_file_dir(location):
     """Returns the directory of the file with the file name
     
@@ -300,6 +327,7 @@ def get_file_dir(location):
         location -- A file path.
     """
     return location.rpartition('\\')
+
 
 def process_files(files, templates, exportfile='', window=None):
     """Process files and templates and runs the program over them. Converts excel files
@@ -332,23 +360,28 @@ def process_files(files, templates, exportfile='', window=None):
                 for sheet in sheet_names:
                     sh = wb.sheet_by_name(sheet)
                     new_name = os.path.join(os.path.splitext(file)[0] + "_" + sheet + ".csv")
-                    with open(new_name, 'w', newline='') as fp:
-                        wr = csv.writer(fp)
-                        for rownum in range(sh.nrows):
-                            wr.writerow(sh.row_values(rownum))
+                    try:
+                        with open(new_name, 'w', newline='') as fp:
+                            wr = csv.writer(fp)
+                            for rownum in range(sh.nrows):
+                                wr.writerow(sh.row_values(rownum))
+                    except PermissionError:
+                        # If created csv file already exists and is open
+                        window.setstatus("ERROR: Permission Denied, ensure "  + new_name + " is not open in another program")
+                        return None
                     filenames.append(new_name)
                     excel.append(new_name)
         elif name_ext[1] == '.csv':
             filenames.append(file)
         else:
             print("ERROR: Unsupported file type: " + file)
-            if window != None:
-                window.setStatus("WARNING: Unsupported file type " + file)
+            if window is not None:
+                window.setstatus("WARNING: Unsupported file type " + file)
     if exportfile != '':
         export = Exporter(exportfile)
     else:
         export = None
-    if window != None:
+    if window is not None:
         window.setmaxprogress(len(filenames) * 5.0 + 0.01)
     if templates != None or templates:
         if len(templates) == 1:
@@ -358,7 +391,7 @@ def process_files(files, templates, exportfile='', window=None):
             num_templates = len(templates)
             print(num_templates)
             num_files = len(filenames)
-            if (num_templates == num_files):
+            if num_templates == num_files:
                 for i in range(0, num_files):
                     main(filenames[i], templates[i], exporter=export, window=window)
             else:
