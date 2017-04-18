@@ -188,7 +188,7 @@ class NumericalAnalyser(Analyser):
             IQR = self.quartile_up - self.quartile_low
             outlier_count = 0
             for x, value in enumerate(values):
-                if value < (self.quartile_low - 1.5 * IQR) or value > (self.quartile_up + 1.5 * IQR):
+                if value < (self.quartile_low - stdDevs/2 * IQR) or value > (self.quartile_up + stdDevs/2 * IQR):
                     self.stDevOutliers.append("Row: %d Value: %s" % (x, value))
                     outlier_count += 1
             #if outlier_count > max_Outliers:
