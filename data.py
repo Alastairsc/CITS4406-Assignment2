@@ -209,6 +209,7 @@ class Data(object):
         self.std_devs_val = 3
         self.range_list = []
         self.set_ignore = set()
+        self.ignore_na = False
         self.delete_set = []
         self.deleted_col = []
         if len(args) > 1:  
@@ -218,6 +219,7 @@ class Data(object):
             self.data_start = self.template.data_start
             self.data_size = self.template.data_size
             self.ignore_empty = self.template.ignore_empty
+            self.ignore_na = self.template.ignore_na
             threshold = self.template.threshold_val
             enum_threshold = self.template.enum_threshold_val
             self.std_devs_val = self.template.std_devs
@@ -239,18 +241,11 @@ class Data(object):
         Keyword arguments:
             csv_file -- The filename of the file to be opened.
         """
-        #f = csv.reader(open(csv_file))
-        #for row in f:
-        #    self.raw_data.append(row)
         #separation of comma, semicolon, dash, tab delimited csv files
         try:
             if self.delimiter_type == '':
                 with open(csv_file,'rU', newline='', encoding='ISO-8859-1') as csvfile:
                     try:
-                        #dialect = csv.Sniffer().sniff(csvfile.read(), delimiters='space,;-\|\t\\')
-                        #csvfile.seek(0)
-                        #f = csv.reader(csvfile, dialect)
-                        #NEW SPLIT DELIMITER
                         f = csv.reader(csvfile)
                         for line in f:
                             n_col = len(line)
@@ -392,6 +387,14 @@ class Data(object):
         #self.invalid_rows_indexes = []
         self.can_edit_rows = False
         self.data_in_columns = True
+        if self.ignore_na:
+            if isinstance(self.ignore_na, list):
+                for col in self.ignore_na:
+                    self.columns[col].ignore_NA = True
+            else:
+                for col in self.columns:
+                    col.ignore_NA = True
+
         
         
     def clean(self):

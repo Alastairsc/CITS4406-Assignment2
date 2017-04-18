@@ -52,6 +52,7 @@ class Template(object):
         self.std_devs = 3
         self.range_vals = []
         self.ignore_set = set()
+        self.ignore_set = False
         self.delete_set = []
 
         self.read(filename)
@@ -96,6 +97,13 @@ class Template(object):
                     elif row[0].lower() == 'ignore_empty':
                         if row[1] == 'all':
                             self.ignore_empty = True
+                    elif row[0].lower() == 'ignore_na':
+                        if row[1] == 'all':
+                            self.ignore_na = True
+                        else:
+                            self.ignore_na = []
+                            for col in row[1:]:
+                                self.ignore_na.append(col)
                     elif row[0].lower() == 'threshold_val':
                         self.threshold_val = float(row[1])
                     elif row[0].lower() == 'enum_threshold_val':
