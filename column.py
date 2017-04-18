@@ -149,6 +149,7 @@ class Column(object):
         self.deleted = False
         self.offline = offline
         self.pos = None
+        self.ignore_NA = False
         if self.offline:
             self.mvalues = []
         else:
@@ -160,7 +161,7 @@ class Column(object):
             if not os.path.exists(filepath):
                 os.makedirs(filepath)
             self.valuefile = open(self.valuefilename, 'w+')
-            os.chmod(self.valuefile.name, stat.S_IWRITE)
+            os.chmod(self.valuefilename, stat.S_IWRITE)
 
     def __sizeof__(self):
         """
@@ -404,11 +405,14 @@ class Column(object):
                                     data_start):
                     continue
                 elif not re_float.match(value) and not value == '0':
-                    reason = 'not a decimal number'
-                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
-                    errors.append(tup)
-                    formatted_errors.append(
-                        "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                    if self.ignore_NA and (value.lower() == 'n/a' or value.lower() == 'na'):
+                        pass
+                    else:
+                        reason = 'not a decimal number'
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                        errors.append(tup)
+                        formatted_errors.append(
+                            "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     colValues[x] = ''
                     edited = True
 
@@ -428,13 +432,16 @@ class Column(object):
                                     data_start):
                     continue
                 elif not re_int.match(value):
-                    reason = 'not an integer'
-                    if not invalid_rows_pos:
-                        print('Invalid Rows Empty')
-                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
-                    errors.append(tup)
-                    formatted_errors.append(
-                        "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                    if self.ignore_NA and (value.lower() == 'n/a' or value.lower() == 'na'):
+                        pass
+                    else:
+                        reason = 'not an integer'
+                        if not invalid_rows_pos:
+                            print('Invalid Rows Empty')
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                        errors.append(tup)
+                        formatted_errors.append(
+                            "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
                     colValues[x] = ''
                     edited = True
 
@@ -456,12 +463,15 @@ class Column(object):
                     continue
                 elif not re_int.match(value) and not re_float.match(value) and not re_sci_notation.match(
                         value) and not value == '0':
-                    reason = 'not a number'
-                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
-                    errors.append(tup)
-                    formatted_errors.append(
-                        "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                    colValues[x] = ''
+                    if self.ignore_NA and (value.lower() == 'n/a' or value.lower() == 'na'):
+                        colValues[x] = ''
+                    else:
+                        reason = 'not a number'
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                        errors.append(tup)
+                        formatted_errors.append(
+                            "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                        colValues[x] = ''
                     edited = True
                     continue
                 try:
@@ -560,12 +570,15 @@ class Column(object):
                                     data_start):
                     continue
                 elif not re_sci_notation.match(value):
-                    reason = 'not scientific notation'
-                    tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
-                    errors.append(tup)
-                    formatted_errors.append(
-                        "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
-                    colValues[x] = ''
+                    if self.ignore_NA and (value.lower() == 'n/a' or value.lower() == 'na'):
+                        colValues[x] = ''
+                    else:
+                        reason = 'not scientific notation'
+                        tup = (x + invalid_rows_pos[x] + data_start, columnNumber, value, reason, x)
+                        errors.append(tup)
+                        formatted_errors.append(
+                            "Row: %d Column: %d Value: %s - %s" % (tup[0] + 1, tup[1] + 1, tup[2], reason))
+                        colValues[x] = ''
                     edited = True
                     continue
                 try:
