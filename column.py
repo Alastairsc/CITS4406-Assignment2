@@ -161,7 +161,8 @@ class Column(object):
             if not os.path.exists(filepath):
                 os.makedirs(filepath)
             self.valuefile = open(self.valuefilename, 'w+')
-            os.chmod(self.valuefilename, stat.S_IWRITE)
+            os.chmod(self.valuefilename, stat.S_IWRITE) #Windows
+            #os.chmod(self.valuefilename, 0o775) #Linux
 
     def __sizeof__(self):
         """
