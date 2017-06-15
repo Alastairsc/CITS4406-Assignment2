@@ -78,6 +78,25 @@ class Report(object):
         self.file_name = data.filename
         self.chart_data = ''
         self.offline = offline
+        self.types = {
+            'Boolean': 'Boolean',
+            'Char': 'Character',
+            'Currency': 'Currency',
+            'Date': 'Date',
+            'Datetime': 'Date Time',
+            'Day': 'Day of the Week',
+            'Email': 'Email Address',
+            'Enum': 'Enumerable Set',
+            'Float': 'Decimals only',
+            'Hyperlink': 'Hyperlink',
+            'Identifier': 'Identification code',
+            'Integer': 'Integers only',
+            'Numeric': 'Number',
+            'Sci_Notation': 'Scientific notation',
+            'String': 'String',
+            'Time': 'Time',
+            'Ignored': 'Ignored / not detected'
+        }
     
     @staticmethod
     def initial_show_items():
@@ -109,6 +128,8 @@ class Report(object):
             len_error_columns=len(self.data.errors),
             len_columns=len(self.data.columns[0].values),
             delimiter_type = self.data.delimiter_type,
+            num_columns=len(self.data.columns),
+            column_details=self.make_header_details(self.data.columns),
             numerical_analysis=self.numerical_analysis(),
             string_analysis=self.string_analysis(),
             identifier_analysis=self.identifier_analysis(),
@@ -125,11 +146,11 @@ class Report(object):
             previous = previous_url,
             chart_data = self.chart_data
             )
-        #gen report for debugging
+        # gen report for debugging
         return str(html) 
 
 
-    def list_creator(self, list_items):
+    def list_creator(self, list_items, height=500):
         """Return provided list as an unordered HTML list.
         
         Keyword arguments:
@@ -140,22 +161,23 @@ class Report(object):
             html_list = '<ul>'
             if list_items:
                 for item in list_items:
-                    if not self.offline and itemCount>Report.initial_show_items():
+                    if not self.offline and itemCount > Report.initial_show_items():
                       html_list += '<li class="hidden">' + str(item) + '</li>'
                     else:
                       html_list += '<li>' + str(item) + '</li>'
             else:
                 html_list += '<li>' + 'Empty' + '</li>'
-            if not self.offline and itemCount>Report.initial_show_items()+1:
+            if not self.offline and itemCount > Report.initial_show_items()+1:
               html_list += "<li class='showMore'>Show More</li>"
             html_list += '</ul>'
         else:
-            html_list='<div style="height: 500; width: 100%;overflow:auto;"><ul>'
+            html_list = '<div style="height: ' + str(height) + '; width: 100%;overflow:auto;"><ul>'
             for item in list_items:
                   html_list += '<li>' + str(item) + '</li>'
             html_list += '</ul></div>'
         if itemCount > Report.item_limit():
-            msg = "<p>Only displaying the first " + str(Report.item_limit()) + " errors. Consider supressing anomalies using a template.</p>"
+            msg = "<p>Only displaying the first " + str(Report.item_limit()) + \
+                  " errors. Consider suppressing anomalies using a template.</p>"
             html_list = msg + html_list
         return html_list
 
@@ -185,7 +207,8 @@ class Report(object):
         if not hide and not self.offline:
             html_row += '<td><a onclick="showChart(\''+type+'\','+str(rowNumber)+',this)" href="#col_analysis">Show Data</a></td>'
         else:
-            html_row += '<td>&nbsp</td>'
+            # html_row += '<td>&nbsp</td>'
+            pass
         html_row += '</tr>'
         return html_row
         
@@ -215,26 +238,17 @@ class Report(object):
                         least_common[i] = (round(tup1[0], 4), tup1[1])
                     except TypeError:
                         pass #non numeric
-                math_stats= [column.analysis.min,
-                       column.analysis.max,
-                       column.analysis.mean,
-                       column.analysis.quartile_low,
-                       column.analysis.median,
-                       column.analysis.quartile_up,
-                       column.analysis.stdev,
-                       column.analysis.stDevOutliers,
-                       most_common,
-                       least_common,
-                       column.analysis.unique]
                 header = column.header.rsplit(' ', 2)
-                header = header[0] + "<br>" + header[1] + " " + header[2]
-                row = [header] #puts column number on next line on header label on report
-                for stats in math_stats:
-                    if not stats == 'N/A':
-                        row.append(stats)
-                    else:
-                        row.append(stats)
-                        #causes problems if some columns have different stats to others of same type
+                math_stats = [self.shorten(header[0],15) + "<br>" + header[1] + " " + header[2] + "<br>" + self.types[column.type]]
+                math_stats.append(self.list_stack(most_common))
+                math_stats.append(self.list_stack(least_common))
+                math_stats.append(column.analysis.unique)
+                math_stats.append("Min: " + str(column.analysis.min) + "<br>Max: " + str(column.analysis.max))
+                math_stats.append("Average:<br>" + str(column.analysis.mean) + "<br>Standard Deviation:<br>" +
+                                  str(column.analysis.stdev))
+                math_stats.append("Lower: " + str(column.analysis.quartile_low) + "<br>Median: " + str(column.analysis.median) +
+                                  "<br>Upper: " + str(column.analysis.quartile_up))
+                math_stats.append(column.analysis.stDevOutliers)
                 if not self.offline:
                     self.chart_data = ''.join([self.chart_data, "["])
                     self.chart_data = ''.join([self.chart_data, "['Row ','Value'],"])
@@ -250,7 +264,7 @@ class Report(object):
                     self.chart_data = ''.join([self.chart_data, "],"])
 
                 rowNo+=1;
-                rows += self.row_creator(row,rowNo,'N')
+                rows += self.row_creator(math_stats,rowNo,'N')
         self.chart_data = self.chart_data[:-1]
         self.chart_data += "];"
         return rows
@@ -266,9 +280,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'String':           
                 row = [column.header,
-                       column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo+=1;
                 rows += self.row_creator(row, rowNo, 'S')
@@ -294,9 +308,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Enum':
                 row = [column.header,
-                       column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo += 1;
                 rows += self.row_creator(row, rowNo, 'E')
@@ -322,9 +336,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Email':
                 row = [column.header,
-                        column.analysis.mode,
-                        column.most_common[:5],
-                        column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo+=1;
                 rows += self.row_creator(row, rowNo, 'Em')
@@ -351,8 +365,8 @@ class Report(object):
             if column.type == 'Boolean':
                 row = [column.header,
                        column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique,
                        column.total_true,
                        column.total_false,
@@ -437,8 +451,8 @@ class Report(object):
             if column.type == 'Date':           
                 row = [column.header,
                        column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique,
                        column.analysis.dateDF,
                        column.analysis.dateMM,
@@ -468,9 +482,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Time':           
                 row = [column.header,
-                       column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique,
                        column.analysis.hourCS[:5],
                        column.analysis.hourCS[-5:]]
@@ -499,8 +513,8 @@ class Report(object):
             if column.type == 'Char':           
                 row = [column.header,
                        column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo+=1;
                 self.chart_data = ''.join([self.chart_data,"["])
@@ -525,9 +539,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Day':           
                 row = [column.header,
-                       column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo+=1;
                 rows += self.row_creator(row, rowNo, 'Dy')
@@ -553,9 +567,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Hyperlink':           
                 row = [column.header,
-                       column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo+=1;
                 rows += self.row_creator(row, rowNo, 'H')
@@ -582,9 +596,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Identifier':           
                 row = [column.header,
-                       column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo+=1;
                 rows += self.row_creator(row, rowNo, 'I')
@@ -610,9 +624,9 @@ class Report(object):
         for column in self.data.columns:
             if column.type == 'Datetime':
                 row = [column.header,
-                       column.analysis.mode,
-                       column.most_common[:5],
-                       column.least_common[:5],
+                       self.flag_errors(column.analysis.mode),
+                       self.flag_errors(column.most_common[:5]),
+                       self.flag_errors(column.least_common[:5]),
                        column.analysis.unique]
                 rowNo += 1;
                 #self.chart_data = ''.join([self.chart_data, "["])
@@ -642,3 +656,71 @@ class Report(object):
                 return int(value)
         except ValueError:
             pass #non numeric
+
+    def make_header_details(self, columns):
+        """
+            Generates list explaining details about all columns in the data
+            :param columns to process:
+            :return html ready scrollable list of colummn details:
+        """
+        column_details = []
+        for col in columns:
+            column_details.append(str(col.header + " - " + self.types[col.type]))
+        return self.list_creator(column_details, height=375)
+
+    def shorten(self,string, n):
+        """
+        Breaks very long strings into stacked html lines separating at known word separators.
+        This includes spaces, dashes or underscores
+        :param string to be broken:
+        :param n approximate length to cut lines:
+        :return html ready line:
+        """
+        if ' ' in string:
+            separator = ' '
+        elif '-' in string:
+            separator = '-'
+        elif '_' in string:
+            separator = '_'
+        else:
+            return string
+        sentence = string.split(separator)
+        result = ""
+        line = sentence[0]
+        for i, word in enumerate(sentence[1:]):
+            if len(line) + len(word) > n:
+                result += line + "<br>"
+                line = separator + word
+            else:
+                line += separator + word
+            if i == len(sentence) - 2:
+                result += line
+        return result
+
+    def list_stack(self, list):
+        """
+        Separates list items and puts them in their own html line. Also flags empty cells and NA cells in red font.
+        :return html ready stacked list:
+        """
+        result = ""
+        list = self.flag_errors(list)
+        for i, item in enumerate(list):
+            if i == len(list) - 1:
+                result += str(item)
+            else:
+                result += str(item) + "<br>"
+        return result
+
+    def flag_errors(self, list_in):
+        not_list = False
+        if not isinstance(list_in, list):
+            list_in = [(list_in, 0)]
+            not_list = True
+        for i, item in enumerate(list_in):
+            if item[0] == '' or item[0] == "":
+                list_in[i] = ('<font color="red"><EMPTY></font>', item[1])
+            elif str(item[0]).lower().strip() == "na" or str(item[0]).lower() == "n/a":
+                list_in[i] = ('<font color="red">' + item[0] + '</font>', item[1])
+        if not_list:
+            return list_in[0][0]
+        return list_in
