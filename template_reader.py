@@ -54,6 +54,8 @@ class Template(object):
         self.ignore_set = set()
         self.ignore_set = False
         self.delete_set = []
+        self.display = []
+        self.hide = []
 
         self.read(filename)
         
@@ -103,7 +105,8 @@ class Template(object):
                         else:
                             self.ignore_na = []
                             for col in row[1:]:
-                                self.ignore_na.append(col)
+                                if isinstance(col,int):
+                                    self.ignore_na.append(int(col))
                     elif row[0].lower() == 'threshold_val':
                         self.threshold_val = float(row[1])
                     elif row[0].lower() == 'enum_threshold_val':
@@ -114,11 +117,36 @@ class Template(object):
                         self.range_vals.append(float(row[1]))
                         self.range_vals.append(float(row[2]))
                     elif row[0].lower() == 'ignore_empty_column':
-                        for x, value in enumerate(row):
-                            if x != 0:
-                                self.ignore_set.add(int(value) - 1)
+                        for value in row[1:]:
+                            self.ignore_set.add(int(value) - 1)
                     elif row[0].lower() == 'delete_col':
                         for col in row[1:]:
                             self.delete_set.append(int(col))
+                    elif row[0].lower() == 'display':
+                        for col in row[1:]:
+                            if isinstance(col,int):
+                                self.display.append(int(col)-1)
+                            elif '-' in col:
+                                display_range = col.split('-')
+                                display_range = [ int(x) for x in display_range]
+                                if display_range[0] > display_range[1]:
+                                    temp = display_range[0]
+                                    display_range[0] = display_range[1]
+                                    display_range[1] = temp
+                                for i in range(int(display_range[0], int(display_range[1]))):
+                                    self.display.append(i-1)
+                    elif row[0].lower() == 'hide':
+                        for col in row[1:]:
+                            if isinstance(col,int):
+                                self.hide.append(int(col)-1)
+                            elif '-' in col:
+                                hide_range = col.split('-')
+                                hide_range = [ int(x) for x in hide_range]
+                                if hide_range[0] > hide_range[1]:
+                                    temp = hide_range[0]
+                                    hide_range[0] = hide_range[1]
+                                    hide_range[1] = temp
+                                for i in range(int(hide_range[0]), int(hide_range[1])):
+                                    self.hide.append(i-1)
                     else:
                         print("Not an option: ", row)
