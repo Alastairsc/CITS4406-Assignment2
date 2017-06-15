@@ -77,7 +77,7 @@ init();
             {empty_columns}
         </div>
         <div class="col-md-6">
-            <h2 class="titleRow">Error Cells ({len_error_columns})</h2>
+            <h2 class="titleRow">Anomaly Cells ({len_error_columns})</h2>
             <p>These cells contain invalid values.</p>
             {error_columns}
         </div>
@@ -86,6 +86,12 @@ init();
             <h2 class="titleRow">Delimiter</h2>
             <p>This file contains the delimiter type:</p>
             <h4><b>{delimiter_type}</b></h4>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="titleRow">Columns ({num_columns})</h2>
+            <p>Detected columns and their determined type.<p>
+            {column_details}
         </div>
     </div>
 </div>
@@ -104,19 +110,14 @@ init();
             <h2 class="titleRow">Numerical</h2>
             <table class="table table-bordered table-hover">
                 <tr>
-                    <th>Column</th>
-                    <th>Min</th>
-                    <th>Max</th>
-                    <th>Mean</th>                   
-                    <th>Lower Quartile</th>
-                    <th>Median</th>
-                    <th>Upper Quartile</th>
-                    <th>Standard Deviation</th>
-                    <th>Outliers</th>
+                    <th style="width:100px">Column</th>
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
+                    <th>Range</th>
+                    <th>Distribution</th>
+                    <th>Quartiles</th>
+                    <th>Outliers</th>
                 </tr>
                 {numerical_analysis}
                 
@@ -131,7 +132,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {string_analysis}
             </table>
@@ -150,13 +150,12 @@ init();
                     <th>Total "Yes"</th>
                     <th>Total "No"</th>
                     <th>Total Boolean Values</th>
-                    <th>View Chart</th>
                 </tr>
                 {boolean_analysis}
             </table>
             
             <hr id="enum"/>
-            <h2 class="titleRow">Enumerated</h2>
+            <h2 class="titleRow">Categorised (Enumerated)</h2>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Column</th>
@@ -164,7 +163,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {enum_analysis}
             </table>
@@ -178,7 +176,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {identifier_analysis}
             </table>
@@ -192,7 +189,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {datetime_analysis}
             </table>
@@ -210,7 +206,6 @@ init();
                     <th>Mar - May Tally</th>
                     <th>Jun - Aug Tally</th>
                     <th>Sep - Nov Tally</th>
-                    <th>View Chart</th>
                 </tr>
                 {date_analysis}
             </table>
@@ -226,7 +221,6 @@ init();
                     <th>Unique Items</th>
                     <th>Most Common Hours (Top 5) (hour,count)</th>
                     <th>Least Common Hours (Top 5) (hour,count)</th>
-                    <th>View Chart</th>
                 </tr>
                 {time_analysis}
             </table>
@@ -240,7 +234,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {day_analysis}
             </table>
@@ -254,7 +247,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {email_analysis}
             </table>
@@ -268,7 +260,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {char_analysis}
             </table>
@@ -282,7 +273,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {hyper_analysis}
             </table>
@@ -304,7 +294,6 @@ init();
                     <th>Most Common (Top 5)</th>
                     <th>Least Common (Top 5)</th>
                     <th>Unique Items</th>
-                    <th>View Chart</th>
                 </tr>
                 {currency_analysis}
             </table>
