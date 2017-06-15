@@ -212,6 +212,8 @@ class Data(object):
         self.ignore_na = False
         self.delete_set = []
         self.deleted_col = []
+        self.display = []
+        self.hide = []
         if len(args) > 1:  
             self.template = args[1]
             self.delimiter_type = self.template.delimiter_type
@@ -226,6 +228,8 @@ class Data(object):
             self.range_list = self.template.range_vals
             self.set_ignore = self.template.ignore_set
             self.delete_set = self.template.delete_set
+            self.display = self.template.display
+            self.hide = self.template.hide
         #Process data
         self.read(self.filename)
 
@@ -394,6 +398,11 @@ class Data(object):
             else:
                 for col in self.columns:
                     col.ignore_NA = True
+        for i in range(0,len(self.columns)):
+            if self.display and not i in self.display:
+                del(col)
+            elif self.hide and i in self.hide:
+                del(col)
 
         
         
@@ -650,5 +659,7 @@ class Data(object):
             del col.values
         if os.path.isdir(os.path.join(os.getcwd(), 'temp')) and not os.listdir(os.path.join(os.getcwd(), 'temp')):
             os.rmdir(os.path.join(os.getcwd(), 'temp'))
+
+
 
 
