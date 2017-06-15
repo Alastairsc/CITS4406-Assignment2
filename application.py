@@ -208,6 +208,7 @@ class Exporter(object):
         self.total_invalid = 0
         self.total_empty = 0
         self.total_errors = 0
+        self.total_col = 0
         if not offline:
             with open(self.filename, 'w') as fp:
                 pass
@@ -225,6 +226,8 @@ class Exporter(object):
             self.total_empty = len(empty_columns)
             fp.write("Number of Error Cells:  " + str(len(data.errors)) + '\n')
             self.total_errors = len(data.errors)
+            fp.write("Number of Valid Columns: " + str(len(data.columns)) + '\n')
+            self.total_col = str(len(data.columns))
             if data.delimiter_type == ',':
                 fp.write("Delimiter: comma\n")
             else:
@@ -239,6 +242,7 @@ class Exporter(object):
             fp.write("Total Files Analysed: " + str(self.total_files) + "\n")
             fp.write("Total Invalid Rows: " + str(self.total_invalid) + "\n")
             fp.write("Total Empty Columns: " + str(self.total_empty) + "\n")
+            fp.write("Total Valid Columns: " + str(self.total_col) + "\n")
             fp.write("Total Errors: " + str(self.total_errors) + "\n\n")
             with open(self.filename, 'r') as fd:
                 for line in fd:
